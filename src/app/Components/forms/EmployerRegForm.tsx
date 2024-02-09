@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  TextareaAutosize,
   Button,
   Checkbox,
   FormControlLabel,
@@ -10,7 +9,6 @@ import {
   FormControl,
   InputLabel,
   Grid,
-  Box,
   Card,
   CardHeader,
 } from "@mui/material";
