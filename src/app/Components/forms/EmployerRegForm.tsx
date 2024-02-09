@@ -412,4 +412,4 @@ const EmployerRegForm = () => {
   );
 };
 
-export { EmployerRegForm };
+export default EmployerRegForm

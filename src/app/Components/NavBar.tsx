@@ -260,4 +260,4 @@ function NavBar() {
     </AppBar>
   );
 }
-export { NavBar };
+export default NavBar

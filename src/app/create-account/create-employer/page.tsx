@@ -1,10 +1,9 @@
-// import {EmployerRegForm} from "../../components/forms/EmployerRegForm"
+import EmployerRegForm from "../../components/forms/EmployerRegForm"
 
 
 function page() {
   return ( 
-    // <EmployerRegForm/> 
-    <></>
+      <EmployerRegForm/> 
   )
 }
 
