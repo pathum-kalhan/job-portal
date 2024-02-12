@@ -1,4 +1,4 @@
-import CandidateRegForm from "@/components/forms/CandidateRegForm"
+import CandidateRegForm from "@/components/forms/Candidate/CandidateRegForm"
 
 
 function page() {

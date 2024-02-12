@@ -4,50 +4,98 @@ import {
   Button,
   Checkbox,
   FormControlLabel,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
   Grid,
   Card,
   CardHeader,
   FormHelperText,
 } from "@mui/material";
-import { Formik, Form, Field, FormikHelpers } from "formik";
+import { Formik, Form, Field, FormikProps, FormikHelpers } from "formik";
 import { TextField } from "formik-mui";
 import { useState } from "react";
 import * as yup from "yup";
 
 type initialValues = {
-  name: string;
-  linkedInProfileUrl: string;
-  dateOfBirth: string;
+  companyName: string;
+  companyDetails: string;
+  websiteUrl: string;
+  location: string;
   email: string;
   verificationCode: string;
-  contactNo: string;
+  companyContactNo: string;
   password: string;
   reenterPassword: string;
   acceptTerms: boolean;
 };
 
-const CandidateRegForm = () => {
+type selectProps = {
+  children: React.ReactNode;
+  form: FormikProps<initialValues>;
+  field: {
+    name: string;
+    value: string;
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    onBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
+    ref: React.Ref<HTMLInputElement>;
+    type: string;
+    id: string;
+    placeholder: string;
+    multiline: boolean;
+    rows: number;
+    maxRows: number;
+    minRows: number;
+    fullWidth: boolean;
+    required: boolean;
+    label: string;
+    error: boolean;
+  };
+};
+
+const CustomizedSelectForFormik = (selectProps: selectProps) => {
+  const { children, form, field } = selectProps;
+
+  const { name, value } = field;
+  const { setFieldValue } = form;
+
+  return (
+    <Select
+      label="Locations"
+      name={name}
+      value={value}
+      fullWidth
+      onChange={(e) => {
+        setFieldValue(name, e.target.value);
+      }}
+    >
+      {children}
+    </Select>
+  );
+};
+
+const EmployerRegForm = () => {
   const [emailValidate, setEmailValidate] = useState(false);
   const [isCodeSubmitted, setIsCodeSubmitted] = useState(false);
+  const locationsArray = ["colombo", "kandy"];
   const phoneNumberRegex = /^07\d{8}$/;
 
   const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
 
   const accountValidationSchemaWithEmailField = yup.object({
-    name: yup.string().min(1).max(30).required("Name is required"),
-    linkedInProfileUrl: yup
+    companyName: yup.string().min(1).max(30).required("Company Name is required"),
+    companyDetails: yup.string().min(1).max(300).required("Company Details are required"),
+    websiteUrl: yup
       .string()
       .url("Invalid URL format")
-      .required("LinkedIn Profile URL is required"),
-    dateOfBirth: yup.string().required("Date of Birth is required"),
+      .required("Website URL is required"),
+    location: yup.string().required("Location is required"),
     email: yup
       .string()
       .email("Invalid email format")
       .required("Email is required"),
-    contactNo: yup
-      .string()
-      .matches(phoneNumberRegex, "Please enter a valid mobile number")
-      .required("Candidate's Contact No is required"),
+    companyContactNo: yup.string().matches(phoneNumberRegex,"Please enter a valid mobile number").required("Company Contact No is required"),
     password: yup
       .string()
       .matches(
@@ -59,21 +107,19 @@ const CandidateRegForm = () => {
       .string()
       .oneOf([yup.ref("password")], "Passwords must match")
       .required("Please re-enter your password"),
-    acceptTerms: yup.boolean().oneOf([true], "Please accept the terms").required(),
+    acceptTerms: yup.boolean().oneOf([true], "Please accept the terms"),
   });
 
   const accountValidationSchemaWithVerifyField = yup.object({
-    name: yup.string().min(1).max(30).required("Name is required"),
-    linkedInProfileUrl: yup
+    companyName: yup.string().min(1).max(30).required("Company Name is required"),
+    companyDetails: yup.string().min(1).max(300).required("Company Details are required"),
+    websiteUrl: yup
       .string()
       .url("Invalid URL format")
-      .required("LinkedIn Profile URL is required"),
-    dateOfBirth: yup.date().required("Date of Birth is required"),
+      .required("Website URL is required"),
+    location: yup.string().required("Location is required"),
     verificationCode: yup.string().required("Verification Code is required"),
-    contactNo: yup
-      .string()
-      .matches(phoneNumberRegex, "Please enter a valid mobile number")
-      .required("Candidate's Contact No is required"),
+    companyContactNo: yup.string().matches(phoneNumberRegex,"Please enter a valid mobile number").required("Company Contact No is required"),
     password: yup
       .string()
       .matches(
@@ -85,16 +131,17 @@ const CandidateRegForm = () => {
       .string()
       .oneOf([yup.ref("password")], "Passwords must match")
       .required("Please re-enter your password"),
-    acceptTerms: yup.boolean().oneOf([true], "Please accept the terms").required(),
+    acceptTerms: yup.boolean().oneOf([true], "Please accept the terms"),
   });
 
   const initialValues: initialValues = {
-    name: "",
-    linkedInProfileUrl: "",
-    dateOfBirth: "",
+    companyName: "",
+    companyDetails: "",
+    websiteUrl: "",
+    location: "",
     email: "",
     verificationCode: "",
-    contactNo: "",
+    companyContactNo: "",
     password: "",
     reenterPassword: "",
     acceptTerms: false,
@@ -104,11 +151,11 @@ const CandidateRegForm = () => {
     values: initialValues,
     formikHelpers: FormikHelpers<initialValues>
   ) => {
+    console.log(values);
+
     formikHelpers.resetForm();
     setEmailValidate(false);
     setIsCodeSubmitted(false);
-
-    console.log(values);
   };
 
   return (
@@ -143,15 +190,11 @@ const CandidateRegForm = () => {
             isValid,
             dirty,
             values,
-            handleChange,
-            handleBlur,
             errors,
-            touched,
             setFieldValue,
           } = formik;
           return (
             <Form>
-              
               <Grid container alignItems="center" justifyContent="center">
                 <Grid
                   item
@@ -163,11 +206,54 @@ const CandidateRegForm = () => {
                   <Grid item lg={12} md={12} sm={12} xs={12}>
                     <Field
                       fullWidth
-                      id="name"
-                      name="name"
-                      label="Name"
+                      id="companyName"
+                      name="companyName"
+                      label="Company Name"
                       component={TextField}
                     />
+                  </Grid>
+                  <Grid item lg={12} md={12} sm={12} xs={12}>
+                    <Field
+                      id="companyDetails"
+                      name="companyDetails"
+                      maxRows={3}
+                      minRows={3}
+                      fullWidth
+                      placeholder="Company Details"
+                      multiline
+                      component={TextField}
+                    />
+                  </Grid>
+                  <Grid item lg={12} md={12} sm={12} xs={12}>
+                    <Field
+                      fullWidth
+                      id="websiteUrl"
+                      name="websiteUrl"
+                      label="Website URL"
+                      component={TextField}
+                    />
+                  </Grid>
+                  <Grid item lg={12} md={12} sm={12} xs={12}>
+                    <FormControl fullWidth>
+                      <InputLabel id="demo-simple-select-label">
+                        Locations
+                      </InputLabel>
+                      <Field
+                        fullWidth
+                        name="location"
+                        component={CustomizedSelectForFormik}
+                      >
+                        {locationsArray.map((item) => (
+                          <MenuItem
+                            sx={{ textTransform: "capitalize" }}
+                            key={item}
+                            value={item}
+                          >
+                            {item}
+                          </MenuItem>
+                        ))}
+                      </Field>
+                    </FormControl>
                   </Grid>
                   {!emailValidate ? (
                     <Grid
@@ -206,8 +292,9 @@ const CandidateRegForm = () => {
                         >
                           Verify
                         </Button>
+                       
                       </Grid>
-                       {!emailValidate && <FormHelperText error={!emailValidate}>
+                     {!emailValidate && <FormHelperText error={!emailValidate}>
                       Click Verify to get the Email verification Code
                     </FormHelperText>}
                     </Grid>
@@ -252,42 +339,22 @@ const CandidateRegForm = () => {
                           Submit
                         </Button>
                       </Grid>
-                       {!isCodeSubmitted && <FormHelperText error={!isCodeSubmitted}>
+
+                     {!isCodeSubmitted && <FormHelperText error={!isCodeSubmitted}>
                       Enter the verification code and Click Submit to Verify the email
                     </FormHelperText>}
                     </Grid>
                   )}
-                  <Grid item lg={12} md={12} sm={12} xs={12}>
-                    <Field
-                      fullWidth
-                      id="linkedInProfileUrl"
-                      name="linkedInProfileUrl"
-                      label="LinkedIn Profile URL"
-                      component={TextField}
-                    />
-                  </Grid>
 
                   <Grid item lg={12} md={12} sm={12} xs={12}>
                     <Field
                       fullWidth
-                      id="contactNo"
-                      name="contactNo"
-                      label="Contact Number"
+                      id="companyContactNo"
+                      name="companyContactNo"
+                      label="Company Contact No"
                       component={TextField}
                     />
                   </Grid>
-
-                  <Grid item lg={12} md={12} sm={12} xs={12}>
-                    <Field
-                      fullWidth
-                      id="dateOfBirth"
-                      name="dateOfBirth"
-                      label="Date of Birth"
-                      type="date"
-                      component={TextField}
-                    />
-                  </Grid>
-
                   <Grid item lg={12} md={12} sm={12} xs={12}>
                     <Field
                       fullWidth
@@ -321,13 +388,11 @@ const CandidateRegForm = () => {
                           }}
                         />
                       }
-                      
                       label="Accept terms and conditions"
                     />
-                    {!!errors.acceptTerms &&
-                      <FormHelperText error={!!errors.acceptTerms}>
+                     <FormHelperText error={!!errors.acceptTerms}>
                       {errors.acceptTerms}
-                    </FormHelperText>}
+                    </FormHelperText>
                   </Grid>
 
                   <Grid item lg={"auto"}>
@@ -353,4 +418,4 @@ const CandidateRegForm = () => {
   );
 };
 
-export default CandidateRegForm;
+export default EmployerRegForm
