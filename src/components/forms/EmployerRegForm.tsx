@@ -11,6 +11,7 @@ import {
   Grid,
   Card,
   CardHeader,
+  FormHelperText,
 } from "@mui/material";
 import { Formik, Form, Field, FormikProps, FormikHelpers } from "formik";
 import { TextField } from "formik-mui";
@@ -150,11 +151,11 @@ const EmployerRegForm = () => {
     values: initialValues,
     formikHelpers: FormikHelpers<initialValues>
   ) => {
+    console.log(values);
+
     formikHelpers.resetForm();
     setEmailValidate(false);
     setIsCodeSubmitted(false);
-
-    console.log(values);
   };
 
   return (
@@ -294,7 +295,11 @@ const EmployerRegForm = () => {
                         >
                           Verify
                         </Button>
+                       
                       </Grid>
+                     {!emailValidate && <FormHelperText error={!emailValidate}>
+                      Click Verify to get the Email verification Code
+                    </FormHelperText>}
                     </Grid>
                   ) : (
                     <Grid
@@ -310,7 +315,8 @@ const EmployerRegForm = () => {
                     >
                       <Grid item lg={8} md={8} sm={8} xs={7}>
                         <Field
-                          fullWidth
+                            fullWidth
+                            disabled={isCodeSubmitted}
                           id="verificationCode"
                           name="verificationCode"
                           label="Verification Code"
@@ -336,6 +342,10 @@ const EmployerRegForm = () => {
                           Submit
                         </Button>
                       </Grid>
+
+                     {!isCodeSubmitted && <FormHelperText error={!isCodeSubmitted}>
+                      Enter the verification code and Click Submit to Verify the email
+                    </FormHelperText>}
                     </Grid>
                   )}
 
@@ -377,16 +387,15 @@ const EmployerRegForm = () => {
                           color="primary"
                           checked={values.acceptTerms}
                           onChange={(e, newValue) => {
-                            console.log("val", newValue);
                             setFieldValue("acceptTerms", newValue);
                           }}
                         />
                       }
                       label="Accept terms and conditions"
                     />
-                    {errors.acceptTerms && touched.acceptTerms && (
-                      <div>{JSON.stringify(errors)}</div>
-                    )}
+                     <FormHelperText error={!!errors.acceptTerms}>
+                      {errors.acceptTerms}
+                    </FormHelperText>
                   </Grid>
 
                   <Grid item lg={"auto"}>
