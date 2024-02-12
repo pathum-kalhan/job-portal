@@ -1,10 +1,9 @@
+import CandidateRegForm from "@/components/forms/CandidateRegForm"
 
 
 function page() {
   return (
-    <div>
-      
-    </div>
+   <CandidateRegForm/>
   )
 }
 

@@ -11,7 +11,7 @@ function Page() {
     >
       <span
         style={{
-          backgroundColor: "#e3e3e3",
+          backgroundColor: "#fff",
           padding: "10rem 6rem 10rem 6rem",
           borderRadius: "1rem",
         }}
