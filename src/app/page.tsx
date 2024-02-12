@@ -1,5 +1,4 @@
 import { Button, Grid, Stack } from "@mui/material";
-import FavoriteIcon from '@mui/icons-material/Favorite';
 
 export default function Home() {
   return (
@@ -16,19 +15,16 @@ export default function Home() {
         }}
         gap={10}
       >
-        <Grid item xs={12}>
-          <Stack direction="row" alignItems="center" justifyContent="center">
+        <Grid item xs={12} alignSelf="center" alignItems="center" justifyContent="center"> 
           <h1
           style={{
             textAlign: "center",
             fontFamily: "sans-serif",
-            fontWeight: "600",
+              fontWeight: "600"
           }}
         >
-            Get matched with a job you love.
-          </h1>
-          <FavoriteIcon sx={{color:"red", fontSize:"2rem", margin:"0"}} />
-          </Stack>
+            Get matched with a job you love. ❤️
+          </h1> 
      
       </Grid>
       <Grid

@@ -1,4 +1,4 @@
-import EmployerRegForm from "@/components/forms/EmployerRegForm"
+import EmployerRegForm from "@/components/forms/Employer/EmployerRegForm"
 
 
 function page() {
