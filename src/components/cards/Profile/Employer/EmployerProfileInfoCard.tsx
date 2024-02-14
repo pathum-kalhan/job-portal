@@ -29,7 +29,15 @@ type Alert = {
   severity: "error" | "info" | "success" | "warning";
 };
 
-function ProfileInfoCard() {
+type props = {
+  handleClickOpenEditProfile: () => void;
+}
+
+function EmployerProfileInfoCard(props: props) {
+  
+
+  const { handleClickOpenEditProfile } = props
+
   const [formData, setFormData] = useState<IFormData["file"]>({ file: null });
   const [backendCall, setBackendCall] = useState(false);
   const [alert, setAlert] = useState<Alert>({
@@ -104,6 +112,7 @@ function ProfileInfoCard() {
               size="small"
               variant="contained"
               sx={{ textTransform: "capitalize" }}
+              onClick={handleClickOpenEditProfile}
             >
               Edit Profile
             </Button>
@@ -111,11 +120,11 @@ function ProfileInfoCard() {
 
           <Typography variant="body2" color="text.secondary">
             {" "}
-            Name: <b>Mr. xxxxx xxxxx</b>{" "}
+            Company Name: <b>Mr. xxxxx xxxxx</b>{" "}
           </Typography>
           <Typography variant="body2" color="text.secondary">
             {" "}
-            Email: <b>xxxxx@xxxx.com</b>{" "}
+            Company Email: <b>xxxxx@xxxx.com</b>{" "}
           </Typography>
 
           <Typography variant="body2" color="text.secondary">
@@ -124,27 +133,19 @@ function ProfileInfoCard() {
           </Typography>
           <Typography variant="body2" color="text.secondary">
             {" "}
-            Contact No: <b>071 123 1234</b>{" "}
+            Company Contact No: <b>071 123 1234</b>{" "}
           </Typography>
           <Typography variant="body2" color="text.secondary">
             {" "}
-            Date Of Birth: <b>09/12/1998</b>{" "}
+            Company Details: <b>xxxxxxxx</b>{" "}
           </Typography>
           <Typography variant="body2" color="text.secondary">
             {" "}
-            Educational Background: <b>xxxxxxxx</b>{" "}
+            Company Website URL: <b>xxxxxxxx</b>{" "}
           </Typography>
           <Typography variant="body2" color="text.secondary">
             {" "}
-            Work Experience: <b>xxxxxxxx</b>{" "}
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            {" "}
-            Skills and Certifications: <b>xxxxxxxx</b>{" "}
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            {" "}
-            LinkedIn Profile URL: <b>xxxxxxxx</b>{" "}
+            Location: <b>xxxxxxxx</b>{" "}
           </Typography>
         </Stack>
       </CardContent>
@@ -170,4 +171,4 @@ function ProfileInfoCard() {
   );
 }
 
-export { ProfileInfoCard };
+export { EmployerProfileInfoCard };
