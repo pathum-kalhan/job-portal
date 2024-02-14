@@ -213,7 +213,7 @@ function NavBar() {
 
           {/* Nav bar Profile Icon start */}
           <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
+            <Tooltip title="View Profile">
               <Link href="/profile">
                 <IconButton sx={{ p: 0 }}>
                   <Avatar
