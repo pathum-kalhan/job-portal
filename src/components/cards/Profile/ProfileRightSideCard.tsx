@@ -8,8 +8,18 @@ import { Avatar, Grid, Stack } from "@mui/material";
 import Link from "next/link";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import { deepPurple } from "@mui/material/colors";
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
-function ProfileRightSideCard() {
+type props = {
+  handleClickOpenUploadCv: () => void
+}
+
+function ProfileRightSideCard(props: props) {
+  
+  const { handleClickOpenUploadCv } = props
+ 
   return (
     <Card sx={{ width: {
         lg:500,
@@ -41,27 +51,33 @@ function ProfileRightSideCard() {
               color="success"
               size="small"
               variant="contained"
-              sx={{ textTransform: "capitalize", height: "2.5rem" }}
+                sx={{ textTransform: "capitalize", height: "2.5rem" }}
+                endIcon={<CloudUploadIcon/>}
+                onClick={handleClickOpenUploadCv}
             >
               Upload new CV
               </Button>
             </Grid>
             <Grid item lg='auto' md='auto' sm='auto' xs='auto'> 
+              <Link href="/testPDF.pdf" target="_blank">
             <Button
               color="info"
               size="small"
-              variant="contained"
-              sx={{ textTransform: "capitalize", height: "2.5rem" }}
+                  variant="contained"
+                  endIcon={<OpenInNewIcon/>}
+                sx={{ textTransform: "capitalize", height: "2.5rem" }}
             >
               View CV
-            </Button>
+                </Button>
+                </Link>
             </Grid>
 
             <Grid item lg='auto' md='auto' sm='auto' xs='auto'> 
             <Button
               color="error"
               size="small"
-              variant="contained"
+                variant="contained"
+                endIcon={<DeleteForeverIcon fontSize="large"/>}
               sx={{ textTransform: "capitalize", height: "2.5rem" }}
             >
               Delete CV
