@@ -4,21 +4,21 @@ import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
-import { Avatar, Grid, Stack } from "@mui/material";
+import { Grid, Stack } from "@mui/material";
 import Link from "next/link";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import { deepPurple } from "@mui/material/colors";
-import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import CreateIcon from '@mui/icons-material/Create';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import AddIcon from '@mui/icons-material/Add';
 
 type props = {
-  handleClickOpenUploadCv: () => void
+  
 }
 
-function ProfileRightSideCard(props: props) {
+function EmployerProfileRightSideCard(props: props) {
   
-  const { handleClickOpenUploadCv } = props
+  const {  } = props
  
   return (
     <Card sx={{ width: {
@@ -52,24 +52,21 @@ function ProfileRightSideCard(props: props) {
               size="small"
               variant="contained"
                 sx={{ textTransform: "capitalize", height: "2.5rem" }}
-                endIcon={<CloudUploadIcon/>}
-                onClick={handleClickOpenUploadCv}
+                endIcon={<AddIcon/>}
             >
-              Upload new CV
+              POST JOb
               </Button>
             </Grid>
-            <Grid item lg='auto' md='auto' sm='auto' xs='auto'> 
-              <Link href="/testPDF.pdf" target="_blank">
+            <Grid item lg='auto' md='auto' sm='auto' xs='auto'>  
             <Button
               color="info"
               size="small"
                   variant="contained"
-                  endIcon={<OpenInNewIcon/>}
+                  endIcon={<CreateIcon/>}
                 sx={{ textTransform: "capitalize", height: "2.5rem" }}
             >
-              View CV
-                </Button>
-                </Link>
+              EDIT JOB
+                </Button> 
             </Grid>
 
             <Grid item lg='auto' md='auto' sm='auto' xs='auto'> 
@@ -80,56 +77,11 @@ function ProfileRightSideCard(props: props) {
                 endIcon={<DeleteForeverIcon fontSize="large"/>}
               sx={{ textTransform: "capitalize", height: "2.5rem" }}
             >
-              Delete CV
+             DELETE JOB
             </Button>
             </Grid>
           </Grid>
 
-          <Grid
-            container
-            item
-            lg={12}
-            md={12}
-            sm={12}
-            xs={12}
-            sx={{
-              backgroundColor: "#c9c9c9",
-              padding: "1rem",
-            }}
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <Grid item> 
-            <Avatar
-              sx={{
-                padding: 1,
-                backgroundColor: "#ebe6e6",
-                color: "black",
-                fontWeight: "bold",
-              }}
-            >
-              N/A
-            </Avatar>
-            </Grid>
-            
-            <Grid item> 
-            <Button
-              size="medium"
-              variant="contained"
-              sx={{
-                height: "3rem",
-                borderRadius: 4,
-                textTransform: "capitalize",
-                backgroundColor: deepPurple[500],
-                "&:hover": {
-                  backgroundColor: deepPurple[700],
-                },
-              }}
-            >
-              QUIZZES
-            </Button>
-            </Grid>
-          </Grid>
         </Grid>
       </CardContent>
 
@@ -164,4 +116,4 @@ function ProfileRightSideCard(props: props) {
   );
 }
 
-export { ProfileRightSideCard };
+export { EmployerProfileRightSideCard };
