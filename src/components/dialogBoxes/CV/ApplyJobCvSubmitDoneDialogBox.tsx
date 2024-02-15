@@ -7,9 +7,11 @@ import {
   CardContent,
   CardActions,
   Grid,
-  Typography,
+    IconButton,
+    Typography
 } from "@mui/material";
-
+import CloseIcon from '@mui/icons-material/Close';
+ 
 type props = {
   openUploadCv: boolean;
   handleClickCloseUploadCv: () => void;
@@ -22,22 +24,24 @@ function UploadCvDialogBox(props: props) {
     <Dialog
       fullScreen={false}
       fullWidth
-      maxWidth="sm"
+          maxWidth="sm"
+        
       open={openUploadCv}
-      onClose={handleClickCloseUploadCv}
-    >
-      <Card
-        sx={{ padding: { lg: "2rem", md: "2rem", sm: "2rem", xs: "1rem" } }}
-      >
-        <CardHeader 
-          sx={{ textAlign: "center" }}
-        />
+      onClose={handleClickCloseUploadCv} 
+    >  
+
+          <Card sx={{padding:{lg:"2rem", md:"2rem", sm:"2rem", xs:"1rem"}}}>
+              <CardHeader
+                  action={
+                      <IconButton onClick={handleClickCloseUploadCv} autoFocus>
+                          <CloseIcon fontSize="large" sx={{color:"black"}} />
+                      </IconButton>
+                  } 
+                  
+                  sx={{textAlign:"center"}}
+        /> 
         <CardContent>
-          <Typography
-            sx={{ textAlign: "center", fontSize: "2rem", fontWeight: "bold" }}
-          >
-            CV submit done!
-          </Typography>
+          <Typography sx={{textAlign:"center", fontSize:"2rem", fontWeight:"bold"}}>CV SUBMIT DONE !</Typography> 
         </CardContent>
 
         <CardActions>
@@ -49,10 +53,9 @@ function UploadCvDialogBox(props: props) {
                   size="large"
                   color="success"
                   autoFocus
-                  sx={{ borderRadius: 3, fontWeight: "bold" }}
-                  onClick={handleClickCloseUploadCv}
+                  sx={{ borderRadius: 3, fontWeight:"bold" }}
                 >
-                 Done
+                  Participate the Quizz
                 </Button>
               </Grid>
             </Grid>
