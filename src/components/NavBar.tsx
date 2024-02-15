@@ -11,11 +11,11 @@ import Container from "@mui/material/Container";
 import Avatar from "@mui/material/Avatar";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
-import WorkIcon from "@mui/icons-material/Work";
-import { Grid, useMediaQuery } from "@mui/material";
+import { Card, Grid, useMediaQuery } from "@mui/material";
 import Link from "next/link";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import Image from "next/image";
 
 const pages = [
   { link: "/find-job", title: "Find Job" },
@@ -66,27 +66,26 @@ function NavBar() {
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           {/* Desktop desktop Logo Start */}
-          <WorkIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
           <Link
             style={{
               textDecoration: "none",
             }}
             href="/"
           >
-            <Typography
-              variant="h6"
-              noWrap
-              sx={{
-                mr: 2,
-                display: { xs: "none", md: "flex" },
-                fontFamily: "monospace",
-                fontWeight: 700,
-                color: "white",
-                textDecoration: "none",
-              }}
+            <Card
+            sx={{
+              backgroundColor: "white",
+              padding: 0.5,
+              display: { xs: "none", md: "flex" },
+            }}
             >
-              C.G.P
-            </Typography>
+            <Image
+              src="/CGPLogo.png"
+              alt="CGPLogo"
+              width={70}
+              height={40}
+              />
+              </Card>
           </Link>
           {/* Desktop desktop Logo end */}
 
@@ -145,24 +144,35 @@ function NavBar() {
           {/* Mobile hamburger menu end */}
 
           {/* Mobile Logo start */}
-          <WorkIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
-          <Typography
-            variant="h5"
-            noWrap
-            component="a"
-            href="/"
-            sx={{
-              mr: 2,
-              display: { xs: "flex", md: "none" },
-              flexGrow: 1,
-              fontFamily: "monospace",
-              fontWeight: 700,
-              color: "inherit",
+          <Grid container sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+            <Grid container item alignItems="center" justifyContent="center">
+              <Grid item>
+                
+              <Link
+            style={{
               textDecoration: "none",
             }}
+            href="/"
           >
-            C.G.P
-          </Typography>
+            <Card
+            sx={{
+              backgroundColor: "white",
+              padding: 0.5,
+                display: { xs: "flex", md: "none" },
+            }}
+            >
+            <Image
+              src="/CGPLogo.png"
+              alt="CGPLogo"
+              width={70}
+              height={40}
+              />
+              </Card>
+          </Link>
+              </Grid>
+            </Grid>
+          </Grid>
+        
           {/* Mobile Logo end */}
 
           {/* Desktop nav Menu Start */}
@@ -260,4 +270,4 @@ function NavBar() {
     </AppBar>
   );
 }
-export default NavBar
+export default NavBar;
