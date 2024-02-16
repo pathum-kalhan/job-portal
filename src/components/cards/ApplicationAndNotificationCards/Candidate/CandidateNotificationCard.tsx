@@ -13,7 +13,7 @@ import Link from "next/link";
 import MessageIcon from '@mui/icons-material/Message';
  
 
-function EmployerNotificationCard() {
+function CandidateNotificationCard() {
   const [applicationStatus, setApplicationStatus] = React.useState("");
   const [applicantInfo, setApplicantInfo] = React.useState({
     name: "John Doe",
@@ -91,7 +91,7 @@ function EmployerNotificationCard() {
             gap={2}
           >
             <Grid item>
-                <Link href="/testPDF.pdf" target="_blank">
+                <Link href="/#" target="_blank">
                   <Button
                     size="large"
                     endIcon={<MessageIcon />}
@@ -109,4 +109,4 @@ function EmployerNotificationCard() {
   );
 }
 
-export { EmployerNotificationCard };
+export { CandidateNotificationCard };
