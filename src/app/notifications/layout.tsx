@@ -11,6 +11,9 @@ export default function Layout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+  let userType = "employer"
+  
   return (
     <Grid container gap={5}>
       <Grid container item alignItems="center" justifyContent="center" xs={12}>
@@ -21,7 +24,7 @@ export default function Layout({
               <IconButton>
               <KeyboardArrowLeftIcon/>
               </IconButton>
-              <Typography fontWeight="bold">INBOX - Employer</Typography>
+              <Typography fontWeight="bold">INBOX - {userType === "employer" && "Employer"} {userType === "candidate" && "Job Seeker"}</Typography>
               </Stack>
           </Card>
         
