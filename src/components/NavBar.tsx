@@ -31,7 +31,15 @@ const pages = [
   { link: "/contact-us", title: "Contact Us" },
   { link: "/privacy-policy", title: "Privacy & Policy" },
   { link: "/about", title: "About Us" },
-  { link: "/post-a-job", title: "Employer/ Post a Job" },
+  {
+    link: "",
+    title: "Employer/ Post a Job",
+    dropdownItems: [
+      { link: "/post-a-job", title: "Post Job" },
+      { link: "/applicants-view", title: "Application View" },
+      { link: "/interview-schedule", title: "Interview Schedule" },
+    ],
+  },
 ];
 
 function NavBar() {
@@ -39,17 +47,23 @@ function NavBar() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
-  const [subMenuAnchorElNav, setSubMenuAnchorElNav] =
-    React.useState<null | HTMLElement>(null);
+  const [subMenuAnchorElNav, setSubMenuAnchorElNav] = React.useState<null | {
+    anchor: HTMLElement;
+    menuName: string;
+  }>(null);
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();
     setAnchorElNav(event.currentTarget);
   };
 
-  const handleOpenSubMenuNavMenu = (event: React.MouseEvent<HTMLElement>) => {
+  const handleOpenSubMenuNavMenu = (
+    event: React.MouseEvent<HTMLElement>,
+    menuName: string
+  ) => {
     event.preventDefault();
-    setSubMenuAnchorElNav(event.currentTarget);
+    setSubMenuAnchorElNav({ anchor: event.currentTarget, menuName });
+    console.log("event.currentTarget", event);
   };
 
   const handleCloseSubMenuNavMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -73,19 +87,14 @@ function NavBar() {
             href="/"
           >
             <Card
-            sx={{
-              backgroundColor: "white",
-              padding: 0.5,
-              display: { xs: "none", md: "flex" },
-            }}
+              sx={{
+                backgroundColor: "white",
+                padding: 0.5,
+                display: { xs: "none", md: "flex" },
+              }}
             >
-            <Image
-              src="/CGPLogo.png"
-              alt="CGPLogo"
-              width={70}
-              height={40}
-              />
-              </Card>
+              <Image src="/CGPLogo.png" alt="CGPLogo" width={70} height={40} />
+            </Card>
           </Link>
           {/* Desktop desktop Logo end */}
 
@@ -125,7 +134,7 @@ function NavBar() {
                   key={page.title}
                   onClick={(e) => {
                     if (page.dropdownItems) {
-                      handleOpenSubMenuNavMenu(e);
+                      handleOpenSubMenuNavMenu(e, page.title);
                     }
                   }}
                 >
@@ -144,35 +153,37 @@ function NavBar() {
           {/* Mobile hamburger menu end */}
 
           {/* Mobile Logo start */}
-          <Grid container sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+          <Grid
+            container
+            sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}
+          >
             <Grid container item alignItems="center" justifyContent="center">
               <Grid item>
-                
-              <Link
-            style={{
-              textDecoration: "none",
-            }}
-            href="/"
-          >
-            <Card
-            sx={{
-              backgroundColor: "white",
-              padding: 0.5,
-                display: { xs: "flex", md: "none" },
-            }}
-            >
-            <Image
-              src="/CGPLogo.png"
-              alt="CGPLogo"
-              width={70}
-              height={40}
-              />
-              </Card>
-          </Link>
+                <Link
+                  style={{
+                    textDecoration: "none",
+                  }}
+                  href="/"
+                >
+                  <Card
+                    sx={{
+                      backgroundColor: "white",
+                      padding: 0.5,
+                      display: { xs: "flex", md: "none" },
+                    }}
+                  >
+                    <Image
+                      src="/CGPLogo.png"
+                      alt="CGPLogo"
+                      width={70}
+                      height={40}
+                    />
+                  </Card>
+                </Link>
               </Grid>
             </Grid>
           </Grid>
-        
+
           {/* Mobile Logo end */}
 
           {/* Desktop nav Menu Start */}
@@ -197,7 +208,7 @@ function NavBar() {
                   }}
                   onClick={(e) => {
                     if (page.dropdownItems) {
-                      handleOpenSubMenuNavMenu(e);
+                      handleOpenSubMenuNavMenu(e, page.title);
                     }
                   }}
                 >
@@ -209,7 +220,7 @@ function NavBar() {
                   >
                     {page.title}{" "}
                     {page.dropdownItems &&
-                      (subMenuAnchorElNav ? (
+                      (page.title === subMenuAnchorElNav?.menuName ? (
                         <ExpandLessIcon />
                       ) : (
                         <ExpandMoreIcon />
@@ -238,12 +249,12 @@ function NavBar() {
 
           {/* Nav dropdown menu start */}
           {pages.map((pageItem) => {
-            if (pageItem.dropdownItems) {
+            if (pageItem.dropdownItems && pageItem.title === subMenuAnchorElNav?.menuName) {
               return (
                 <Menu
                   key={pageItem.title}
                   id={`menu-${pageItem.title}`}
-                  anchorEl={subMenuAnchorElNav}
+                  anchorEl={subMenuAnchorElNav?.anchor}
                   open={Boolean(subMenuAnchorElNav)}
                   onClose={handleCloseSubMenuNavMenu}
                   anchorOrigin={{
@@ -252,14 +263,14 @@ function NavBar() {
                   }}
                 >
                   {pageItem?.dropdownItems.map((item) => (
-                    <MenuItem
-                      key={item.title}
-                      component={Link}
-                      href={item.link}
-                    >
-                      {item.title}
-                    </MenuItem>
-                  ))}
+                      <MenuItem
+                        key={item.title}
+                        component={Link}
+                        href={item.link}
+                      >
+                        {item.title}
+                      </MenuItem>
+                    ))}
                 </Menu>
               );
             }
