@@ -16,7 +16,6 @@ import React from "react";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import DownloadIcon from "@mui/icons-material/Download";
 import Link from "next/link";
- 
 
 function CandidatesApplicationCard() {
   const [applicationStatus, setApplicationStatus] = React.useState("");
@@ -35,7 +34,7 @@ function CandidatesApplicationCard() {
   };
 
   return (
-    <Card sx={{backgroundColor:""}}>
+    <Card sx={{ backgroundColor: "" }}>
       <Grid
         container
         alignItems="center"
@@ -57,13 +56,13 @@ function CandidatesApplicationCard() {
             md="auto"
             alignItems="center"
             justifyContent="center"
-          > 
-              <Image
-                src="/profilepic.jpeg"
-                alt="profileImage"
-                width={100}
-                height={100}
-              /> 
+          >
+            <Image
+              src="/profilepic.jpeg"
+              alt="profileImage"
+              width={100}
+              height={100}
+            />
           </Grid>
 
           <Grid
@@ -75,13 +74,27 @@ function CandidatesApplicationCard() {
           >
             <Grid item md={12}>
               <Stack direction="column">
-                <Typography sx={{ textAlign: "left" }}><b>Applicant Name :</b> {applicantInfo.name}</Typography>
-                <Typography sx={{ textAlign: "left" }}><b>Date of Birth :</b> {applicantInfo.email}</Typography>
-                <Typography sx={{ textAlign: "left" }}><b>Email :</b> {applicantInfo.dateOfBirth}</Typography>
-                <Typography sx={{ textAlign: "left" }}><b>Job Role :</b> {applicantInfo.jobRole}</Typography>
-                <Typography sx={{ textAlign: "left" }}><b>Skills :</b> {applicantInfo.skills}</Typography>
-                <Typography sx={{ textAlign: "left" }}><b>Qualification :</b> {applicantInfo.qualifications}</Typography>
-                <Typography sx={{ textAlign: "left" }}><b>Result of Quiz :</b> {applicantInfo.resultOfTheQuiz}</Typography>
+                <Typography sx={{ textAlign: "left" }}>
+                  <b>Applicant Name :</b> {applicantInfo.name}
+                </Typography>
+                <Typography sx={{ textAlign: "left" }}>
+                  <b>Date of Birth :</b> {applicantInfo.email}
+                </Typography>
+                <Typography sx={{ textAlign: "left" }}>
+                  <b>Email :</b> {applicantInfo.dateOfBirth}
+                </Typography>
+                <Typography sx={{ textAlign: "left" }}>
+                  <b>Job Role :</b> {applicantInfo.jobRole}
+                </Typography>
+                <Typography sx={{ textAlign: "left" }}>
+                  <b>Skills :</b> {applicantInfo.skills}
+                </Typography>
+                <Typography sx={{ textAlign: "left" }}>
+                  <b>Qualification :</b> {applicantInfo.qualifications}
+                </Typography>
+                <Typography sx={{ textAlign: "left" }}>
+                  <b>Result of Quiz :</b> {applicantInfo.resultOfTheQuiz}
+                </Typography>
               </Stack>
             </Grid>
           </Grid>
@@ -102,7 +115,7 @@ function CandidatesApplicationCard() {
             gap={2}
           >
             <Grid item xs={12}>
-              <FormControl fullWidth >
+              <FormControl fullWidth>
                 <InputLabel>Status of the Application</InputLabel>
                 <Select
                   value={applicationStatus}
@@ -123,7 +136,7 @@ function CandidatesApplicationCard() {
                   endIcon={<DownloadIcon />}
                   variant="contained"
                   color="success"
-                  sx={{borderRadius:2}}
+                  sx={{ borderRadius: 2 }}
                 >
                   Download
                 </Button>
@@ -133,7 +146,7 @@ function CandidatesApplicationCard() {
                     size="large"
                     endIcon={<OpenInNewIcon />}
                     variant="contained"
-                    sx={{borderRadius:2}}
+                    sx={{ borderRadius: 2 }}
                   >
                     View CV
                   </Button>
