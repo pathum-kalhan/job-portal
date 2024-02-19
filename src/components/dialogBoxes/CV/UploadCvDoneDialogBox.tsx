@@ -15,7 +15,7 @@ type props = {
   handleClickCloseUploadCv: () => void;
 };
 
-function UploadCvDialogBox(props: props) {
+function UploadCvDoneDialogBox(props: props) {
   const { openUploadCv, handleClickCloseUploadCv } = props;
 
   return (
@@ -63,4 +63,4 @@ function UploadCvDialogBox(props: props) {
   );
 }
 
-export default UploadCvDialogBox;
+export  {UploadCvDoneDialogBox};

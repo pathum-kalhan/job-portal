@@ -7,10 +7,10 @@ import {
   FormControl,
   InputLabel,
   Grid,
+  FormHelperText,
 } from "@mui/material";
 import { Formik, Form, Field, FormikProps, FormikHelpers } from "formik";
 import { TextField } from "formik-mui";
-import { useState } from "react";
 import * as yup from "yup";
 
 type initialValues = {
@@ -116,7 +116,7 @@ const EmployerEditProfileForm = () => {
         enableReinitialize
       >
         {(formik) => {
-          const { isValid, dirty } = formik;
+          const { isValid, dirty, errors} = formik;
           return (
             <Form>
               <Grid container alignItems="center" justifyContent="center">
@@ -150,7 +150,7 @@ const EmployerEditProfileForm = () => {
                   </Grid>
                   
                   <Grid item lg={12} md={12} sm={12} xs={12}>
-                    <FormControl fullWidth>
+                    <FormControl error={!!errors.location} fullWidth>
                       <InputLabel id="demo-simple-select-label">
                         Locations
                       </InputLabel>
@@ -169,6 +169,9 @@ const EmployerEditProfileForm = () => {
                           </MenuItem>
                         ))}
                       </Field>
+                      <FormHelperText error={!!errors.location}>
+                        {errors.location}
+                      </FormHelperText>
                     </FormControl>
                   </Grid>
 
@@ -211,4 +214,4 @@ const EmployerEditProfileForm = () => {
   );
 };
 
-export default EmployerEditProfileForm;
+export {EmployerEditProfileForm}

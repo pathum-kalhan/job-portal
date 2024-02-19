@@ -350,4 +350,4 @@ const CandidateRegForm = () => {
   );
 };
 
-export default CandidateRegForm;
+export {CandidateRegForm};

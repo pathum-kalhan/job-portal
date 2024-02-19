@@ -229,4 +229,4 @@ const CandidateLoginForm = (props:props) => {
   );
 };
 
-export default CandidateLoginForm;
+export {CandidateLoginForm}
