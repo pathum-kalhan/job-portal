@@ -281,4 +281,4 @@ function NavBar() {
     </AppBar>
   );
 }
-export default NavBar;
+export {NavBar};

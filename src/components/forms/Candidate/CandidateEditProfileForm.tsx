@@ -175,4 +175,4 @@ const CandidateEditProfileForm = () => {
   );
 };
 
-export default CandidateEditProfileForm;
+export {CandidateEditProfileForm};

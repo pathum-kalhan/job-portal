@@ -234,7 +234,7 @@ const EmployerRegForm = () => {
                     />
                   </Grid>
                   <Grid item lg={12} md={12} sm={12} xs={12}>
-                    <FormControl fullWidth>
+                    <FormControl error={!!errors.location}  fullWidth>
                       <InputLabel id="demo-simple-select-label">
                         Locations
                       </InputLabel>
@@ -253,6 +253,10 @@ const EmployerRegForm = () => {
                           </MenuItem>
                         ))}
                       </Field>
+
+                      <FormHelperText error={!!errors.location}>
+                        {errors.location}
+                      </FormHelperText>
                     </FormControl>
                   </Grid>
                   {!emailValidate ? (
@@ -418,4 +422,4 @@ const EmployerRegForm = () => {
   );
 };
 
-export default EmployerRegForm
+export {EmployerRegForm}

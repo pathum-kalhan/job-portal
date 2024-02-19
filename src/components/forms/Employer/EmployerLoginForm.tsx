@@ -192,4 +192,4 @@ const EmployerLoginForm = (props:props) => {
   );
 };
 
-export default EmployerLoginForm;
+export {EmployerLoginForm};

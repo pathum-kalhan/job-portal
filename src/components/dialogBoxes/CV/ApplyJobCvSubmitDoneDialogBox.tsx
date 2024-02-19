@@ -66,4 +66,4 @@ function UploadCvDialogBox(props: props) {
   );
 }
 
-export default UploadCvDialogBox;
+export {UploadCvDialogBox};

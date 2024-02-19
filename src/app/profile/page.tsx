@@ -5,9 +5,9 @@ import { CandidateProfileRightSideCard } from "@/components/cards/Profile/Candid
 import { RightSideAttachedMenu } from "@/components/sideAttachMenu/profile/RightSideAttachedMenu";
 import { Grid } from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import UploadCvDialogBox from "@/components/dialogBoxes/CV/UploadCvDialogBox";
-import UploadCvDoneDialogBox from "@/components/dialogBoxes/CV/UploadCvDoneDialogBox";
-import EditProfileDialogBox from "@/components/dialogBoxes/Profile/EditProfileDialogBox";
+import {UploadCvDialogBox} from "@/components/dialogBoxes/CV/UploadCvDialogBox";
+import {UploadCvDoneDialogBox} from "@/components/dialogBoxes/CV/UploadCvDoneDialogBox";
+import {EditProfileDialogBox} from "@/components/dialogBoxes/Profile/EditProfileDialogBox";
 // import { EmployerProfileInfoCard } from "@/components/cards/Profile/Employer/EmployerProfileInfoCard";
 // import { EmployerProfileRightSideCard } from "@/components/cards/Profile/Employer/EmployerProfileRightSideCard";
 
