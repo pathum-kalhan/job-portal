@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 
 export const metadata: Metadata = {
-  title: "Post a job",
+  title: "Settings",
 };
 
 export default function Layout({
