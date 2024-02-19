@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 
 export const metadata: Metadata = {
-  title: "Interview schedule",
+  title: "Settings",
 };
 
 export default function Layout({
@@ -21,7 +21,7 @@ export default function Layout({
               <IconButton>
               <KeyboardArrowLeftIcon/>
               </IconButton>
-              <Typography fontWeight="bold">Interview Schedule</Typography>
+              <Typography fontWeight="bold">Settings</Typography>
               </Stack>
           </Card>
         

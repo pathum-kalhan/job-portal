@@ -2,7 +2,7 @@ import { Card, Grid, Typography } from "@mui/material";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Post a job",
+  title: "Saved jobs",
 };
 
 export default function Layout({

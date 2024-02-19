@@ -1,9 +1,8 @@
-import { Card, Grid, IconButton, Stack, Typography } from "@mui/material";
+import { Card, Grid, Typography } from "@mui/material";
 import type { Metadata } from "next";
-import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 
 export const metadata: Metadata = {
-  title: "Interview schedule",
+  title: "Help",
 };
 
 export default function Layout({
@@ -16,13 +15,8 @@ export default function Layout({
       <Grid container item alignItems="center" justifyContent="center" xs={12}>
         <Grid item xs={11} >
 
-          <Card sx={{ backgroundColor: "#79D7FF", height: "2rem", paddingLeft: 3, paddingTop: 0.5, paddingBottom: 1 }}>
-            <Stack direction="row" alignItems="center">
-              <IconButton>
-              <KeyboardArrowLeftIcon/>
-              </IconButton>
-              <Typography fontWeight="bold">Interview Schedule</Typography>
-              </Stack>
+          <Card sx={{ backgroundColor: "#79D7FF", height: "2rem", paddingLeft:3, paddingTop:1 }}>
+            <Typography fontWeight="bold">Help Center</Typography>
           </Card>
         
         </Grid>
