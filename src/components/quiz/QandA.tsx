@@ -8,7 +8,6 @@ import {
   FormControlLabel,
   Grid,
   Radio,
-  RadioGroup,
   Stack,
   Typography,
 } from "@mui/material";
@@ -19,6 +18,7 @@ import { Code } from "react-code-blocks";
 import { CountDownTimer } from "./CountDownTimer";
 import { ScoreDialogBox } from "./ScoreDialogBox";
 import { StartForm } from "./StartForm";
+import { RadioGroup } from "formik-mui";
 
 type CodeBlock = {
   code: string;
@@ -50,8 +50,7 @@ type Props = {
 const QandA = ({ questions }: Props) => {
   const [status, setStatus] = useState("start");
 
-
-  const handleStatus= (statusVal:string) => {
+  const handleStatus = (statusVal: string) => {
     setStatus(statusVal);
   };
 
@@ -64,18 +63,8 @@ const QandA = ({ questions }: Props) => {
     setStatus("finished");
   };
 
-  const handleSubmit = (values: {answersFormControlLabel: string[]}) => {
+  const handleSubmit = (values: {}) => {
     console.log(values);
-
-    const parseAnswers = values.answersFormControlLabel.map(
-      (item, index) =>
-        item && {
-          question: questions[index].question,
-          answer: JSON.parse(item).text,
-        }
-    );
-    setStatus("finished");
-    console.log("parseAnswers", parseAnswers);
   };
 
   return (
@@ -108,7 +97,7 @@ const QandA = ({ questions }: Props) => {
 
           <Grid item md={7} sm={10} xs={12}>
             <Formik
-              initialValues={{ answersFormControlLabel: [] }}
+              initialValues={{ }}
               onSubmit={handleSubmit}
             >
               {(formik) => {
@@ -159,7 +148,25 @@ const QandA = ({ questions }: Props) => {
                                       </Grid>
                                     )}
                                     <Grid item xs={12}>
-                                      <FormControl component="fieldset">
+
+                                      <Field
+                                        component={RadioGroup}
+                                        name={item.question}
+                                      >
+                                        {item.answers.map(
+                                          (answer, answerIndex) => (
+                                            <FormControlLabel
+                                            key={answer.text}
+                                              value={answer.text}
+                                              control={
+                                                <Radio />
+                                              }
+                                              label={answer.text}
+                                            />))}
+                                      </Field>
+
+
+                                      {/* <FormControl component="fieldset">
                                         <RadioGroup>
                                           {item.answers.map(
                                             (answer, answerIndex) => (
@@ -209,7 +216,7 @@ const QandA = ({ questions }: Props) => {
                                             )
                                           )}
                                         </RadioGroup>
-                                      </FormControl>
+                                      </FormControl> */}
                                     </Grid>
                                   </Grid>
                                 </Grid>
