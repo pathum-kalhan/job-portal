@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
 import {NavBar} from "@/components/NavBar";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Career Guid Pro",
@@ -24,7 +21,8 @@ export default function RootLayout({
           style={{
             paddingTop: "2rem",
             paddingBottom: "5rem",
-            height:"100vh",
+            minHeight:"100vh",
+            maxHeight:"100%",
             backgroundColor: "#f0f0f0",
           }}
         >
