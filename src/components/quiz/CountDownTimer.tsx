@@ -32,6 +32,7 @@ const CountDownTimer: React.FC<Props> = ({
     }, 1000);
 
     return () => clearInterval(interval);
+// eslint-disable-next-line
   }, []);
 
   useEffect(() => {
