@@ -8,22 +8,21 @@ import {
   Button,
   Grid,
 } from "@mui/material";
-// import EmployerEditProfileForm from "@/components/forms/Employer/EmployerEditProfileForm";
 
 type props = {
-  openEditProfile: boolean;
-  handleCloseEditProfile: () => void;
+  open: boolean;
+  handleClose: () => void;
 };
 
 function ScoreDialogBox(props: props) {
-  const { openEditProfile, handleCloseEditProfile } = props;
+  const { open, handleClose } = props;
   return (
     <Dialog
       fullScreen={false}
       fullWidth
       maxWidth="sm"
-      open={openEditProfile}
-      onClose={handleCloseEditProfile}
+      open={open}
+      onClose={handleClose}
     >
       <Card
         sx={{ padding: { lg: "2rem", md: "2rem", sm: "2rem", xs: "1rem" } }}
@@ -33,7 +32,6 @@ function ScoreDialogBox(props: props) {
           sx={{ textAlign: "center" }}
         />
         <CardContent  sx={{maxHeight:"20rem", overflowY:"auto"}}>
-         {/* <EmployerEditProfileForm/> */}
         </CardContent>
         <CardActions>
           <Grid container>
@@ -42,7 +40,7 @@ function ScoreDialogBox(props: props) {
           <Button
             color="success"
             variant="contained"
-          onClick={handleCloseEditProfile}
+          onClick={handleClose}
           >
             Finish
           </Button>

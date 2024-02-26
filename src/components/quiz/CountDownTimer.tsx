@@ -3,8 +3,8 @@ import { Box, CircularProgress, Typography } from "@mui/material";
 
 type Props = {
   hours?: number;
-  minutes?: number;
-  onTimeout?: () => void;
+  minutes: number;
+  onTimeout: () => void;
 };
 
 const CountDownTimer: React.FC<Props> = ({
@@ -22,9 +22,7 @@ const CountDownTimer: React.FC<Props> = ({
       setTotalSeconds((prevTotalSeconds) => {
         if (prevTotalSeconds <= 0) {
           clearInterval(interval);
-          if (onTimeout) {
             onTimeout();
-          }
           return 0;
         }
         return prevTotalSeconds - 1;

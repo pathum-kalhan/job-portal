@@ -19,7 +19,6 @@ const StartForm = ({ handleStatus }: Props) => {
     name: "",
   });
   const handleSubmit = (value: {name:string}) => {
-    console.log("value", value);
     if(handleStatus){
       handleStatus('questions')
     }
