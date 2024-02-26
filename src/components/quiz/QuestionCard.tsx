@@ -6,6 +6,8 @@ import {
   FormControlLabel,
   Grid,
   Radio,
+  Stack,
+  Typography,
 } from "@mui/material";
 import Image from "next/image";
 import React from "react";
@@ -79,7 +81,35 @@ const QuestionCard = ({ questions }: Props) => {
                           key={answer.text}
                           value={answer.text}
                           control={<Radio />}
-                          label={answer.text}
+                           label={
+                            answer.codeBlock ? (
+                              <Code
+                                text={
+                                  answer.codeBlock.code
+                                }
+                                language={
+                                  answer.codeBlock
+                                    .language
+                                }
+                                showLineNumbers
+                              />
+                            ) : answer.image ? (
+                              <Stack>
+                                <Typography>
+                                  {" "}
+                                  {answer.text}
+                                </Typography>
+                                <Image
+                                  src={answer.image ?? ""}
+                                  alt={`${item?.question} image`}
+                                  height={100}
+                                  width={100}
+                                />
+                              </Stack>
+                            ) : (
+                              answer.text
+                            )
+                          }
                         />
                       ))}
                     </Field>

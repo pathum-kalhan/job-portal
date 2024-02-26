@@ -9,6 +9,8 @@ import { Avatar, Stack } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import { useDropzone } from "react-dropzone";
 import Link from "next/link";
+import { ChangePassword } from "../../../forms/ChangePassword";
+
 
 type IFormData = {
   file:
@@ -34,6 +36,17 @@ type props = {
 }
 
 function CandidateProfileInfoCard(props: props) {
+
+  const [openChangePassword, setOpenChangePassword] = useState(false);
+
+  const handleCloseChangePassword = () => {
+    setOpenChangePassword(false);
+  };
+
+  const handleOpenChangePassword = () => {
+    setOpenChangePassword(true);
+  };
+
   
 
   const { handleClickOpenEditProfile } = props
@@ -77,6 +90,7 @@ function CandidateProfileInfoCard(props: props) {
   });
 
   return (
+    <>
     <Card sx={{
       width: {
         lg:300,
@@ -164,18 +178,23 @@ function CandidateProfileInfoCard(props: props) {
         justifyContent="center"
       >
         <CardActions>
-          <Link href="/reset-password">
             <Button
+              onClick={handleOpenChangePassword}
               size="small"
               sx={{ textTransform: "capitalize", textAlign: "center" }}
               fullWidth
             >
               Change Password or Reset Password
             </Button>
-          </Link>
         </CardActions>
       </Stack>
     </Card>
+
+    <ChangePassword
+        open={openChangePassword}
+        onClose={handleCloseChangePassword}
+      />
+      </>
   );
 }
 

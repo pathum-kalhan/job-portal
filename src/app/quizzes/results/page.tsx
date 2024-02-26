@@ -6,7 +6,7 @@ function Page() {
   const router = useRouter();
 
   const handleClose = () => {
-    router.push("/quizzes");
+    router.push("/quizzes/start");
   };
 
   return <ScoreDialogBox open={true} handleClose={handleClose} />;

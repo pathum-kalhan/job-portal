@@ -146,6 +146,13 @@ function NavBar() {
                   >
                     {page.title}
                   </Typography>
+                  {page.dropdownItems &&
+                      (page.title === subMenuAnchorElNav?.menuName ? (
+                        <ExpandLessIcon />
+                      ) : (
+                        <ExpandMoreIcon />
+                    ))}
+                  
                 </MenuItem>
               ))}
             </Menu>
