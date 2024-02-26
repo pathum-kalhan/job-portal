@@ -1,12 +1,9 @@
 "use client";
-import {
-  Button,
-  Grid,
-} from "@mui/material";
+import { Button, Grid } from "@mui/material";
 import React from "react";
 import { Formik, Form } from "formik";
 import { QuestionCard } from "./QuestionCard";
-
+import { useRouter } from "next/navigation";
 type CodeBlock = {
   code: string;
   language: string;
@@ -25,17 +22,19 @@ type Question = {
   image?: string; // Optional Image type
   codeBlock?: CodeBlock; // Optional CodeBlock type
 };
- 
 
 type Props = {
   questions: Question[];
 };
 
-const Questions = ({ questions }: Props) => { 
+const Questions = ({ questions }: Props) => {
 
+  const router = useRouter();
   const handleSubmit = (values: {}) => {
     console.log(values);
+    router.push("/quizzes/results");
   };
+
 
   return (
     <Formik initialValues={{}} onSubmit={handleSubmit}>
