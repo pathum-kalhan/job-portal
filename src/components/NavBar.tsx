@@ -63,7 +63,6 @@ function NavBar() {
   ) => {
     event.preventDefault();
     setSubMenuAnchorElNav({ anchor: event.currentTarget, menuName });
-    console.log("event.currentTarget", event);
   };
 
   const handleCloseSubMenuNavMenu = (event: React.MouseEvent<HTMLElement>) => {
