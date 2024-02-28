@@ -1,17 +1,19 @@
 "use client";
 
+import { LoadingButton } from "@mui/lab";
 import {
-  Button,
   Checkbox,
   FormControlLabel,
   Grid,
   Card,
   CardHeader,
   FormHelperText,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import { Formik, Form, Field, FormikHelpers } from "formik";
 import { TextField } from "formik-mui";
-import { useState } from "react";
+import { MouseEvent, useCallback, useState } from "react";
 import * as yup from "yup";
 
 type initialValues = {
@@ -26,8 +28,21 @@ type initialValues = {
   acceptTerms: boolean;
 };
 
+type Alert = {
+  show: boolean;
+  message: string;
+  severity: "error" | "info" | "success" | "warning";
+};
+
 const CandidateRegForm = () => {
   const [emailValidate, setEmailValidate] = useState(false);
+  const [backendCall, setBackendCall] = useState(false);
+  const [alert, setAlert] = useState<Alert>({
+    show: false,
+    message: "",
+    severity: "success",
+  });
+
   const [isCodeSubmitted, setIsCodeSubmitted] = useState(false);
   const phoneNumberRegex = /^07\d{8}$/;
 
@@ -59,7 +74,10 @@ const CandidateRegForm = () => {
       .string()
       .oneOf([yup.ref("password")], "Passwords must match")
       .required("Please re-enter your password"),
-    acceptTerms: yup.boolean().oneOf([true], "Please accept the terms").required(),
+    acceptTerms: yup
+      .boolean()
+      .oneOf([true], "Please accept the terms")
+      .required(),
   });
 
   const accountValidationSchemaWithVerifyField = yup.object({
@@ -85,7 +103,10 @@ const CandidateRegForm = () => {
       .string()
       .oneOf([yup.ref("password")], "Passwords must match")
       .required("Please re-enter your password"),
-    acceptTerms: yup.boolean().oneOf([true], "Please accept the terms").required(),
+    acceptTerms: yup
+      .boolean()
+      .oneOf([true], "Please accept the terms")
+      .required(),
   });
 
   const initialValues: initialValues = {
@@ -100,16 +121,142 @@ const CandidateRegForm = () => {
     acceptTerms: false,
   };
 
-  const handleSubmit = (
-    values: initialValues,
-    formikHelpers: FormikHelpers<initialValues>
-  ) => {
-    formikHelpers.resetForm();
-    setEmailValidate(false);
-    setIsCodeSubmitted(false);
+  const handleSubmit = useCallback(
+    async (
+      values: initialValues,
+      formikHelpers: FormikHelpers<initialValues>
+    ) => {
+      setBackendCall(true);
+      try {
+        const payload = {
+          name: values.name,
+          linkedInProfileUrl: values.linkedInProfileUrl,
+          dateOfBirth: values.dateOfBirth,
+          email: values.email,
+          contactNo: values.contactNo,
+          password: values.password,
+        };
 
-    console.log(values);
-  };
+        const response = await fetch("/api/candidate/register", {
+          method: "POST",
+          body: JSON.stringify(payload),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+ 
+        if (response.status !== 200) {
+          setBackendCall(false);
+          setAlert({
+            show: true,
+            message: "Something went wrong!",
+            severity: "error",
+          });
+        } else {
+          formikHelpers.resetForm();
+          setEmailValidate(false);
+          setIsCodeSubmitted(false);
+          setBackendCall(false);
+          setAlert({
+            show: true,
+            message: "Candidate Created successfully!",
+            severity: "success",
+          });
+        }
+      } catch (e: any) {
+        setBackendCall(false);
+        setAlert({
+          show: true,
+          message: "Server Error",
+          severity: "error",
+        });
+      }
+    },
+    []
+  );
+
+  const verifyAccount = useCallback(async (e: MouseEvent, email: string) => {
+    e.preventDefault();
+
+    try {
+      setBackendCall(true);
+      const response = await fetch("/api/common/sendOtpEmail", {
+        method: "POST",
+        body: JSON.stringify({ email, userType: "candidate" }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+        
+      if (response.status !== 200) {
+        setBackendCall(false);
+        setAlert({
+          show: true,
+          message:" Something went wrong!",
+          severity: "error",
+        });
+      } else {
+        setEmailValidate(true);
+        setBackendCall(false);
+        setAlert({
+          show: true,
+          message: `OTP sent to your email!`,
+          severity: "success",
+        });
+      }
+    } catch (e:any) {
+      setBackendCall(false);
+      setAlert({
+        show: true,
+        message:  e?.message?? "Server Error",
+        severity: "error",
+      });
+    }
+  }, []);
+
+  const verifyOtp = useCallback(
+    async (e: MouseEvent, email: string, otpCode?: string) => {
+      e.preventDefault();
+
+      try {
+        setBackendCall(true);
+
+        const response = await fetch("/api/common/verifyOtp", {
+          method: "POST",
+          body: JSON.stringify({ email, otpCode, userType: "candidate" }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        
+
+        if (response.status !== 200) {
+          setBackendCall(false);
+           setAlert({
+          show: true,
+          message: " Something went wrong!",
+          severity: "error",
+        });
+        } else {
+          setIsCodeSubmitted(true);
+          setBackendCall(false);
+          setAlert({
+          show: true,
+          message: `Email is verified!`,
+          severity: "success",
+        });
+        }
+      } catch (e:any) {
+        setBackendCall(false);
+         setAlert({
+        show: true,
+        message: "Server Error",
+        severity: "error",
+      });
+      }
+    },
+    []
+  );
 
   return (
     <Card
@@ -127,6 +274,29 @@ const CandidateRegForm = () => {
       }}
       elevation={3}
     >
+      <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        autoHideDuration={3000}
+        open={alert.show}
+        onClose={() => setAlert({
+          show: false,
+          message: "",
+          severity: "success",
+        })}
+      >
+        <Alert
+          onClose={() => setAlert({
+            show: false,
+            message: "",
+            severity: "success",
+          })}
+          severity={alert.severity}
+          sx={{ width: "100%" }}
+        >
+          {alert.message}
+        </Alert>
+      </Snackbar>
+
       <CardHeader title="Create account to post a job" align="center" />
       <Formik
         initialValues={initialValues}
@@ -139,16 +309,9 @@ const CandidateRegForm = () => {
         enableReinitialize
       >
         {(formik) => {
-          const {
-            isValid,
-            dirty,
-            values,
-            errors,
-            setFieldValue,
-          } = formik;
+          const { isValid, dirty, values, errors, setFieldValue } = formik;
           return (
             <Form>
-              
               <Grid container alignItems="center" justifyContent="center">
                 <Grid
                   item
@@ -194,19 +357,22 @@ const CandidateRegForm = () => {
                         sm={"auto"}
                         xs={"auto"}
                       >
-                        <Button
+                        <LoadingButton
+                          loading={backendCall}
                           disabled={values.email === ""}
                           color="success"
                           variant="contained"
                           fullWidth
-                          onClick={() => setEmailValidate(true)}
+                          onClick={(e) => verifyAccount(e, values.email)}
                         >
                           Verify
-                        </Button>
+                        </LoadingButton>
                       </Grid>
-                       {!emailValidate && <FormHelperText error={!emailValidate}>
-                      Click Verify to get the Email verification Code
-                    </FormHelperText>}
+                      {!emailValidate && (
+                        <FormHelperText error={!emailValidate}>
+                          Click Verify to get the Email verification Code
+                        </FormHelperText>
+                      )}
                     </Grid>
                   ) : (
                     <Grid
@@ -222,8 +388,8 @@ const CandidateRegForm = () => {
                     >
                       <Grid item lg={8} md={8} sm={8} xs={7}>
                         <Field
-                            fullWidth
-                            disabled={isCodeSubmitted}
+                          fullWidth
+                          disabled={isCodeSubmitted}
                           id="verificationCode"
                           name="verificationCode"
                           label="Verification Code"
@@ -237,21 +403,27 @@ const CandidateRegForm = () => {
                         sm={"auto"}
                         xs={"auto"}
                       >
-                        <Button
+                        <LoadingButton
+                          loading={backendCall}
                           disabled={
                             isCodeSubmitted || values.verificationCode === ""
                           }
                           color="success"
                           variant="contained"
                           fullWidth
-                          onClick={() => setIsCodeSubmitted(true)}
+                          onClick={(e) =>
+                            verifyOtp(e, values.email, values.verificationCode)
+                          }
                         >
                           Submit
-                        </Button>
+                        </LoadingButton>
                       </Grid>
-                       {!isCodeSubmitted && <FormHelperText error={!isCodeSubmitted}>
-                      Enter the verification code and Click Submit to Verify the email
-                    </FormHelperText>}
+                      {!isCodeSubmitted && (
+                        <FormHelperText error={!isCodeSubmitted}>
+                          Enter the verification code and Click Submit to Verify
+                          the email
+                        </FormHelperText>
+                      )}
                     </Grid>
                   )}
                   <Grid item lg={12} md={12} sm={12} xs={12}>
@@ -318,17 +490,18 @@ const CandidateRegForm = () => {
                           }}
                         />
                       }
-                      
                       label="Accept terms and conditions"
                     />
-                    {!!errors.acceptTerms &&
+                    {!!errors.acceptTerms && (
                       <FormHelperText error={!!errors.acceptTerms}>
-                      {errors.acceptTerms}
-                    </FormHelperText>}
+                        {errors.acceptTerms}
+                      </FormHelperText>
+                    )}
                   </Grid>
 
                   <Grid item lg={"auto"}>
-                    <Button
+                    <LoadingButton
+                      loading={backendCall}
                       disabled={
                         !isCodeSubmitted || !emailValidate || !isValid || !dirty
                       }
@@ -338,7 +511,7 @@ const CandidateRegForm = () => {
                       type="submit"
                     >
                       Create Account
-                    </Button>
+                    </LoadingButton>
                   </Grid>
                 </Grid>
               </Grid>
@@ -350,4 +523,4 @@ const CandidateRegForm = () => {
   );
 };
 
-export {CandidateRegForm};
+export { CandidateRegForm };
