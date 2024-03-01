@@ -14,7 +14,7 @@ function RightSideAttachedMenu() {
       xs:"row",
       }} gap={0} >
       <Link
-        href="/notifications/job-seeker"
+        href="/dashboard/notifications/job-seeker"
         style={{
           textDecoration: "none",
           color: "black",
@@ -26,7 +26,7 @@ function RightSideAttachedMenu() {
       </Link>
 
       <Link
-        href="/settings"
+        href="/dashboard/settings"
         style={{
           textDecoration: "none",
           color: "black",

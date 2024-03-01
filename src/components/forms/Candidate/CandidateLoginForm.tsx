@@ -9,6 +9,8 @@ import {
   CardHeader,
   Typography,
   Stack,
+  Alert,
+  Snackbar,
 } from "@mui/material";
 import { Formik, Form, Field, FormikHelpers } from "formik";
 import { TextField } from "formik-mui";
@@ -16,6 +18,10 @@ import { TextField } from "formik-mui";
 import * as yup from "yup";
 import GoogleIcon from "@mui/icons-material/Google";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
+import { signIn } from "next-auth/react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { LoadingButton } from "@mui/lab";
 
 type initialValues = {
   email: string;
@@ -24,13 +30,23 @@ type initialValues = {
 };
 
 type props = {
-  handleLoginMethod: (val: string) => void
+  handleLoginMethod: (val: string) => void;
+};
+type Alert = {
+  show: boolean;
+  message: string;
+  severity: "error" | "info" | "success" | "warning";
 };
 
-
-const CandidateLoginForm = (props:props) => {
-
+const CandidateLoginForm = (props: props) => {
   const { handleLoginMethod } = props;
+  const router = useRouter();
+  const [backendCall, setBackendCall] = useState(false);
+  const [alert, setAlert] = useState<Alert>({
+    show: false,
+    message: "",
+    severity: "success",
+  });
 
   const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
 
@@ -55,13 +71,50 @@ const CandidateLoginForm = (props:props) => {
     rememberMe: false,
   };
 
-  const handleSubmit = (
+  const handleSubmit = async (
     values: initialValues,
     formikHelpers: FormikHelpers<initialValues>
   ) => {
     formikHelpers.resetForm();
 
-    console.log(values);
+
+    try {
+      setBackendCall(true);
+
+      const response = await signIn("credentials", {
+        redirect: false,
+        email: values.email,
+        password: values.password,
+        role: "candidate",
+      });
+
+      if (response?.status !== 200) {
+        setBackendCall(false);
+        setAlert({
+          show: true,
+          message: "Something went wrong!",
+          severity: "error",
+        });
+      } else {
+        
+        setBackendCall(false);
+        setAlert({
+          show: true,
+          message: "Candidate Logedin successfully!",
+          severity: "success",
+        });
+        formikHelpers.resetForm();
+        router.push("/dashboard/profile");
+      }
+ 
+    } catch (error) {
+      setBackendCall(false);
+      setAlert({
+        show: true,
+        message: "Server Error",
+        severity: "error",
+      });
+    }
   };
 
   return (
@@ -80,7 +133,38 @@ const CandidateLoginForm = (props:props) => {
       }}
       elevation={3}
     >
-      <CardHeader title="Login to career pro guide" align="center" sx={{textTransform:"uppercase"}} />
+      <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        autoHideDuration={3000}
+        open={alert.show}
+        onClose={() =>
+          setAlert({
+            show: false,
+            message: "",
+            severity: "success",
+          })
+        }
+      >
+        <Alert
+          onClose={() =>
+            setAlert({
+              show: false,
+              message: "",
+              severity: "success",
+            })
+          }
+          severity={alert.severity}
+          sx={{ width: "100%" }}
+        >
+          {alert.message}
+        </Alert>
+      </Snackbar>
+
+      <CardHeader
+        title="Login to career pro guide"
+        align="center"
+        sx={{ textTransform: "uppercase" }}
+      />
       <Formik
         initialValues={initialValues}
         onSubmit={handleSubmit}
@@ -88,15 +172,15 @@ const CandidateLoginForm = (props:props) => {
         enableReinitialize
       >
         {(formik) => {
-          const {
-            isValid,
-            dirty,
-            values,
-            setFieldValue,
-          } = formik;
+          const { isValid, dirty, values, setFieldValue } = formik;
           return (
             <Form>
-              <Grid container alignItems="center" justifyContent="center" mt={3}>
+              <Grid
+                container
+                alignItems="center"
+                justifyContent="center"
+                mt={3}
+              >
                 <Grid
                   item
                   container
@@ -144,6 +228,7 @@ const CandidateLoginForm = (props:props) => {
 
                   <Grid item lg={12} md={12} sm={12} xs={12}>
                     <Field
+                    disabled={backendCall}
                       fullWidth
                       id="email"
                       name="email"
@@ -153,6 +238,7 @@ const CandidateLoginForm = (props:props) => {
                   </Grid>
                   <Grid item lg={12} md={12} sm={12} xs={12}>
                     <Field
+                    disabled={backendCall}
                       fullWidth
                       id="password"
                       name="password"
@@ -174,6 +260,7 @@ const CandidateLoginForm = (props:props) => {
                   >
                     <Grid item lg={"auto"} md={"auto"} sm={"auto"} xs={"auto"}>
                       <FormControlLabel
+                        disabled={backendCall}
                         control={
                           <Checkbox
                             id="rememberMe"
@@ -189,34 +276,41 @@ const CandidateLoginForm = (props:props) => {
                       />
                     </Grid>
                     <Grid item lg={"auto"} md={"auto"} sm={"auto"} xs={"auto"}>
-                      <Button sx={{textTransform:"capitalize"}} variant="text">Forgot Password?</Button>
+                      <Button
+                        disabled={backendCall}
+                        sx={{ textTransform: "capitalize" }}
+                        variant="text"
+                      >
+                        Forgot Password?
+                      </Button>
                     </Grid>
                   </Grid>
 
                   <Grid item lg={"auto"}>
                     <Stack direction="column" gap={2}>
-                    <Button
-                      disabled={!isValid || !dirty}
-                      color="primary"
-                      variant="contained"
-                      size="large"
-                      type="submit"
-                    >
-                      Login
-                    </Button>
+                      <LoadingButton
+                        loading={backendCall}
+                        disabled={!isValid || !dirty}
+                        color="primary"
+                        variant="contained"
+                        size="large"
+                        type="submit"
+                      >
+                        Login
+                      </LoadingButton>
 
-                     <Button
+                      <Button
+                        disabled={backendCall}
                         color="primary"
                         variant="text"
                         type="submit"
                         sx={{
                           textTransform: "none",
                         }}
-                        
-                        onClick={()=>handleLoginMethod('employer')}
-                    >
-                      Login as a Employer
-                    </Button>
+                        onClick={() => handleLoginMethod("employer")}
+                      >
+                        Login as a Employer
+                      </Button>
                     </Stack>
                   </Grid>
                 </Grid>
@@ -229,4 +323,4 @@ const CandidateLoginForm = (props:props) => {
   );
 };
 
-export {CandidateLoginForm}
+export { CandidateLoginForm };

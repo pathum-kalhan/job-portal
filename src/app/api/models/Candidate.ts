@@ -38,11 +38,7 @@ const CandidateSchema = new Schema({
     },
   ],
   experience: String,
-  skills: [
-    {
-      skill: String,
-    },
-  ],
+  skills: Array,
   education: String,
 },
 {

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Button,
   Dialog,
@@ -7,8 +7,11 @@ import {
   DialogTitle,
   TextField,
 } from "@mui/material";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Formik, Form, Field, ErrorMessage, FormikHelpers } from "formik";
 import * as Yup from "yup";
+import { LoadingButton } from "@mui/lab";
+import router from "next/router";
+import { signOut } from "next-auth/react";
 
 // Define prop types for the ChangePassword component
 type ChangePasswordProps = {
@@ -16,10 +19,30 @@ type ChangePasswordProps = {
   onClose: () => void;
 };
 
+type initialValues = {
+  currentPassword: string,
+  newPassword: string,
+  confirmPassword: string
+}
+
+type Alert = {
+  show: boolean;
+  message: string;
+  severity: "error" | "info" | "success" | "warning";
+};
+
+
 const ChangePassword: React.FC<ChangePasswordProps> = ({ open, onClose }) => {
   const handleClose = () => {
     onClose();
   };
+
+  const [backendCall, setBackendCall] = useState(false);
+  const [alert, setAlert] = useState<Alert>({
+    show: false,
+    message: "",
+    severity: "success",
+  });
 
   const initialValues = {
     currentPassword: "",
@@ -39,8 +62,51 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ open, onClose }) => {
       }),
   });
 
-  const handleSubmit = (values: any) => {
-    console.log(values);
+  const handleSubmit = async (
+    values: initialValues,
+    formikHelpers: FormikHelpers<initialValues>) => {
+    setBackendCall(true);
+    try {
+      setBackendCall(true); 
+
+      const response = await fetch("/api/change-password", {
+        method: "POST",
+        body: JSON.stringify(values),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response?.status !== 200) {
+        setBackendCall(false);
+        setAlert({
+          show: true,
+          message: "Something went wrong!",
+          severity: "error",
+        });
+      } else {
+        
+        setBackendCall(false);
+        setAlert({
+          show: true,
+          message: "Password changed successfully!",
+          severity: "success",
+        });
+        formikHelpers.resetForm(); 
+        handleClose()
+        signOut({ redirect: false, callbackUrl: "/" });
+        router.replace("/login");
+       
+      }
+ 
+    } catch (error) {
+      setBackendCall(false);
+      setAlert({
+        show: true,
+        message: "Server Error",
+        severity: "error",
+      });
+    }
   };
 
   return (
@@ -85,20 +151,18 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ open, onClose }) => {
               <ErrorMessage name="confirmPassword" component="div" />
             </DialogContent>
             <DialogActions>
-              <Button
-                onClick={handleClose}
-                color="secondary"
-                disabled={!dirty || !isValid}
-              >
+              <Button onClick={handleClose} color="primary">
                 Cancel
               </Button>
-              <Button
+              <LoadingButton
+                loading={backendCall}
+                variant="contained"
                 type="submit"
-                color="primary"
+                color="success"
                 disabled={!isValid || !dirty}
               >
                 Change Password
-              </Button>
+              </LoadingButton>
             </DialogActions>
           </Form>
         )}

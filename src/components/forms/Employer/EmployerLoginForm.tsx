@@ -8,12 +8,17 @@ import {
   Card,
   CardHeader,
   Stack,
+  Alert,
+  Snackbar,
 } from "@mui/material";
 import { Formik, Form, Field, FormikHelpers } from "formik";
 import { TextField } from "formik-mui";
+import { signIn } from "next-auth/react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { LoadingButton } from "@mui/lab";
 
 import * as yup from "yup";
-
 
 type initialValues = {
   email: string;
@@ -22,11 +27,23 @@ type initialValues = {
 };
 
 type props = {
-  handleLoginMethod: (val: string) => void
+  handleLoginMethod: (val: string) => void;
 };
 
+type Alert = {
+  show: boolean;
+  message: string;
+  severity: "error" | "info" | "success" | "warning";
+};
 
-const EmployerLoginForm = (props:props) => {
+const EmployerLoginForm = (props: props) => {
+  const router = useRouter();
+  const [backendCall, setBackendCall] = useState(false);
+  const [alert, setAlert] = useState<Alert>({
+    show: false,
+    message: "",
+    severity: "success",
+  });
 
   const { handleLoginMethod } = props;
   const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
@@ -52,13 +69,47 @@ const EmployerLoginForm = (props:props) => {
     rememberMe: false,
   };
 
-  const handleSubmit = (
+  const handleSubmit = async (
     values: initialValues,
     formikHelpers: FormikHelpers<initialValues>
   ) => {
     formikHelpers.resetForm();
 
-    console.log(values);
+    try {
+      setBackendCall(true);
+
+      const response = await signIn("credentials", {
+        redirect: false,
+        email: values.email,
+        password: values.password,
+        role: "employer",
+      });
+
+      if (response?.status !== 200) {
+        setBackendCall(false);
+        setAlert({
+          show: true,
+          message: "Something went wrong!",
+          severity: "error",
+        });
+      } else {
+        setBackendCall(false);
+        setAlert({
+          show: true,
+          message: "Employer Logedin successfully!",
+          severity: "success",
+        });
+        formikHelpers.resetForm();
+        router.push("/dashboard/profile");
+      }
+    } catch (error) {
+      setBackendCall(false);
+      setAlert({
+        show: true,
+        message: "Server Error",
+        severity: "error",
+      });
+    }
   };
 
   return (
@@ -77,7 +128,38 @@ const EmployerLoginForm = (props:props) => {
       }}
       elevation={3}
     >
-      <CardHeader title="Login as a Employer" align="center" sx={{textTransform:"uppercase"}}/>
+      <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        autoHideDuration={3000}
+        open={alert.show}
+        onClose={() =>
+          setAlert({
+            show: false,
+            message: "",
+            severity: "success",
+          })
+        }
+      >
+        <Alert
+          onClose={() =>
+            setAlert({
+              show: false,
+              message: "",
+              severity: "success",
+            })
+          }
+          severity={alert.severity}
+          sx={{ width: "100%" }}
+        >
+          {alert.message}
+        </Alert>
+      </Snackbar>
+
+      <CardHeader
+        title="Login as a Employer"
+        align="center"
+        sx={{ textTransform: "uppercase" }}
+      />
       <Formik
         initialValues={initialValues}
         onSubmit={handleSubmit}
@@ -85,15 +167,15 @@ const EmployerLoginForm = (props:props) => {
         enableReinitialize
       >
         {(formik) => {
-          const {
-            isValid,
-            dirty,
-            values,
-            setFieldValue,
-          } = formik;
+          const { isValid, dirty, values, setFieldValue } = formik;
           return (
             <Form>
-              <Grid container alignItems="center" justifyContent="center" mt={3}>
+              <Grid
+                container
+                alignItems="center"
+                justifyContent="center"
+                mt={3}
+              >
                 <Grid
                   item
                   container
@@ -104,10 +186,10 @@ const EmployerLoginForm = (props:props) => {
                   md={9}
                   sm={11}
                   xs={12}
-                > 
-
+                >
                   <Grid item lg={12} md={12} sm={12} xs={12}>
                     <Field
+                      disabled={backendCall}
                       fullWidth
                       id="email"
                       name="email"
@@ -117,6 +199,7 @@ const EmployerLoginForm = (props:props) => {
                   </Grid>
                   <Grid item lg={12} md={12} sm={12} xs={12}>
                     <Field
+                      disabled={backendCall}
                       fullWidth
                       id="password"
                       name="password"
@@ -138,6 +221,7 @@ const EmployerLoginForm = (props:props) => {
                   >
                     <Grid item lg={"auto"} md={"auto"} sm={"auto"} xs={"auto"}>
                       <FormControlLabel
+                        disabled={backendCall}
                         control={
                           <Checkbox
                             id="rememberMe"
@@ -153,33 +237,40 @@ const EmployerLoginForm = (props:props) => {
                       />
                     </Grid>
                     <Grid item lg={"auto"} md={"auto"} sm={"auto"} xs={"auto"}>
-                      <Button sx={{textTransform:"capitalize"}} variant="text">Forgot Password?</Button>
+                      <Button
+                        sx={{ textTransform: "capitalize" }}
+                        variant="text"
+                      >
+                        Forgot Password?
+                      </Button>
                     </Grid>
                   </Grid>
 
                   <Grid item lg={"auto"}>
-                  <Stack direction="column" gap={2}>
-                    <Button
-                      disabled={!isValid || !dirty}
-                      color="primary"
-                      variant="contained"
-                      size="large"
-                      type="submit"
-                    >
-                      Login
-                    </Button>
+                    <Stack direction="column" gap={2}>
+                      <LoadingButton
+                        loading={backendCall}
+                        disabled={!isValid || !dirty}
+                        color="primary"
+                        variant="contained"
+                        size="large"
+                        type="submit"
+                      >
+                        Login
+                      </LoadingButton>
 
-                     <Button
+                      <Button
+                        disabled={backendCall}
                         color="primary"
                         variant="text"
                         type="submit"
                         sx={{
                           textTransform: "none",
                         }}
-                        onClick={() => handleLoginMethod('candidate')}
-                    >
-                      Login as a Candidate
-                    </Button>
+                        onClick={() => handleLoginMethod("candidate")}
+                      >
+                        Login as a Candidate
+                      </Button>
                     </Stack>
                   </Grid>
                 </Grid>
@@ -192,4 +283,4 @@ const EmployerLoginForm = (props:props) => {
   );
 };
 
-export {EmployerLoginForm};
+export { EmployerLoginForm };

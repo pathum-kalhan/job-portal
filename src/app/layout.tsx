@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import {NavBar} from "@/components/NavBar";
+import { NavBar } from "@/components/NavBar";
+import Provider from "@/context/Provider"; 
 
 export const metadata: Metadata = {
   title: "Career Guid Pro",
@@ -13,6 +14,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+     <Provider>
       <body>
         <header>
           <NavBar />
@@ -25,10 +27,11 @@ export default function RootLayout({
             maxHeight:"100%",
             backgroundColor: "#f0f0f0",
           }}
-        >
-          {children}
+          >
+          {children} 
         </main>
-      </body>
-    </html>
+        </body>
+        </Provider>
+      </html>
   );
 }

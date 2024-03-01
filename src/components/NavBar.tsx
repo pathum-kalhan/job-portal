@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -15,19 +15,27 @@ import { Card, Grid, useMediaQuery } from "@mui/material";
 import Link from "next/link";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
-import Image from "next/image";
+import Image from "next/image"; 
+import { useSession } from "next-auth/react";
 
-const pages = [
-  { link: "/find-job", title: "Find Job" },
+const logedInCandidate = [
+  { link: "/dashboard/candidate/find-job", title: "Find Job" },
   {
     title: "Job Listings",
     link: "",
     dropdownItems: [
-      { link: "/saved-jobs", title: "Saved Jobs" },
-      { link: "/recommended-jobs", title: "Recommended Jobs" },
-      { link: "/recent-job-views", title: "Recent Job Views" },
+      { link: "/dashboard/candidate/saved-jobs", title: "Saved Jobs" },
+      { link: "/dashboard/candidate/recommended-jobs", title: "Recommended Jobs" },
+      { link: "/dashboard/candidate/recent-job-views", title: "Recent Job Views" },
     ],
   },
+
+  { link: "/contact-us", title: "Contact Us" },
+  { link: "/privacy-policy", title: "Privacy & Policy" },
+  { link: "/about", title: "About Us" },
+];
+
+const logedInEmployer = [
   { link: "/contact-us", title: "Contact Us" },
   { link: "/privacy-policy", title: "Privacy & Policy" },
   { link: "/about", title: "About Us" },
@@ -35,14 +43,22 @@ const pages = [
     link: "",
     title: "Employer/ Post a Job",
     dropdownItems: [
-      { link: "/post-a-job", title: "Post Job" },
-      { link: "/applicants-view", title: "Application View" },
-      { link: "/interview-schedule", title: "Interview Schedule" },
+      { link: "/dashboard/employer/post-a-job", title: "Post Job" },
+      { link: "/dashboard/employer/applicants-view", title: "Application View" },
+      { link: "/dashboard/employer/interview-schedule", title: "Interview Schedule" },
     ],
   },
 ];
 
+const defaultPages = [
+  { link: "/contact-us", title: "Contact Us" },
+  { link: "/privacy-policy", title: "Privacy & Policy" },
+  { link: "/about", title: "About Us" }
+];
+
 function NavBar() {
+  const [pages, setPages] = useState(defaultPages);
+  const { data: session } = useSession();
   const isMdScreen = useMediaQuery("(min-width:900px)");
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
@@ -73,6 +89,20 @@ function NavBar() {
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
+
+  useEffect(() => {
+    if (session) {
+      // @ts-ignore
+      if (session?.user?.role === "candidate") {
+        setPages(logedInCandidate);
+        // @ts-ignore
+      } else if (session?.user?.role === "employer") {
+        setPages(logedInEmployer);
+      }
+    } else { 
+      setPages(defaultPages)
+    }
+  }, [session]);
 
   return (
     <AppBar position="static">
@@ -132,7 +162,8 @@ function NavBar() {
                   href={page.link}
                   key={page.title}
                   onClick={(e) => {
-                    if (page.dropdownItems) {
+                    // @ts-ignore
+                    if (page?.dropdownItems) {
                       handleOpenSubMenuNavMenu(e, page.title);
                     }
                   }}
@@ -145,13 +176,13 @@ function NavBar() {
                   >
                     {page.title}
                   </Typography>
-                  {page.dropdownItems &&
-                      (page.title === subMenuAnchorElNav?.menuName ? (
-                        <ExpandLessIcon />
-                      ) : (
-                        <ExpandMoreIcon />
+                    {/* @ts-ignore */}
+                  {page?.dropdownItems &&
+                    (page.title === subMenuAnchorElNav?.menuName ? (
+                      <ExpandLessIcon />
+                    ) : (
+                      <ExpandMoreIcon />
                     ))}
-                  
                 </MenuItem>
               ))}
             </Menu>
@@ -213,6 +244,7 @@ function NavBar() {
                     fontWeight: "500",
                   }}
                   onClick={(e) => {
+                     // @ts-ignore
                     if (page.dropdownItems) {
                       handleOpenSubMenuNavMenu(e, page.title);
                     }
@@ -225,6 +257,7 @@ function NavBar() {
                     }}
                   >
                     {page.title}{" "}
+                    {/* @ts-ignore */}
                     {page.dropdownItems &&
                       (page.title === subMenuAnchorElNav?.menuName ? (
                         <ExpandLessIcon />
@@ -241,12 +274,9 @@ function NavBar() {
           {/* Nav bar Profile Icon start */}
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="View Profile">
-              <Link href="/profile">
+              <Link href="/dashboard/profile">
                 <IconButton sx={{ p: 0 }}>
-                  <Avatar
-                    alt="Profile Icon"
-                    src="/static/images/avatar/2.jpg"
-                  />
+                  <Avatar alt="Profile Icon" src="/profilepic.jpeg" />
                 </IconButton>
               </Link>
             </Tooltip>
@@ -255,7 +285,11 @@ function NavBar() {
 
           {/* Nav dropdown menu start */}
           {pages.map((pageItem) => {
-            if (pageItem.dropdownItems && pageItem.title === subMenuAnchorElNav?.menuName) {
+            if (
+               // @ts-ignore
+              pageItem.dropdownItems &&
+              pageItem.title === subMenuAnchorElNav?.menuName
+            ) {
               return (
                 <Menu
                   key={pageItem.title}
@@ -268,15 +302,16 @@ function NavBar() {
                     horizontal: isMdScreen ? "left" : "right",
                   }}
                 >
+                  {/* @ts-ignore */}
                   {pageItem?.dropdownItems.map((item) => (
-                      <MenuItem
-                        key={item.title}
-                        component={Link}
-                        href={item.link}
-                      >
-                        {item.title}
-                      </MenuItem>
-                    ))}
+                    <MenuItem
+                      key={item.title}
+                      component={Link}
+                      href={item.link}
+                    >
+                      {item.title}
+                    </MenuItem>
+                  ))}
                 </Menu>
               );
             }
@@ -287,4 +322,4 @@ function NavBar() {
     </AppBar>
   );
 }
-export {NavBar};
+export { NavBar };
