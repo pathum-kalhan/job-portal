@@ -70,10 +70,8 @@ const EmployerLoginForm = (props: props) => {
   };
 
   const handleSubmit = async (
-    values: initialValues,
-    formikHelpers: FormikHelpers<initialValues>
-  ) => {
-    formikHelpers.resetForm();
+    values: initialValues
+  ) => { 
 
     try {
       setBackendCall(true);
@@ -99,7 +97,6 @@ const EmployerLoginForm = (props: props) => {
           message: "Employer Logedin successfully!",
           severity: "success",
         });
-        formikHelpers.resetForm();
         router.push("/dashboard/profile");
       }
     } catch (error) {

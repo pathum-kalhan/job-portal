@@ -73,10 +73,7 @@ const CandidateLoginForm = (props: props) => {
 
   const handleSubmit = async (
     values: initialValues,
-    formikHelpers: FormikHelpers<initialValues>
-  ) => {
-    formikHelpers.resetForm();
-
+  ) => { 
 
     try {
       setBackendCall(true);
@@ -103,7 +100,6 @@ const CandidateLoginForm = (props: props) => {
           message: "Candidate Logedin successfully!",
           severity: "success",
         });
-        formikHelpers.resetForm();
         router.push("/dashboard/profile");
       }
  
