@@ -18,7 +18,7 @@ import { TextField } from "formik-mui";
 import * as yup from "yup";
 import GoogleIcon from "@mui/icons-material/Google";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { LoadingButton } from "@mui/lab";
@@ -39,6 +39,7 @@ type Alert = {
 };
 
 const CandidateLoginForm = (props: props) => {
+  const { data: session } = useSession();
   const { handleLoginMethod } = props;
   const router = useRouter();
   const [backendCall, setBackendCall] = useState(false);
@@ -100,7 +101,10 @@ const CandidateLoginForm = (props: props) => {
           message: "Candidate Logedin successfully!",
           severity: "success",
         });
-        router.replace("/dashboard/profile");
+        
+        if (session?.user) {
+          router.replace("/dashboard/profile");
+        }
       }
  
     } catch (error) {
