@@ -5,29 +5,43 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import { Grid, Stack } from "@mui/material";
-import Link from "next/link";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import { deepPurple } from "@mui/material/colors";
-import CreateIcon from '@mui/icons-material/Create';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import AddIcon from '@mui/icons-material/Add';
+import CreateIcon from "@mui/icons-material/Create";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import AddIcon from "@mui/icons-material/Add";
+import { signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
-type props = {
-  
-}
+type props = {};
 
 function EmployerProfileRightSideCard(props: props) {
-  
-  const {  } = props
- 
+  const router = useRouter();
+  const {} = props;
+
+  const logOutFunc = () => {
+    signOut({ redirect: false, callbackUrl: "/" });
+    router.replace("/");
+  };
+
   return (
-    <Card sx={{ width: {
-        lg:500,
-        md:500,
-        sm:500,
-        xs:350,
-      }, pb: 1 }}>
-      <CardContent sx={{ maxHeight: {lg:400, xs:300}, minHeight: {lg:400, xs:300} }}>
+    <Card
+      sx={{
+        width: {
+          lg: 500,
+          md: 500,
+          sm: 500,
+          xs: 350,
+        },
+        pb: 1,
+      }}
+    >
+      <CardContent
+        sx={{
+          maxHeight: { lg: 400, xs: 300 },
+          minHeight: { lg: 400, xs: 300 },
+        }}
+      >
         <Grid container gap={1}>
           <Grid
             container
@@ -43,45 +57,44 @@ function EmployerProfileRightSideCard(props: props) {
             alignItems="center"
             justifyContent="space-between"
           >
-            <Grid item lg='auto' md='auto' sm='auto' xs='auto'>
-            <CalendarTodayIcon sx={{ fontSize: "4rem", cursor: "pointer" }} />
+            <Grid item lg="auto" md="auto" sm="auto" xs="auto">
+              <CalendarTodayIcon sx={{ fontSize: "4rem", cursor: "pointer" }} />
             </Grid>
-            <Grid item lg='auto' md='auto' sm='auto' xs='auto'> 
-            <Button
-              color="success"
-              size="small"
-              variant="contained"
+            <Grid item lg="auto" md="auto" sm="auto" xs="auto">
+              <Button
+                color="success"
+                size="small"
+                variant="contained"
                 sx={{ textTransform: "capitalize", height: "2.5rem" }}
-                endIcon={<AddIcon/>}
-            >
-              POST JOb
+                endIcon={<AddIcon />}
+              >
+                POST JOb
               </Button>
             </Grid>
-            <Grid item lg='auto' md='auto' sm='auto' xs='auto'>  
-            <Button
-              color="info"
-              size="small"
-                  variant="contained"
-                  endIcon={<CreateIcon/>}
+            <Grid item lg="auto" md="auto" sm="auto" xs="auto">
+              <Button
+                color="info"
+                size="small"
+                variant="contained"
+                endIcon={<CreateIcon />}
                 sx={{ textTransform: "capitalize", height: "2.5rem" }}
-            >
-              EDIT JOB
-                </Button> 
+              >
+                EDIT JOB
+              </Button>
             </Grid>
 
-            <Grid item lg='auto' md='auto' sm='auto' xs='auto'> 
-            <Button
-              color="error"
-              size="small"
+            <Grid item lg="auto" md="auto" sm="auto" xs="auto">
+              <Button
+                color="error"
+                size="small"
                 variant="contained"
-                endIcon={<DeleteForeverIcon fontSize="large"/>}
-              sx={{ textTransform: "capitalize", height: "2.5rem" }}
-            >
-             DELETE JOB
-            </Button>
+                endIcon={<DeleteForeverIcon fontSize="large" />}
+                sx={{ textTransform: "capitalize", height: "2.5rem" }}
+              >
+                DELETE JOB
+              </Button>
             </Grid>
           </Grid>
-
         </Grid>
       </CardContent>
 
@@ -92,24 +105,23 @@ function EmployerProfileRightSideCard(props: props) {
         justifyContent="center"
       >
         <CardActions>
-          <Link href="/reset-password">
-            <Button
-              size="large"
-              variant="contained"
-              sx={{
-                textTransform: "capitalize",
-                textAlign: "center",
-                borderRadius: 10,
-                backgroundColor: deepPurple[500],
-                "&:hover": {
-                  backgroundColor: deepPurple[700],
-                },
-              }}
-              fullWidth
-            >
-              LOGOUT
-            </Button>
-          </Link>
+          <Button
+            onClick={logOutFunc}
+            size="large"
+            variant="contained"
+            sx={{
+              textTransform: "capitalize",
+              textAlign: "center",
+              borderRadius: 10,
+              backgroundColor: deepPurple[500],
+              "&:hover": {
+                backgroundColor: deepPurple[700],
+              },
+            }}
+            fullWidth
+          >
+            LOGOUT
+          </Button>
         </CardActions>
       </Stack>
     </Card>

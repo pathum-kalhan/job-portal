@@ -30,9 +30,8 @@ type Props = {
 const Questions = ({ questions }: Props) => {
 
   const router = useRouter();
-  const handleSubmit = (values: {}) => {
-    console.log(values);
-    router.push("/quizzes/results");
+  const handleSubmit = (values: {}) => { 
+    router.push("/dashboard/candidate/quizzes/results");
   };
 
 
