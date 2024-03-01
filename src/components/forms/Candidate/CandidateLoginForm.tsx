@@ -100,7 +100,7 @@ const CandidateLoginForm = (props: props) => {
           message: "Candidate Logedin successfully!",
           severity: "success",
         });
-        router.push("/dashboard/profile");
+        router.replace("/dashboard/profile");
       }
  
     } catch (error) {
