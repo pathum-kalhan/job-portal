@@ -4,8 +4,7 @@ const validationSchema = {
   name: Yup.string()
     .required("Name is required.")
     .max(30, "Maximum length for the first name is 15.")
-    .min(3, "Minimum length for the first name is 3.")
-    .matches(/^[A-Za-z ]*$/, "Please enter valid name"),
+    .min(3, "Minimum length for the first name is 3."),
   email: Yup.string()
     .required("Email is required.")
     .email("Please enter a valid email."),
