@@ -99,7 +99,6 @@ const EmployerLoginForm = (props: props) => {
           message: "Employer Logedin successfully!",
           severity: "success",
         });
-        router.push("/dashboard/profile");
       }
     } catch (error) {
       setBackendCall(false);
