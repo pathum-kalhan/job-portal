@@ -13,8 +13,8 @@ import {
 } from "@mui/material";
 import { Formik, Form, Field, FormikHelpers } from "formik";
 import { TextField } from "formik-mui";
-import { signIn } from "next-auth/react";
-import { useState } from "react";
+import { signIn, useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { LoadingButton } from "@mui/lab";
 
@@ -38,6 +38,7 @@ type Alert = {
 
 const EmployerLoginForm = (props: props) => {
   const router = useRouter();
+  const { data: session } = useSession();
   const [backendCall, setBackendCall] = useState(false);
   const [alert, setAlert] = useState<Alert>({
     show: false,
@@ -48,6 +49,7 @@ const EmployerLoginForm = (props: props) => {
   const { handleLoginMethod } = props;
   const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
 
+  
   const loginValidationSchema = yup.object({
     email: yup
       .string()
@@ -108,6 +110,16 @@ const EmployerLoginForm = (props: props) => {
       });
     }
   };
+
+
+    useEffect(() => { 
+
+    if (session?.user?.email) {
+      router.push("/dashboard/profile");
+    }
+
+// eslint-disable-next-line react-hooks/exhaustive-deps
+  },[session?.user?.email])
 
   return (
     <Card

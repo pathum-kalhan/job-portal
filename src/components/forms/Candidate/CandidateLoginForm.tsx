@@ -19,7 +19,7 @@ import * as yup from "yup";
 import GoogleIcon from "@mui/icons-material/Google";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import { signIn, useSession } from "next-auth/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { LoadingButton } from "@mui/lab";
 
@@ -39,7 +39,7 @@ type Alert = {
 };
 
 const CandidateLoginForm = (props: props) => {
-  const { data: session } = useSession();
+  const { data: session  } = useSession();
   const { handleLoginMethod } = props;
   const router = useRouter();
   const [backendCall, setBackendCall] = useState(false);
@@ -102,9 +102,7 @@ const CandidateLoginForm = (props: props) => {
           severity: "success",
         });
         
-        if (session?.user) {
-          router.replace("/dashboard/profile");
-        }
+       
       }
  
     } catch (error) {
@@ -116,6 +114,15 @@ const CandidateLoginForm = (props: props) => {
       });
     }
   };
+
+  useEffect(() => { 
+
+    if (session?.user?.email) {
+      router.push("/dashboard/profile");
+    }
+
+// eslint-disable-next-line react-hooks/exhaustive-deps
+  },[session?.user?.email])
 
   return (
     <Card
