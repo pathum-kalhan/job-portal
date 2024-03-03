@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -12,16 +12,22 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import AddIcon from "@mui/icons-material/Add";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { LoadingButton } from "@mui/lab";
 
 type props = {};
 
 function EmployerProfileRightSideCard(props: props) {
+  const [backendCall, setBackendCall] = useState(false)
+
   const router = useRouter();
   const {} = props;
 
-  const logOutFunc = () => {
-    signOut({ redirect: false, callbackUrl: "/" });
+  const logOutFunc = async () => {
+    setBackendCall(true);
+
+    await signOut({ redirect: false, callbackUrl: "/" });
     router.replace("/");
+    setBackendCall(false);
   };
 
   return (
@@ -105,7 +111,8 @@ function EmployerProfileRightSideCard(props: props) {
         justifyContent="center"
       >
         <CardActions>
-          <Button
+          <LoadingButton
+            loading={backendCall}
             onClick={logOutFunc}
             size="large"
             variant="contained"
@@ -121,7 +128,7 @@ function EmployerProfileRightSideCard(props: props) {
             fullWidth
           >
             LOGOUT
-          </Button>
+          </LoadingButton>
         </CardActions>
       </Stack>
     </Card>

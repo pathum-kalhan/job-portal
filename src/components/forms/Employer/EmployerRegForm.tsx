@@ -18,6 +18,7 @@ import {
 } from "@mui/material";
 import { Formik, Form, Field, FormikProps, FormikHelpers } from "formik";
 import { TextField } from "formik-mui";
+import { useRouter } from "next/navigation";
 import { MouseEvent, useCallback, useState } from "react";
 import * as yup from "yup";
 
@@ -64,7 +65,6 @@ type Alert = {
 
 const CustomizedSelectForFormik = (selectProps: selectProps) => {
   const { children, form, field } = selectProps;
- 
 
   const { name, value } = field;
   const { setFieldValue } = form;
@@ -85,6 +85,7 @@ const CustomizedSelectForFormik = (selectProps: selectProps) => {
 };
 
 const EmployerRegForm = () => {
+  const router = useRouter();
   const [emailValidate, setEmailValidate] = useState(false);
   const [isCodeSubmitted, setIsCodeSubmitted] = useState(false);
   const [backendCall, setBackendCall] = useState(false);
@@ -221,22 +222,23 @@ const EmployerRegForm = () => {
           setEmailValidate(false);
           setIsCodeSubmitted(false);
           setBackendCall(false);
-           setAlert({
+          setAlert({
             show: true,
             message: "Employer Created successfully!!",
             severity: "success",
           });
+          router.replace("/login");
         }
-      } catch (e:any) {
+      } catch (e: any) {
         setBackendCall(false);
-         setAlert({
+        setAlert({
           show: true,
-          message: e?.message?? "Server Error",
+          message: e?.message ?? "Server Error",
           severity: "error",
         });
       }
     },
-    []
+    [router]
   );
 
   const verifyAccount = useCallback(async (e: MouseEvent, email: string) => {
@@ -256,26 +258,26 @@ const EmployerRegForm = () => {
       if (response.status !== 200) {
         setBackendCall(false);
         setAlert({
-            show: true,
-            message: "Something went wrong!",
-            severity: "error",
-          });
+          show: true,
+          message: "Something went wrong!",
+          severity: "error",
+        });
       } else {
         setEmailValidate(true);
         setBackendCall(false);
-         setAlert({
-            show: true,
-            message: "OTP sent to your email!",
-            severity: "success",
-          });
-      }
-    } catch (e:any) {
-      setBackendCall(false);
-       setAlert({
+        setAlert({
           show: true,
-          message: e?.message?? "Server Error",
-          severity: "error",
+          message: "OTP sent to your email!",
+          severity: "success",
         });
+      }
+    } catch (e: any) {
+      setBackendCall(false);
+      setAlert({
+        show: true,
+        message: e?.message ?? "Server Error",
+        severity: "error",
+      });
     }
   }, []);
 
@@ -304,17 +306,17 @@ const EmployerRegForm = () => {
         } else {
           setIsCodeSubmitted(true);
           setBackendCall(false);
-           setAlert({
+          setAlert({
             show: true,
             message: "Email is verified!",
             severity: "success",
           });
         }
-      } catch (e:any) {
+      } catch (e: any) {
         setBackendCall(false);
-         setAlert({
+        setAlert({
           show: true,
-          message: e?.message?? "Server Error",
+          message: e?.message ?? "Server Error",
           severity: "error",
         });
       }

@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import { Formik, Form, Field, FormikHelpers } from "formik";
 import { TextField } from "formik-mui";
+import { useRouter } from "next/navigation";
 import { MouseEvent, useCallback, useState } from "react";
 import * as yup from "yup";
 
@@ -35,6 +36,8 @@ type Alert = {
 };
 
 const CandidateRegForm = () => {
+  const router = useRouter();
+
   const [emailValidate, setEmailValidate] = useState(false);
   const [backendCall, setBackendCall] = useState(false);
   const [alert, setAlert] = useState<Alert>({
@@ -162,6 +165,8 @@ const CandidateRegForm = () => {
             message: "Candidate Created successfully!",
             severity: "success",
           });
+
+          router.replace('/login');
         }
       } catch (e: any) {
         setBackendCall(false);
@@ -172,7 +177,8 @@ const CandidateRegForm = () => {
         });
       }
     },
-    []
+
+    [router]
   );
 
   const verifyAccount = useCallback(async (e: MouseEvent, email: string) => {

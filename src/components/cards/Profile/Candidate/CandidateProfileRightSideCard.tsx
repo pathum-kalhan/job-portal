@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -13,19 +13,24 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
+import { LoadingButton } from "@mui/lab";
 
 type props = {
   handleClickOpenUploadCv: () => void;
 };
 
 function CandidateProfileRightSideCard(props: props) {
+  const [backendCall, setBackendCall] = useState(false)
   const router = useRouter();
 
   const { handleClickOpenUploadCv } = props;
 
-  const logOutFunc = () => {
-    signOut({ redirect: false, callbackUrl: "/" });
+  const logOutFunc = async () => {
+    setBackendCall(true);
+
+    await signOut({ redirect: false, callbackUrl: "/" });
     router.replace("/");
+    setBackendCall(false);
   };
 
   return (
@@ -158,7 +163,8 @@ function CandidateProfileRightSideCard(props: props) {
         justifyContent="center"
       >
         <CardActions>
-          <Button
+          <LoadingButton
+            loading={backendCall}
             onClick={logOutFunc}
             size="large"
             variant="contained"
@@ -174,7 +180,7 @@ function CandidateProfileRightSideCard(props: props) {
             fullWidth
           >
             LOGOUT
-          </Button>
+          </LoadingButton>
         </CardActions>
       </Stack>
     </Card>

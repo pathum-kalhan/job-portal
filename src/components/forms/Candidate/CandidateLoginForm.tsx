@@ -11,6 +11,7 @@ import {
   Stack,
   Alert,
   Snackbar,
+  CircularProgress,
 } from "@mui/material";
 import { Formik, Form, Field, FormikHelpers } from "formik";
 import { TextField } from "formik-mui";
@@ -39,7 +40,7 @@ type Alert = {
 };
 
 const CandidateLoginForm = (props: props) => {
-  const { data: session  } = useSession();
+  const { data: session } = useSession();
   const { handleLoginMethod } = props;
   const router = useRouter();
   const [backendCall, setBackendCall] = useState(false);
@@ -72,10 +73,7 @@ const CandidateLoginForm = (props: props) => {
     rememberMe: false,
   };
 
-  const handleSubmit = async (
-    values: initialValues,
-  ) => { 
-
+  const handleSubmit = async (values: initialValues) => {
     try {
       setBackendCall(true);
 
@@ -94,17 +92,13 @@ const CandidateLoginForm = (props: props) => {
           severity: "error",
         });
       } else {
-        
         setBackendCall(false);
         setAlert({
           show: true,
-          message: "Candidate Logedin successfully!",
+          message: "Candidate Loged-in successfully!",
           severity: "success",
         });
-        
-       
       }
- 
     } catch (error) {
       setBackendCall(false);
       setAlert({
@@ -115,14 +109,11 @@ const CandidateLoginForm = (props: props) => {
     }
   };
 
-  useEffect(() => { 
-
-    if (session?.user?.email) {
+  useEffect(() => {
+    if (session?.user?.email && !backendCall) {
       router.push("/dashboard/profile");
     }
-
-// eslint-disable-next-line react-hooks/exhaustive-deps
-  },[session?.user?.email])
+  }, [session?.user?.email, backendCall, router]);
 
   return (
     <Card
@@ -168,164 +159,198 @@ const CandidateLoginForm = (props: props) => {
       </Snackbar>
 
       <CardHeader
-        title="Login to career pro guide"
+        title={
+          !session?.user?.email && !backendCall
+            ? "Login to career pro guide"
+            : "Please wait. Login in to the dashboard..."
+        }
         align="center"
         sx={{ textTransform: "uppercase" }}
       />
-      <Formik
-        initialValues={initialValues}
-        onSubmit={handleSubmit}
-        validationSchema={loginValidationSchema}
-        enableReinitialize
-      >
-        {(formik) => {
-          const { isValid, dirty, values, setFieldValue } = formik;
-          return (
-            <Form>
-              <Grid
-                container
-                alignItems="center"
-                justifyContent="center"
-                mt={3}
-              >
+      {!session?.user?.email && !backendCall ? (
+        <Formik
+          initialValues={initialValues}
+          onSubmit={handleSubmit}
+          validationSchema={loginValidationSchema}
+          enableReinitialize
+        >
+          {(formik) => {
+            const { isValid, dirty, values, setFieldValue } = formik;
+            return (
+              <Form>
                 <Grid
-                  item
                   container
                   alignItems="center"
                   justifyContent="center"
-                  gap={3}
-                  lg={10}
-                  md={9}
-                  sm={11}
-                  xs={12}
+                  mt={3}
                 >
                   <Grid
-                    container
                     item
-                    lg={12}
-                    md={12}
-                    sm={12}
-                    xs={12}
+                    container
                     alignItems="center"
                     justifyContent="center"
                     gap={3}
-                  >
-                    <Grid item lg={"auto"} md={"auto"} sm={"auto"} xs={"auto"}>
-                      <Button
-                        variant="contained"
-                        startIcon={<GoogleIcon />}
-                        sx={{ fontWeight: "bold" }}
-                      >
-                        Google
-                      </Button>
-                    </Grid>
-                    <Grid item lg={"auto"} md={"auto"} sm={"auto"} xs={"auto"}>
-                      <Button
-                        variant="contained"
-                        startIcon={<LinkedInIcon />}
-                        sx={{ fontWeight: "bold" }}
-                      >
-                        LinkedIn
-                      </Button>
-                    </Grid>
-                  </Grid>
-                  <Grid item lg={12} md={12} sm={12} xs={12}>
-                    <Typography textAlign="center">OR</Typography>
-                  </Grid>
-
-                  <Grid item lg={12} md={12} sm={12} xs={12}>
-                    <Field
-                    disabled={backendCall}
-                      fullWidth
-                      id="email"
-                      name="email"
-                      label="Email"
-                      component={TextField}
-                    />
-                  </Grid>
-                  <Grid item lg={12} md={12} sm={12} xs={12}>
-                    <Field
-                    disabled={backendCall}
-                      fullWidth
-                      id="password"
-                      name="password"
-                      label="Password"
-                      type="password"
-                      component={TextField}
-                    />
-                  </Grid>
-                  <Grid
-                    container
-                    item
-                    lg={12}
-                    md={12}
-                    sm={12}
+                    lg={10}
+                    md={9}
+                    sm={11}
                     xs={12}
-                    alignItems="center"
-                    justifyContent="space-between"
-                    gap={2}
                   >
-                    <Grid item lg={"auto"} md={"auto"} sm={"auto"} xs={"auto"}>
-                      <FormControlLabel
+                    <Grid
+                      container
+                      item
+                      lg={12}
+                      md={12}
+                      sm={12}
+                      xs={12}
+                      alignItems="center"
+                      justifyContent="center"
+                      gap={3}
+                    >
+                      <Grid
+                        item
+                        lg={"auto"}
+                        md={"auto"}
+                        sm={"auto"}
+                        xs={"auto"}
+                      >
+                        <Button
+                          variant="contained"
+                          startIcon={<GoogleIcon />}
+                          sx={{ fontWeight: "bold" }}
+                        >
+                          Google
+                        </Button>
+                      </Grid>
+                      <Grid
+                        item
+                        lg={"auto"}
+                        md={"auto"}
+                        sm={"auto"}
+                        xs={"auto"}
+                      >
+                        <Button
+                          variant="contained"
+                          startIcon={<LinkedInIcon />}
+                          sx={{ fontWeight: "bold" }}
+                        >
+                          LinkedIn
+                        </Button>
+                      </Grid>
+                    </Grid>
+                    <Grid item lg={12} md={12} sm={12} xs={12}>
+                      <Typography textAlign="center">OR</Typography>
+                    </Grid>
+
+                    <Grid item lg={12} md={12} sm={12} xs={12}>
+                      <Field
                         disabled={backendCall}
-                        control={
-                          <Checkbox
-                            id="rememberMe"
-                            name="rememberMe"
-                            color="primary"
-                            checked={values.rememberMe}
-                            onChange={(e, newValue) => {
-                              setFieldValue("rememberMe", newValue);
-                            }}
-                          />
-                        }
-                        label="Remember me"
+                        fullWidth
+                        id="email"
+                        name="email"
+                        label="Email"
+                        component={TextField}
                       />
                     </Grid>
-                    <Grid item lg={"auto"} md={"auto"} sm={"auto"} xs={"auto"}>
-                      <Button
+                    <Grid item lg={12} md={12} sm={12} xs={12}>
+                      <Field
                         disabled={backendCall}
-                        sx={{ textTransform: "capitalize" }}
-                        variant="text"
+                        fullWidth
+                        id="password"
+                        name="password"
+                        label="Password"
+                        type="password"
+                        component={TextField}
+                      />
+                    </Grid>
+                    <Grid
+                      container
+                      item
+                      lg={12}
+                      md={12}
+                      sm={12}
+                      xs={12}
+                      alignItems="center"
+                      justifyContent="space-between"
+                      gap={2}
+                    >
+                      <Grid
+                        item
+                        lg={"auto"}
+                        md={"auto"}
+                        sm={"auto"}
+                        xs={"auto"}
                       >
-                        Forgot Password?
-                      </Button>
+                        <FormControlLabel
+                          disabled={backendCall}
+                          control={
+                            <Checkbox
+                              id="rememberMe"
+                              name="rememberMe"
+                              color="primary"
+                              checked={values.rememberMe}
+                              onChange={(e, newValue) => {
+                                setFieldValue("rememberMe", newValue);
+                              }}
+                            />
+                          }
+                          label="Remember me"
+                        />
+                      </Grid>
+                      <Grid
+                        item
+                        lg={"auto"}
+                        md={"auto"}
+                        sm={"auto"}
+                        xs={"auto"}
+                      >
+                        <Button
+                          disabled={backendCall}
+                          sx={{ textTransform: "capitalize" }}
+                          variant="text"
+                        >
+                          Forgot Password?
+                        </Button>
+                      </Grid>
+                    </Grid>
+
+                    <Grid item lg={"auto"}>
+                      <Stack direction="column" gap={2}>
+                        <LoadingButton
+                          loading={backendCall}
+                          disabled={!isValid || !dirty}
+                          color="primary"
+                          variant="contained"
+                          size="large"
+                          type="submit"
+                        >
+                          Login
+                        </LoadingButton>
+
+                        <Button
+                          disabled={backendCall}
+                          color="primary"
+                          variant="text"
+                          type="submit"
+                          sx={{
+                            textTransform: "none",
+                          }}
+                          onClick={() => handleLoginMethod("employer")}
+                        >
+                          Login as a Employer
+                        </Button>
+                      </Stack>
                     </Grid>
                   </Grid>
-
-                  <Grid item lg={"auto"}>
-                    <Stack direction="column" gap={2}>
-                      <LoadingButton
-                        loading={backendCall}
-                        disabled={!isValid || !dirty}
-                        color="primary"
-                        variant="contained"
-                        size="large"
-                        type="submit"
-                      >
-                        Login
-                      </LoadingButton>
-
-                      <Button
-                        disabled={backendCall}
-                        color="primary"
-                        variant="text"
-                        type="submit"
-                        sx={{
-                          textTransform: "none",
-                        }}
-                        onClick={() => handleLoginMethod("employer")}
-                      >
-                        Login as a Employer
-                      </Button>
-                    </Stack>
-                  </Grid>
                 </Grid>
-              </Grid>
-            </Form>
-          );
-        }}
-      </Formik>
+              </Form>
+            );
+          }}
+        </Formik>
+      ) : (
+        <Stack height={"50vh"} alignItems="center" justifyContent="center">
+          <CircularProgress />
+        </Stack>
+      )}
     </Card>
   );
 };

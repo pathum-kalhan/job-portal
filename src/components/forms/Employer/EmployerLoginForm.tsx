@@ -10,6 +10,7 @@ import {
   Stack,
   Alert,
   Snackbar,
+  CircularProgress,
 } from "@mui/material";
 import { Formik, Form, Field, FormikHelpers } from "formik";
 import { TextField } from "formik-mui";
@@ -49,7 +50,6 @@ const EmployerLoginForm = (props: props) => {
   const { handleLoginMethod } = props;
   const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
 
-  
   const loginValidationSchema = yup.object({
     email: yup
       .string()
@@ -71,10 +71,7 @@ const EmployerLoginForm = (props: props) => {
     rememberMe: false,
   };
 
-  const handleSubmit = async (
-    values: initialValues
-  ) => { 
-
+  const handleSubmit = async (values: initialValues) => {
     try {
       setBackendCall(true);
 
@@ -96,7 +93,7 @@ const EmployerLoginForm = (props: props) => {
         setBackendCall(false);
         setAlert({
           show: true,
-          message: "Employer Logedin successfully!",
+          message: "Employer Loged-in successfully!",
           severity: "success",
         });
       }
@@ -110,15 +107,11 @@ const EmployerLoginForm = (props: props) => {
     }
   };
 
-
-    useEffect(() => { 
-
-    if (session?.user?.email) {
+  useEffect(() => {
+    if (session?.user?.email && !backendCall) {
       router.push("/dashboard/profile");
     }
-
-// eslint-disable-next-line react-hooks/exhaustive-deps
-  },[session?.user?.email])
+  }, [session?.user?.email, backendCall, router]);
 
   return (
     <Card
@@ -168,125 +161,143 @@ const EmployerLoginForm = (props: props) => {
         align="center"
         sx={{ textTransform: "uppercase" }}
       />
-      <Formik
-        initialValues={initialValues}
-        onSubmit={handleSubmit}
-        validationSchema={loginValidationSchema}
-        enableReinitialize
-      >
-        {(formik) => {
-          const { isValid, dirty, values, setFieldValue } = formik;
-          return (
-            <Form>
-              <Grid
-                container
-                alignItems="center"
-                justifyContent="center"
-                mt={3}
-              >
+      {!session?.user?.email && !backendCall ? (
+        <Formik
+          initialValues={initialValues}
+          onSubmit={handleSubmit}
+          validationSchema={loginValidationSchema}
+          enableReinitialize
+        >
+          {(formik) => {
+            const { isValid, dirty, values, setFieldValue } = formik;
+            return (
+              <Form>
                 <Grid
-                  item
                   container
                   alignItems="center"
                   justifyContent="center"
-                  gap={3}
-                  lg={10}
-                  md={9}
-                  sm={11}
-                  xs={12}
+                  mt={3}
                 >
-                  <Grid item lg={12} md={12} sm={12} xs={12}>
-                    <Field
-                      disabled={backendCall}
-                      fullWidth
-                      id="email"
-                      name="email"
-                      label="Email"
-                      component={TextField}
-                    />
-                  </Grid>
-                  <Grid item lg={12} md={12} sm={12} xs={12}>
-                    <Field
-                      disabled={backendCall}
-                      fullWidth
-                      id="password"
-                      name="password"
-                      label="Password"
-                      type="password"
-                      component={TextField}
-                    />
-                  </Grid>
                   <Grid
-                    container
                     item
-                    lg={12}
-                    md={12}
-                    sm={12}
-                    xs={12}
+                    container
                     alignItems="center"
-                    justifyContent="space-between"
-                    gap={2}
+                    justifyContent="center"
+                    gap={3}
+                    lg={10}
+                    md={9}
+                    sm={11}
+                    xs={12}
                   >
-                    <Grid item lg={"auto"} md={"auto"} sm={"auto"} xs={"auto"}>
-                      <FormControlLabel
+                    <Grid item lg={12} md={12} sm={12} xs={12}>
+                      <Field
                         disabled={backendCall}
-                        control={
-                          <Checkbox
-                            id="rememberMe"
-                            name="rememberMe"
-                            color="primary"
-                            checked={values.rememberMe}
-                            onChange={(e, newValue) => {
-                              setFieldValue("rememberMe", newValue);
-                            }}
-                          />
-                        }
-                        label="Remember me"
+                        fullWidth
+                        id="email"
+                        name="email"
+                        label="Email"
+                        component={TextField}
                       />
                     </Grid>
-                    <Grid item lg={"auto"} md={"auto"} sm={"auto"} xs={"auto"}>
-                      <Button
-                        sx={{ textTransform: "capitalize" }}
-                        variant="text"
+                    <Grid item lg={12} md={12} sm={12} xs={12}>
+                      <Field
+                        disabled={backendCall}
+                        fullWidth
+                        id="password"
+                        name="password"
+                        label="Password"
+                        type="password"
+                        component={TextField}
+                      />
+                    </Grid>
+                    <Grid
+                      container
+                      item
+                      lg={12}
+                      md={12}
+                      sm={12}
+                      xs={12}
+                      alignItems="center"
+                      justifyContent="space-between"
+                      gap={2}
+                    >
+                      <Grid
+                        item
+                        lg={"auto"}
+                        md={"auto"}
+                        sm={"auto"}
+                        xs={"auto"}
                       >
-                        Forgot Password?
-                      </Button>
+                        <FormControlLabel
+                          disabled={backendCall}
+                          control={
+                            <Checkbox
+                              id="rememberMe"
+                              name="rememberMe"
+                              color="primary"
+                              checked={values.rememberMe}
+                              onChange={(e, newValue) => {
+                                setFieldValue("rememberMe", newValue);
+                              }}
+                            />
+                          }
+                          label="Remember me"
+                        />
+                      </Grid>
+                      <Grid
+                        item
+                        lg={"auto"}
+                        md={"auto"}
+                        sm={"auto"}
+                        xs={"auto"}
+                      >
+                        <Button
+                          sx={{ textTransform: "capitalize" }}
+                          variant="text"
+                        >
+                          Forgot Password?
+                        </Button>
+                      </Grid>
+                    </Grid>
+
+                    <Grid item lg={"auto"}>
+                      <Stack direction="column" gap={2}>
+                        <LoadingButton
+                          loading={backendCall}
+                          disabled={!isValid || !dirty}
+                          color="primary"
+                          variant="contained"
+                          size="large"
+                          type="submit"
+                        >
+                          Login
+                        </LoadingButton>
+
+                        <Button
+                          disabled={backendCall}
+                          color="primary"
+                          variant="text"
+                          type="submit"
+                          sx={{
+                            textTransform: "none",
+                          }}
+                          onClick={() => handleLoginMethod("candidate")}
+                        >
+                          Login as a Candidate
+                        </Button>
+                      </Stack>
                     </Grid>
                   </Grid>
-
-                  <Grid item lg={"auto"}>
-                    <Stack direction="column" gap={2}>
-                      <LoadingButton
-                        loading={backendCall}
-                        disabled={!isValid || !dirty}
-                        color="primary"
-                        variant="contained"
-                        size="large"
-                        type="submit"
-                      >
-                        Login
-                      </LoadingButton>
-
-                      <Button
-                        disabled={backendCall}
-                        color="primary"
-                        variant="text"
-                        type="submit"
-                        sx={{
-                          textTransform: "none",
-                        }}
-                        onClick={() => handleLoginMethod("candidate")}
-                      >
-                        Login as a Candidate
-                      </Button>
-                    </Stack>
-                  </Grid>
                 </Grid>
-              </Grid>
-            </Form>
-          );
-        }}
-      </Formik>
+              </Form>
+            );
+          }}
+        </Formik>
+      ) : (
+        <Stack height={"50vh"} alignItems="center" justifyContent="center">
+          <CircularProgress />
+        </Stack>
+      )}
     </Card>
   );
 };
