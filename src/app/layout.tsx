@@ -4,7 +4,7 @@ import { NavBar } from "@/components/NavBar";
 import Provider from "@/context/Provider"; 
 
 export const metadata: Metadata = {
-  title: "Career Guid Pro",
+  title: "Career Guide Pro",
 };
 
 export default function RootLayout({

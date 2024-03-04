@@ -32,8 +32,8 @@ function Page() {
 
           <Typography component="p">
             If you have any questions, comments or requests please email us at{" "}
-            <a href="mailto:careerguidepro@gmail.com">
-              careerguidepro@gmail.com
+            <a href="mailto:careerguidpro@gmail.com">
+              careerguidpro@gmail.com
             </a>
             . Alternatively you can submit your query via this form and we will
             get back to you as soon as we can.

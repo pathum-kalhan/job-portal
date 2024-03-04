@@ -1,5 +1,5 @@
 export const Constant = {
   companyEmail: "careerguidpro@gmail.com",
-  companyName: "Career Guid Pro",
+  companyName: "Career Guide Pro",
   noReplyEmail: "careerguidpro@gmail.com",
 };

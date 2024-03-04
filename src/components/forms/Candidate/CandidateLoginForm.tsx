@@ -162,7 +162,7 @@ const CandidateLoginForm = (props: props) => {
       <CardHeader
         title={
           !session?.user?.email && !backendCall
-            ? "Login to career pro guide"
+            ? "Login to career guide pro"
             : "Please wait. Login in to the dashboard..."
         }
         align="center"
