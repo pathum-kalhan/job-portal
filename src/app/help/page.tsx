@@ -25,8 +25,8 @@ function page() {
   const contactInfo = [
     {
       Icon: EmailIcon,
-      title: "careerguidepro@gmail.com",
-      link: "mailto:careerguidepro@gmail.com",
+      title: "careerguidpro@gmail.com",
+      link: "mailto:careerguidpro@gmail.com",
     },
     {
       Icon: PhoneIcon,
