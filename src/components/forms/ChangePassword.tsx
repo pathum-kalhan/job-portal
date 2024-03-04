@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+
+import React, {useState } from "react";
 import {
   Button,
   Dialog,
@@ -11,7 +12,8 @@ import { Formik, Form, Field, ErrorMessage, FormikHelpers } from "formik";
 import * as Yup from "yup";
 import { LoadingButton } from "@mui/lab";
 import router from "next/router";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 // Define prop types for the ChangePassword component
 type ChangePasswordProps = {
@@ -20,10 +22,10 @@ type ChangePasswordProps = {
 };
 
 type initialValues = {
-  currentPassword: string,
-  newPassword: string,
-  confirmPassword: string
-}
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+};
 
 type Alert = {
   show: boolean;
@@ -31,8 +33,11 @@ type Alert = {
   severity: "error" | "info" | "success" | "warning";
 };
 
-
 const ChangePassword: React.FC<ChangePasswordProps> = ({ open, onClose }) => {
+  const { data: session } = useSession();
+
+  const router = useRouter();
+
   const handleClose = () => {
     onClose();
   };
@@ -64,14 +69,22 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ open, onClose }) => {
 
   const handleSubmit = async (
     values: initialValues,
-    formikHelpers: FormikHelpers<initialValues>) => {
+    formikHelpers: FormikHelpers<initialValues>
+  ) => {
     setBackendCall(true);
     try {
-      setBackendCall(true); 
+      setBackendCall(true);
+
+      const payload = {
+        oldPassword: values.currentPassword,
+        newPassword: values.newPassword,
+        // @ts-ignore
+        userType: session?.user?.role,
+      };
 
       const response = await fetch("/api/change-password", {
         method: "POST",
-        body: JSON.stringify(values),
+        body: JSON.stringify(payload),
         headers: {
           "Content-Type": "application/json",
         },
@@ -85,20 +98,17 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ open, onClose }) => {
           severity: "error",
         });
       } else {
-        
         setBackendCall(false);
         setAlert({
           show: true,
           message: "Password changed successfully!",
           severity: "success",
         });
-        formikHelpers.resetForm(); 
-        handleClose()
+        formikHelpers.resetForm();
         signOut({ redirect: false, callbackUrl: "/" });
-        router.replace("/login");
-       
+        router.push("/login");
+        handleClose();
       }
- 
     } catch (error) {
       setBackendCall(false);
       setAlert({

@@ -1,9 +1,6 @@
 "use client";
 
 import {
-  Button,
-  Checkbox,
-  FormControlLabel,
   Grid,
   Card,
   CardHeader,
@@ -14,22 +11,14 @@ import {
 } from "@mui/material";
 import { Formik, Form, Field, FormikHelpers } from "formik";
 import { TextField } from "formik-mui";
-import { signIn, useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { LoadingButton } from "@mui/lab";
-
 import * as yup from "yup";
-import Link from "next/link";
+import { useSession } from "next-auth/react";
+import { useState } from "react";
+import { LoadingButton } from "@mui/lab";
+import { useRouter } from "next/navigation";
 
 type initialValues = {
   email: string;
-  password: string;
-  rememberMe: boolean;
-};
-
-type props = {
-  handleLoginMethod: (val: string) => void;
 };
 
 type Alert = {
@@ -38,9 +27,13 @@ type Alert = {
   severity: "error" | "info" | "success" | "warning";
 };
 
-const EmployerLoginForm = (props: props) => {
-  const router = useRouter();
+type props = {
+  userType: string;
+};
+
+const ForgotPassword = (props: props) => {
   const { data: session } = useSession();
+  const router = useRouter();
   const [backendCall, setBackendCall] = useState(false);
   const [alert, setAlert] = useState<Alert>({
     show: false,
@@ -48,42 +41,38 @@ const EmployerLoginForm = (props: props) => {
     severity: "success",
   });
 
-  const { handleLoginMethod } = props;
-  const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
-
   const loginValidationSchema = yup.object({
     email: yup
       .string()
       .email("Invalid email format")
       .required("Email is required"),
-    password: yup
-      .string()
-      .matches(
-        passwordRegex,
-        "Password must contain at least one uppercase letter, one lowercase letter, one number, and be at least 8 characters long"
-      )
-      .required("Password is required"),
-    rememberMe: yup.boolean(),
   });
 
   const initialValues: initialValues = {
     email: "",
-    password: "",
-    rememberMe: false,
   };
 
-  const handleSubmit = async (values: initialValues) => {
+  const handleSubmit = async (
+    values: initialValues,
+    formikHelpers: FormikHelpers<initialValues>
+  ) => {
     try {
       setBackendCall(true);
 
-      const response = await signIn("credentials", {
-        redirect: false,
+      const payload = {
         email: values.email,
-        password: values.password,
-        role: "employer",
+        userType: props.userType,
+      };
+
+      const response = await fetch("/api/forgotPassword", {
+        method: "POST",
+        body: JSON.stringify(payload),
+        headers: {
+          "Content-Type": "application/json",
+        },
       });
 
-      if (response?.status !== 200) {
+      if (response.status !== 200) {
         setBackendCall(false);
         setAlert({
           show: true,
@@ -91,14 +80,16 @@ const EmployerLoginForm = (props: props) => {
           severity: "error",
         });
       } else {
+        formikHelpers.resetForm();
         setBackendCall(false);
         setAlert({
           show: true,
-          message: "Employer Loged-in successfully!",
+          message: "Password rest email sent successfully!",
           severity: "success",
         });
+        router.push("/");
       }
-    } catch (error) {
+    } catch (e: any) {
       setBackendCall(false);
       setAlert({
         show: true,
@@ -107,12 +98,6 @@ const EmployerLoginForm = (props: props) => {
       });
     }
   };
-
-  useEffect(() => {
-    if (session?.user?.email && !backendCall) {
-      router.push("/dashboard/profile");
-    }
-  }, [session?.user?.email, backendCall, router]);
 
   return (
     <Card
@@ -158,7 +143,11 @@ const EmployerLoginForm = (props: props) => {
       </Snackbar>
 
       <CardHeader
-        title="Login as a Employer"
+        title={
+          !session?.user?.email && !backendCall
+            ? "Forgot Password"
+            : "Please wait. sending reset link to your mail..."
+        }
         align="center"
         sx={{ textTransform: "uppercase" }}
       />
@@ -170,7 +159,7 @@ const EmployerLoginForm = (props: props) => {
           enableReinitialize
         >
           {(formik) => {
-            const { isValid, dirty, values, setFieldValue } = formik;
+            const { isValid, dirty } = formik;
             return (
               <Form>
                 <Grid
@@ -200,68 +189,6 @@ const EmployerLoginForm = (props: props) => {
                         component={TextField}
                       />
                     </Grid>
-                    <Grid item lg={12} md={12} sm={12} xs={12}>
-                      <Field
-                        disabled={backendCall}
-                        fullWidth
-                        id="password"
-                        name="password"
-                        label="Password"
-                        type="password"
-                        component={TextField}
-                      />
-                    </Grid>
-                    <Grid
-                      container
-                      item
-                      lg={12}
-                      md={12}
-                      sm={12}
-                      xs={12}
-                      alignItems="center"
-                      justifyContent="space-between"
-                      gap={2}
-                    >
-                      <Grid
-                        item
-                        lg={"auto"}
-                        md={"auto"}
-                        sm={"auto"}
-                        xs={"auto"}
-                      >
-                        <FormControlLabel
-                          disabled={backendCall}
-                          control={
-                            <Checkbox
-                              id="rememberMe"
-                              name="rememberMe"
-                              color="primary"
-                              checked={values.rememberMe}
-                              onChange={(e, newValue) => {
-                                setFieldValue("rememberMe", newValue);
-                              }}
-                            />
-                          }
-                          label="Remember me"
-                        />
-                      </Grid>
-                      <Grid
-                        item
-                        lg={"auto"}
-                        md={"auto"}
-                        sm={"auto"}
-                        xs={"auto"}
-                      >
-                        <Link href="/employer/forgot-password">
-                        <Button
-                          sx={{ textTransform: "capitalize" }}
-                          variant="text"
-                        >
-                          Forgot Password?
-                        </Button>
-                        </Link>
-                      </Grid>
-                    </Grid>
 
                     <Grid item lg={"auto"}>
                       <Stack direction="column" gap={2}>
@@ -273,21 +200,8 @@ const EmployerLoginForm = (props: props) => {
                           size="large"
                           type="submit"
                         >
-                          Login
+                          Submit
                         </LoadingButton>
-
-                        <Button
-                          disabled={backendCall}
-                          color="primary"
-                          variant="text"
-                          type="submit"
-                          sx={{
-                            textTransform: "none",
-                          }}
-                          onClick={() => handleLoginMethod("candidate")}
-                        >
-                          Login as a Candidate
-                        </Button>
                       </Stack>
                     </Grid>
                   </Grid>
@@ -305,4 +219,4 @@ const EmployerLoginForm = (props: props) => {
   );
 };
 
-export { EmployerLoginForm };
+export { ForgotPassword };

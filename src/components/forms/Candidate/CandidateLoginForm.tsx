@@ -23,6 +23,7 @@ import { signIn, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { LoadingButton } from "@mui/lab";
+import Link from "next/link";
 
 type initialValues = {
   email: string;
@@ -303,13 +304,15 @@ const CandidateLoginForm = (props: props) => {
                         sm={"auto"}
                         xs={"auto"}
                       >
+                        <Link href="/candidate/forgot-password">
                         <Button
                           disabled={backendCall}
                           sx={{ textTransform: "capitalize" }}
                           variant="text"
                         >
                           Forgot Password?
-                        </Button>
+                          </Button>
+                          </Link>
                       </Grid>
                     </Grid>
 
