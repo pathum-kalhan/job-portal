@@ -7,7 +7,7 @@ import Candidates from "../../models/Candidate";
 import { Constant } from "../../../../utils/Constents";
 import Employer from "../../models/Employer";
 
-const apiKey: string = process.env.SENDGRID_API_KEY!;
+const apiKey: string = `${process.env.SENDGRID_API_KEY}`
 
 export async function POST(request: Request) {
   try {
@@ -97,7 +97,7 @@ export async function POST(request: Request) {
 
     //  Send the verification email
     const verifyCode = otpCode;
-    const templateData = { verifyCode };
+    const templateData = { verifyCode, name: user.name };
     mail.setApiKey(apiKey);
     await mail.send({
       to: email,
@@ -105,7 +105,7 @@ export async function POST(request: Request) {
         name: `${Constant.companyName}`,
         email: `${Constant.companyEmail}`,
       },
-      templateId: "d-ca630d678736496fa9a9c8806974758f",
+      templateId: "d-3f9f400bac984a70a92e6ccd78b7f99d",
       dynamicTemplateData: templateData,
     });
 
@@ -117,7 +117,7 @@ export async function POST(request: Request) {
         status: 200,
       }
     );
-  } catch (error: any) {
+  } catch (error: any) { 
     return NextResponse.json(
       {
         message: error,

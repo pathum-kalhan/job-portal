@@ -1,9 +1,10 @@
-import { hashPassword } from "../../../../lib/auth";
+
 import { backEndAccountValidation } from "../../../../utils/validations-types/candidateAccount";
 import DbMongoose from "../../../../lib/db_mongoose";
 import Candidates from "../../models/Candidate";
 import { Constant } from "../../../../utils/Constents";
 import { NextResponse } from "next/server";
+import bcrypt from "bcryptjs";
 
 export async function POST(request: Request) {
   try {
@@ -36,8 +37,9 @@ export async function POST(request: Request) {
         );
       }
 
-      // hash the password
-      const hashedPassword = await hashPassword(password);
+      // hash the password 
+      const salt = await bcrypt.genSalt(10);
+      const encryptedPassword = await bcrypt.hash(password, salt);
       // save record
       await Candidates.findOneAndUpdate(
         {
@@ -45,7 +47,7 @@ export async function POST(request: Request) {
         },
         {
           name,
-          password: hashedPassword,
+          password: encryptedPassword,
           role: "candidate",
           contactNo,
           dateOfBirth,

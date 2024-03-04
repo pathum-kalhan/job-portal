@@ -3,10 +3,25 @@ import DbMongoose from "../../../lib/db_mongoose";
 import Candidates from "../models/Candidate";
 import { NextResponse } from "next/server";
 import Employer from "../models/Employer";
+import { getServerSession } from "next-auth";
 
 export async function POST(request: Request) {
   try {
     await DbMongoose();
+
+    const sessionData = await getServerSession();
+    
+    if (!sessionData) {
+      return NextResponse.json(
+        {
+          message: "Unauthorized",
+        },
+        {
+          status: 401,
+        }
+      );
+    }
+    
 
     const data = await request.json();
 

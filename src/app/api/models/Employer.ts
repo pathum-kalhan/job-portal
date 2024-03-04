@@ -16,6 +16,7 @@ const EmployerSchema = new Schema({
   password: String,
   contactNo: String,
   location: String,
+  resetToken: String,
   emailVerification: {
     otpCode: String,
     status: {

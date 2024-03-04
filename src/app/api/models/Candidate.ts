@@ -40,6 +40,8 @@ const CandidateSchema = new Schema({
   experience: String,
   skills: Array,
   education: String,
+  resetToken: String,
+
 },
 {
   timestamps: true,
