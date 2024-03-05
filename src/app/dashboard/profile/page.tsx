@@ -20,14 +20,20 @@ import { EditProfileDialogBox } from "@/components/dialogBoxes/Profile/EditProfi
 import { useSession } from "next-auth/react";
 import { EmployerProfileInfoCard } from "@/components/cards/Profile/Employer/EmployerProfileInfoCard";
 import { EmployerProfileRightSideCard } from "@/components/cards/Profile/Employer/EmployerProfileRightSideCard";
+import { useRouter } from "next/navigation";
 
 type Alert = {
   show: boolean;
   message: string;
   severity: "error" | "info" | "success" | "warning";
 };
+ 
+ 
 
 function Page() {
+
+  const router = useRouter();
+
   const [openEditProfile, setOpenEditProfile] = useState(false);
   const [openUploadCv, setOpenUploadCv] = useState(false);
   const [openUploadCvDone, setOpenUploadCvDone] = useState(false);
@@ -111,10 +117,10 @@ function Page() {
     }
 
     if (!session) {
-      getProfileData();
+      router.push("/login"); 
     }
 
-  }, [getProfileData, profileData, session]);
+  }, [getProfileData, profileData, session, router]);
 
   return (
     <>
