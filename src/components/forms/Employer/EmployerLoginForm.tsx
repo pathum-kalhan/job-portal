@@ -87,7 +87,7 @@ const EmployerLoginForm = (props: props) => {
         setBackendCall(false);
         setAlert({
           show: true,
-          message: "Something went wrong!",
+          message: "Login Failed!",
           severity: "error",
         });
       } else {
@@ -151,7 +151,6 @@ const EmployerLoginForm = (props: props) => {
             })
           }
           severity={alert.severity}
-          sx={{ width: "100%" }}
         >
           {alert.message}
         </Alert>

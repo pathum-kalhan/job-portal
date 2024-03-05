@@ -7,7 +7,6 @@ import { getServerSession } from "next-auth";
 
 export async function POST(request: Request) {
   try {
-    await DbMongoose();
 
     const sessionData = await getServerSession();
     
@@ -21,13 +20,13 @@ export async function POST(request: Request) {
         }
       );
     }
-    
 
+    await DbMongoose(); 
     const data = await request.json();
 
-    const normalizedEmail = data.email.toLowerCase().trim();
+    const normalizedEmail = data?.email?.toLowerCase().trim();
 
-    const [user] = data.userRole === 'candidate' ?  await Candidates.find({ email: normalizedEmail }) :  await Employer.find({ email: normalizedEmail })
+    const [user] = data?.userRole === 'candidate' ?  await Candidates.find({ email: normalizedEmail }) :  await Employer.find({ email: normalizedEmail })
 
     return NextResponse.json(
       {

@@ -18,7 +18,7 @@ export async function POST(request: Request) {
         .min(8, "Minimum length for the password is 8."),
     });
 
-    const isPasswordValid = await passwordValidation.validate({ newPassword });
+    const isPasswordValid = await passwordValidation?.validate({ newPassword });
 
     if (!isPasswordValid) {
       return NextResponse.json(

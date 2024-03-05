@@ -13,7 +13,7 @@ export async function POST(request: Request) {
 
     let { email, otpCode, userType } = await request.json();
     const checkValidEmail = () => {
-      email.test(emailRegex);
+      email?.test(emailRegex);
     };
 
     if (!checkValidEmail) {
@@ -27,17 +27,17 @@ export async function POST(request: Request) {
       );
     }
 
-    email = email.toLowerCase().trim();
+    email = email?.toLowerCase().trim();
 
     const [user] =
       userType === "employer"
         ? await Employer.find({ email })
         : await Candidates.find({ email });
 
-    if (user.emailVerification.otpCode === otpCode) {
+    if (user?.emailVerification?.otpCode === otpCode) {
       // save record
       if (userType === "candidate") {
-        const getCandidate = await Candidates.findOneAndUpdate(
+        await Candidates.findOneAndUpdate(
           { email },
           {
             emailVerification: {
@@ -49,9 +49,8 @@ export async function POST(request: Request) {
             new: true,
           }
         );
-        
       } else {
-        const getEmployer = await Employer.findOneAndUpdate(
+        await Employer.findOneAndUpdate(
           { email },
           {
             emailVerification: {
@@ -63,7 +62,6 @@ export async function POST(request: Request) {
             new: true,
           }
         );
-
       }
 
       return NextResponse.json(

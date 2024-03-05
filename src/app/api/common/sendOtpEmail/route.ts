@@ -102,8 +102,8 @@ export async function POST(request: Request) {
     await mail.send({
       to: email,
       from: {
-        name: `${Constant.companyName}`,
-        email: `${Constant.companyEmail}`,
+        name: `${Constant?.companyName}`,
+        email: `${Constant?.companyEmail}`,
       },
       templateId: "d-3f9f400bac984a70a92e6ccd78b7f99d",
       dynamicTemplateData: templateData,

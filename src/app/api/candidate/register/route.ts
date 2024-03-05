@@ -24,7 +24,7 @@ export async function POST(request: Request) {
 
       const [user] = await Candidates.find({ email });
 
-      if (user && user.name) {
+      if (user && user?.name) {
         return NextResponse.json(
           {
             message: `User already exists in our database. 

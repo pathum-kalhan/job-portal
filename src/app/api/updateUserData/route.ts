@@ -3,11 +3,9 @@ import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import CandidateModel from "../models/Candidate";
 import EmployerModel from "../models/Employer";
-import bcrypt from "bcryptjs";
 
 export async function POST(request: Request) {
   try {
-
     const sessionData = await getServerSession();
     if (!sessionData) {
       return NextResponse.json(
@@ -19,12 +17,22 @@ export async function POST(request: Request) {
         }
       );
     }
-    
-    await DbMongoose(); 
-    const { oldPassword, newPassword, userType } = await request.json();
-  
 
-    // check old password is correct
+    await DbMongoose();
+
+    const {
+      userType,
+      name,
+      linkedInProfileUrl,
+      contactNo,
+      companyDetails,
+      location,
+      education,
+      experience,
+      skills,
+      websiteUrl,
+    } = await request.json();
+
     const user =
       userType === "candidate"
         ? await CandidateModel.findOne({ email: sessionData?.user?.email })
@@ -32,7 +40,7 @@ export async function POST(request: Request) {
             email: sessionData?.user?.email,
           });
 
-    if (!user) { 
+    if (!user) {
       return NextResponse.json(
         {
           message: "Unauthorized",
@@ -40,52 +48,44 @@ export async function POST(request: Request) {
         {
           status: 401,
         }
-      )
-    }
-    
-    const isOldPasswordCorrect = await bcrypt.compare(
-      oldPassword,
-      user?.password
-    );
-
-    if (!isOldPasswordCorrect) {
-      return NextResponse.json(
-        {
-          message: "Incorrect old password",
-        },
-        {
-          status: 401,
-        }
       );
     }
 
-    const salt = await bcrypt.genSalt(10);
-    const newEncryptedPassword = await bcrypt.hash(newPassword, salt);
-
     if (userType === "candidate") {
-  await CandidateModel.findOneAndUpdate(
+      await CandidateModel.findOneAndUpdate(
         { email: sessionData?.user?.email },
-        { password: newEncryptedPassword },
-        { new: true }
+        {
+          name,
+          linkedInProfileUrl,
+          contactNo,
+          education,
+          experience,
+          skills,
+        }
       );
     } else {
       await EmployerModel.findOneAndUpdate(
         { email: sessionData?.user?.email },
-        { password: newEncryptedPassword },
-        { new: true }
+        {
+          name,
+          contactNo,
+          companyDetails,
+          location,
+          websiteUrl
+        }
       );
     }
 
     return NextResponse.json(
       {
-        message: "Password updated successfully",
+        message: "Profile updated successfully",
       },
       {
         status: 200,
       }
     );
   } catch (error) {
-
+    
     return NextResponse.json(
       {
         message: error,
