@@ -69,7 +69,7 @@ const authOptions: NextAuthOptions = {
     signIn: "/login",
   },
   callbacks: {
-    async jwt({ token, user, session }) { 
+    async jwt({ token, user }) { 
       if (user) {
         return {
           ...token,

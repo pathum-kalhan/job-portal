@@ -88,7 +88,11 @@ const ForgotPassword = (props: props) => {
           message: "Password rest email sent successfully!",
           severity: "success",
         });
-        router.push("/");
+
+         setTimeout(() => {
+          router.push("/");
+        }, 3000);
+       
       }
     } catch (e: any) {
       setBackendCall(false);

@@ -6,16 +6,17 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  InputAdornment,
   Snackbar,
-  Stack,
   TextField,
 } from "@mui/material";
 import { Formik, Form, Field, ErrorMessage, FormikHelpers } from "formik";
 import * as Yup from "yup";
 import { LoadingButton } from "@mui/lab";
-import router from "next/router";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
 // Define prop types for the ChangePassword component
 type ChangePasswordProps = {
@@ -45,6 +46,11 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ open, onClose }) => {
   };
 
   const [backendCall, setBackendCall] = useState(false);
+
+  const [oldPasswordVisibility, setOldPasswordVisibility] = useState(false);
+  const [newPasswordVisibility, setNewPasswordVisibility] = useState(false);
+  const [newConfirmPasswordVisibility, setNewConfirmPasswordVisibility] = useState(false);
+
   const [alert, setAlert] = useState<Alert>({
     show: false,
     message: "",
@@ -95,7 +101,10 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ open, onClose }) => {
         setBackendCall(false);
         setAlert({
           show: true,
-          message: (typeof errorMessage?.message === "string" && errorMessage?.message) ?? "Something went wrong!",
+          message:
+            (typeof errorMessage?.message === "string" &&
+              errorMessage?.message) ??
+            "Something went wrong!",
           severity: "error",
         });
       } else {
@@ -135,9 +144,26 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ open, onClose }) => {
                 name="currentPassword"
                 as={TextField}
                 label="Current Password"
-                type="password"
                 fullWidth
                 margin="normal"
+                type={oldPasswordVisibility ? "text" : "password"}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment
+                      position="end"
+                      style={{ outline: "none", cursor: "pointer" }}
+                      onClick={() =>
+                        setOldPasswordVisibility(!oldPasswordVisibility)
+                      }
+                    >
+                      {oldPasswordVisibility ? (
+                        <RemoveRedEyeIcon />
+                      ) : (
+                        <VisibilityOffIcon />
+                      )}
+                    </InputAdornment>
+                  ),
+                }}
               />
               <ErrorMessage name="currentPassword" component="div" />
 
@@ -145,17 +171,51 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ open, onClose }) => {
                 name="newPassword"
                 as={TextField}
                 label="New Password"
-                type="password"
                 fullWidth
                 margin="normal"
+                type={newPasswordVisibility ? "text" : "password"}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment
+                      position="end"
+                      style={{ outline: "none", cursor: "pointer" }}
+                      onClick={() =>
+                        setNewPasswordVisibility(!newPasswordVisibility)
+                      }
+                    >
+                      {newPasswordVisibility ? (
+                        <RemoveRedEyeIcon />
+                      ) : (
+                        <VisibilityOffIcon />
+                      )}
+                    </InputAdornment>
+                  ),
+                }}
               />
               <ErrorMessage name="newPassword" component="div" />
 
               <Field
                 name="confirmPassword"
                 as={TextField}
+                type={newConfirmPasswordVisibility ? "text" : "password"}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment
+                      position="end"
+                      style={{ outline: "none", cursor: "pointer" }}
+                      onClick={() =>
+                        setNewConfirmPasswordVisibility(!newConfirmPasswordVisibility)
+                      }
+                    >
+                      {newConfirmPasswordVisibility ? (
+                        <RemoveRedEyeIcon />
+                      ) : (
+                        <VisibilityOffIcon />
+                      )}
+                    </InputAdornment>
+                  ),
+                }}
                 label="Confirm Password"
-                type="password"
                 fullWidth
                 margin="normal"
               />

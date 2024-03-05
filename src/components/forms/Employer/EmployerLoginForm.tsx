@@ -11,6 +11,7 @@ import {
   Alert,
   Snackbar,
   CircularProgress,
+  InputAdornment,
 } from "@mui/material";
 import { Formik, Form, Field, FormikHelpers } from "formik";
 import { TextField } from "formik-mui";
@@ -18,6 +19,8 @@ import { signIn, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { LoadingButton } from "@mui/lab";
+import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
 import * as yup from "yup";
 import Link from "next/link";
@@ -39,6 +42,8 @@ type Alert = {
 };
 
 const EmployerLoginForm = (props: props) => {
+  const [passwordVisibility, setPasswordVisibility] = useState(false);
+
   const router = useRouter();
   const { data: session } = useSession();
   const [backendCall, setBackendCall] = useState(false);
@@ -87,7 +92,7 @@ const EmployerLoginForm = (props: props) => {
         setBackendCall(false);
         setAlert({
           show: true,
-          message: "Login Failed!",
+          message: "Please check your email and password!",
           severity: "error",
         });
       } else {
@@ -206,7 +211,24 @@ const EmployerLoginForm = (props: props) => {
                         id="password"
                         name="password"
                         label="Password"
-                        type="password"
+                        type={passwordVisibility ? "text" : "password"}
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment
+                              position="end"
+                              style={{ outline: "none", cursor: "pointer" }}
+                              onClick={() =>
+                                setPasswordVisibility(!passwordVisibility)
+                              }
+                            >
+                              {passwordVisibility ? (
+                                <RemoveRedEyeIcon />
+                              ) : (
+                                <VisibilityOffIcon />
+                              )}
+                            </InputAdornment>
+                          ),
+                        }}
                         component={TextField}
                       />
                     </Grid>

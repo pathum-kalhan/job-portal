@@ -8,6 +8,7 @@ import {
   Alert,
   Snackbar,
   CircularProgress,
+  InputAdornment,
 } from "@mui/material";
 import { Formik, Form, Field, FormikHelpers } from "formik";
 import { TextField } from "formik-mui";
@@ -15,6 +16,8 @@ import * as yup from "yup";
 import { useState, Suspense, useEffect } from "react";
 import { LoadingButton } from "@mui/lab";
 import { useRouter, useSearchParams } from "next/navigation";
+import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
 type initialValues = {
   newPassword: string;
@@ -33,6 +36,8 @@ type props = {
 
 const NewPassword = (props: props) => {
   const [token, setToken] = useState<null | string>(null);
+  const [newPasswordVisibility, setNewPasswordVisibility] = useState(false);
+  const [newConfirmPasswordVisibility, setNewConfirmPasswordVisibility] = useState(false);
 
   const router = useRouter();
 
@@ -101,7 +106,9 @@ const NewPassword = (props: props) => {
           severity: "success",
         });
 
-        router.push("/login");
+        setTimeout(() => {
+          router.push("/");
+        }, 3000);
       }
     } catch (e: any) {
       setBackendCall(false);
@@ -206,6 +213,24 @@ const NewPassword = (props: props) => {
                         id="newPassword"
                         name="newPassword"
                         label="New Password"
+                        type={newPasswordVisibility ? "text" : "password"}
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment
+                              position="end"
+                              style={{ outline: "none", cursor: "pointer" }}
+                              onClick={() =>
+                                setNewPasswordVisibility(!newPasswordVisibility)
+                              }
+                            >
+                              {newPasswordVisibility ? (
+                                <RemoveRedEyeIcon />
+                              ) : (
+                                <VisibilityOffIcon />
+                              )}
+                            </InputAdornment>
+                          ),
+                        }}
                         component={TextField}
                       />
                     </Grid>
@@ -217,6 +242,24 @@ const NewPassword = (props: props) => {
                         id="reenterPassword"
                         name="reenterPassword"
                         label="Reenter Password"
+                        type={newConfirmPasswordVisibility ? "text" : "password"}
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment
+                              position="end"
+                              style={{ outline: "none", cursor: "pointer" }}
+                              onClick={() =>
+                                setNewConfirmPasswordVisibility(!newConfirmPasswordVisibility)
+                              }
+                            >
+                              {newConfirmPasswordVisibility ? (
+                                <RemoveRedEyeIcon />
+                              ) : (
+                                <VisibilityOffIcon />
+                              )}
+                            </InputAdornment>
+                          ),
+                        }}
                         component={TextField}
                       />
                     </Grid>

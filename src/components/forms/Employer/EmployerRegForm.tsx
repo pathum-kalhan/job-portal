@@ -15,12 +15,16 @@ import {
   FormHelperText,
   Snackbar,
   Alert,
+  InputAdornment,
 } from "@mui/material";
 import { Formik, Form, Field, FormikProps, FormikHelpers } from "formik";
 import { TextField } from "formik-mui";
 import { useRouter } from "next/navigation";
 import { MouseEvent, useCallback, useState } from "react";
 import * as yup from "yup";
+import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+
 
 type initialValues = {
   companyName: string;
@@ -89,6 +93,10 @@ const EmployerRegForm = () => {
   const [emailValidate, setEmailValidate] = useState(false);
   const [isCodeSubmitted, setIsCodeSubmitted] = useState(false);
   const [backendCall, setBackendCall] = useState(false);
+  const [passwordVisibility, setPasswordVisibility] = useState(false);
+  const [newConfirmPasswordVisibility, setNewConfirmPasswordVisibility] = useState(false);
+
+
   const [alert, setAlert] = useState<Alert>({
     show: false,
     message: "",
@@ -562,7 +570,24 @@ const EmployerRegForm = () => {
                       id="password"
                       name="password"
                       label="Password"
-                      type="password"
+                      type={passwordVisibility ? "text" : "password"}
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment
+                            position="end"
+                            style={{ outline: "none", cursor: "pointer" }}
+                            onClick={() =>
+                              setPasswordVisibility(!passwordVisibility)
+                            }
+                          >
+                            {passwordVisibility ? (
+                              <RemoveRedEyeIcon />
+                            ) : (
+                              <VisibilityOffIcon />
+                            )}
+                          </InputAdornment>
+                        ),
+                      }}
                       component={TextField}
                     />
                   </Grid>
@@ -572,7 +597,24 @@ const EmployerRegForm = () => {
                       id="reenterPassword"
                       name="reenterPassword"
                       label="Re-enter Password"
-                      type="password"
+                      type={newConfirmPasswordVisibility ? "text" : "password"}
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment
+                            position="end"
+                            style={{ outline: "none", cursor: "pointer" }}
+                            onClick={() =>
+                              setNewConfirmPasswordVisibility(!newConfirmPasswordVisibility)
+                            }
+                          >
+                            {newConfirmPasswordVisibility ? (
+                              <RemoveRedEyeIcon />
+                            ) : (
+                              <VisibilityOffIcon />
+                            )}
+                          </InputAdornment>
+                        ),
+                      }}
                       component={TextField}
                     />
                   </Grid>
