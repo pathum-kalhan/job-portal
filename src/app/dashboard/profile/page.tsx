@@ -109,8 +109,12 @@ function Page() {
     if (!profileData) {
       getProfileData();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [session?.user?.email]);
+
+    if (!session) {
+      getProfileData();
+    }
+
+  }, [getProfileData, profileData, session]);
 
   return (
     <>
