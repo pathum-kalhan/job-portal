@@ -153,7 +153,6 @@ const CandidateLoginForm = (props: props) => {
             })
           }
           severity={alert.severity}
-          sx={{ width: "100%" }}
         >
           {alert.message}
         </Alert>

@@ -12,17 +12,17 @@ export async function POST(request: Request) {
   try {
     await DbMongoose();
     const { email, userType } = await request.json();
-    const normalizedEmail = email.toLowerCase().trim();
+    const normalizedEmail = email?.toLowerCase().trim();
 
     const user =
       userType === "candidate"
         ? await CandidateModel.findOne({ email: normalizedEmail })
         : await EmployerModel.findOne({ email: normalizedEmail });
 
-    if (!user && !user.name) {
+    if (!user && !user?.name) {
       return NextResponse.json(
         {
-          message: `User not exists in our database.`,
+          message: "User not exists in our database.",
         },
         {
           status: 404,
@@ -55,8 +55,8 @@ export async function POST(request: Request) {
     await mail.send({
       to: normalizedEmail,
       from: {
-        name: `${Constant.companyName}`,
-        email: `${Constant.companyEmail}`,
+        name: `${Constant?.companyName}`,
+        email: `${Constant?.companyEmail}`,
       },
       templateId: "d-01c05991ca9c4523836a50c9c50a49b3",
       dynamicTemplateData: templateData,

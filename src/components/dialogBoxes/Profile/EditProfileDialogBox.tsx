@@ -7,16 +7,38 @@ import {
   IconButton,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import {CandidateEditProfileForm} from "@/components/forms/Candidate/CandidateEditProfileForm";
-// import EmployerEditProfileForm from "@/components/forms/Employer/EmployerEditProfileForm";
+import { CandidateEditProfileForm } from "@/components/forms/Candidate/CandidateEditProfileForm";
+import { EmployerEditProfileForm } from "@/components/forms/Employer/EmployerEditProfileForm";
+
+type initialData = {
+  name: string;
+  linkedInProfileUrl?: string;
+  contactNo: string;
+  email: string;
+  companyDetails?: string;
+  location?: string;
+  education?: string;
+  experience?: string;
+  skills?: string[];
+  websiteUrl?: string;
+};
 
 type props = {
   openEditProfile: boolean;
   handleCloseEditProfile: () => void;
+  getProfileData: () => void;
+  initialData: initialData | null;
+  userRole?: string;
 };
 
 function EditProfileDialogBox(props: props) {
-  const { openEditProfile, handleCloseEditProfile } = props;
+  const {
+    openEditProfile,
+    handleCloseEditProfile,
+    getProfileData,
+    initialData,
+    userRole,
+  } = props;
   return (
     <Dialog
       fullScreen={false}
@@ -37,13 +59,23 @@ function EditProfileDialogBox(props: props) {
           title="Edit Profile"
           sx={{ textAlign: "center" }}
         />
-        <CardContent  sx={{maxHeight:"20rem", overflowY:"auto"}}>
-         <CandidateEditProfileForm/>
-         {/* <EmployerEditProfileForm/> */}
-        </CardContent>
+        {userRole && <CardContent sx={{ maxHeight: "20rem", overflowY: "auto" }}>
+          {userRole === "candidate" ? (
+            <CandidateEditProfileForm
+              getProfileData={getProfileData}
+              initialData={initialData}
+              handleCloseEditProfile={handleCloseEditProfile}
+            />
+          ) : (
+              <EmployerEditProfileForm
+              getProfileData={getProfileData}
+              initialData={initialData}
+              handleCloseEditProfile={handleCloseEditProfile}/>
+          )}
+        </CardContent>}
       </Card>
     </Dialog>
   );
 }
 
-export {EditProfileDialogBox};
+export { EditProfileDialogBox };

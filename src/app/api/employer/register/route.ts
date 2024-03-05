@@ -26,11 +26,11 @@ export async function POST(request: Request) {
       } = isValid;
 
       let { email } = isValid;
-      email = email.toLowerCase().trim();
+      email = email?.toLowerCase().trim();
 
       const [user] = await Employer.find({ email });
 
-      if (user && user.name) {
+      if (user && user?.name) {
         return NextResponse.json(
           {
             message: `User already exists in our database. 

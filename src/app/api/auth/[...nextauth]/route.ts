@@ -69,7 +69,7 @@ const authOptions: NextAuthOptions = {
     signIn: "/login",
   },
   callbacks: {
-    async jwt({ token, user, session }) {
+    async jwt({ token, user, session }) { 
       if (user) {
         return {
           ...token,
@@ -77,7 +77,7 @@ const authOptions: NextAuthOptions = {
           // @ts-ignore
           role: user.role,
         };
-      }
+      } 
 
       return token;
     },

@@ -149,12 +149,13 @@ const CandidateRegForm = () => {
         });
  
         if (response.status !== 200) {
-          setBackendCall(false);
-          setAlert({
-            show: true,
-            message: "Something went wrong!",
-            severity: "error",
-          });
+          const errorMessage = await response.json();
+        setBackendCall(false);
+        setAlert({
+          show: true,
+          message: (typeof errorMessage?.message === "string" && errorMessage?.message) ?? "Something went wrong!",
+          severity: "error",
+        });
         } else {
           formikHelpers.resetForm();
           setEmailValidate(false);
@@ -195,10 +196,11 @@ const CandidateRegForm = () => {
       });
         
       if (response.status !== 200) {
+        const errorMessage = await response.json();
         setBackendCall(false);
         setAlert({
           show: true,
-          message:" Something went wrong!",
+          message: (typeof errorMessage?.message === "string" && errorMessage?.message) ?? "Something went wrong!",
           severity: "error",
         });
       } else {
@@ -237,12 +239,13 @@ const CandidateRegForm = () => {
         
 
         if (response.status !== 200) {
+          const errorMessage = await response.json();
           setBackendCall(false);
-           setAlert({
-          show: true,
-          message: " Something went wrong!",
-          severity: "error",
-        });
+          setAlert({
+            show: true,
+            message: (typeof errorMessage?.message === "string" && errorMessage?.message) ?? "Something went wrong!",
+            severity: "error",
+          });
         } else {
           setIsCodeSubmitted(true);
           setBackendCall(false);
@@ -297,7 +300,6 @@ const CandidateRegForm = () => {
             severity: "success",
           })}
           severity={alert.severity}
-          sx={{ width: "100%" }}
         >
           {alert.message}
         </Alert>

@@ -211,10 +211,11 @@ const EmployerRegForm = () => {
         });
 
         if (response.status !== 200) {
+          const errorMessage = await response.json();
           setBackendCall(false);
           setAlert({
             show: true,
-            message: "Something went wrong!",
+            message: (typeof errorMessage?.message === "string" && errorMessage?.message) ?? "Something went wrong!",
             severity: "error",
           });
         } else {
@@ -256,10 +257,11 @@ const EmployerRegForm = () => {
       });
 
       if (response.status !== 200) {
+        const errorMessage = await response.json();
         setBackendCall(false);
         setAlert({
           show: true,
-          message: "Something went wrong!",
+          message: (typeof errorMessage?.message === "string" && errorMessage?.message) ?? "Something went wrong!",
           severity: "error",
         });
       } else {
@@ -297,10 +299,11 @@ const EmployerRegForm = () => {
         });
 
         if (response.status !== 200) {
+          const errorMessage = await response.json();
           setBackendCall(false);
           setAlert({
             show: true,
-            message: "Something went wrong!",
+            message: (typeof errorMessage?.message === "string" && errorMessage?.message) ?? "Something went wrong!",
             severity: "error",
           });
         } else {
@@ -361,7 +364,6 @@ const EmployerRegForm = () => {
             })
           }
           severity={alert.severity}
-          sx={{ width: "100%" }}
         >
           {alert.message}
         </Alert>

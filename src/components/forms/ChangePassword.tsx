@@ -1,11 +1,13 @@
-
-import React, {useState } from "react";
+import React, { useState } from "react";
 import {
+  Alert,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
+  Snackbar,
+  Stack,
   TextField,
 } from "@mui/material";
 import { Formik, Form, Field, ErrorMessage, FormikHelpers } from "formik";
@@ -73,8 +75,6 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ open, onClose }) => {
   ) => {
     setBackendCall(true);
     try {
-      setBackendCall(true);
-
       const payload = {
         oldPassword: values.currentPassword,
         newPassword: values.newPassword,
@@ -91,10 +91,11 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ open, onClose }) => {
       });
 
       if (response?.status !== 200) {
+        const errorMessage = await response.json();
         setBackendCall(false);
         setAlert({
           show: true,
-          message: "Something went wrong!",
+          message: (typeof errorMessage?.message === "string" && errorMessage?.message) ?? "Something went wrong!",
           severity: "error",
         });
       } else {
@@ -160,6 +161,32 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ open, onClose }) => {
               />
               <ErrorMessage name="confirmPassword" component="div" />
             </DialogContent>
+
+            <Snackbar
+              open={alert.show}
+              onClose={() =>
+                setAlert({
+                  show: false,
+                  message: "",
+                  severity: "success",
+                })
+              }
+              anchorOrigin={{ vertical: "top", horizontal: "center" }}
+            >
+              <Alert
+                severity={alert.severity}
+                onClose={() =>
+                  setAlert({
+                    show: false,
+                    message: "",
+                    severity: "success",
+                  })
+                }
+              >
+                {alert.message}
+              </Alert>
+            </Snackbar>
+
             <DialogActions>
               <Button onClick={handleClose} color="primary">
                 Cancel
