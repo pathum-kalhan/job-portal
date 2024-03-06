@@ -1,4 +1,3 @@
-//  @ts-nocheck
 "use client";
 import React, { useState, useCallback } from "react";
 import Card from "@mui/material/Card";
@@ -6,21 +5,25 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { Avatar, CircularProgress, Stack } from "@mui/material";
+import {
+  Alert,
+  Avatar,
+  CircularProgress,
+  Snackbar,
+  Stack,
+} from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import { useDropzone } from "react-dropzone";
 import { ChangePassword } from "../../../forms/ChangePassword";
 import { LoadingButton } from "@mui/lab";
+import { useSession } from "next-auth/react";
 
-type IFormData = {
+type FormDataObj = {
   file:
     | {
-        lastModified: number;
-        lastModifiedDate: Date;
-        name: string;
-        size: number;
-        type: string;
-        webkitRelativePath: string;
+        image: Blob;
+        fileName: string;
+        fileLastModified: number;
       }
     | any;
 };
@@ -35,13 +38,35 @@ type props = {
     education: string;
     experience: string;
     skills: string[];
+    profilePic: {
+      image: string;
+      status: {
+        type: boolean;
+      };
+    };
     linkedInProfileUrl: string;
   } | null;
   backendCall: boolean;
+  getProfileData: () => void;
+};
+
+type AlertType = {
+  show: boolean;
+  message: string;
+  severity: "error" | "info" | "success" | "warning";
 };
 
 function CandidateProfileInfoCard(props: props) {
   const [openChangePassword, setOpenChangePassword] = useState(false);
+  const [profilePicBackendCall, setProfilePPicBackendCall] = useState(false);
+
+  const { data: session } = useSession();
+
+  const [alert, setAlert] = useState<AlertType>({
+    show: false,
+    message: "",
+    severity: "success",
+  });
 
   const handleCloseChangePassword = () => {
     setOpenChangePassword(false);
@@ -51,31 +76,127 @@ function CandidateProfileInfoCard(props: props) {
     setOpenChangePassword(true);
   };
 
-  const { handleClickOpenEditProfile, profileData, backendCall } = props;
+  const {
+    handleClickOpenEditProfile,
+    profileData,
+    backendCall,
+    getProfileData,
+  } = props;
 
-  const [formData, setFormData] = useState<IFormData["file"]>({ file: null });
+  const onDrop = useCallback(
+    async (acceptedFiles: File[]) => {
+      const fileExtension = acceptedFiles[0]?.name.split(".")[1];
 
-  const onDrop = useCallback((acceptedFiles: File[]) => {
-    // Handle dropped files here
-    if (acceptedFiles[0]?.size < 3599999) {
-      setFormData(acceptedFiles[0]);
-    } else {
-      setAlert({
-        show: true,
-        message: `Please upload a picture smaller than 3MB, Uploaded File is ${(
-          acceptedFiles[0]?.size / 1000000
-        ).toFixed(3)}MB`,
-        severity: "error",
-      });
-      setTimeout(() => {
+      try {
+        if (
+          !(
+            fileExtension === "jpg" ||
+            fileExtension === "jpeg" ||
+            fileExtension === "png" ||
+            fileExtension === "svg"
+          )
+        ) {
+          setAlert({
+            show: true,
+            message:
+              "Please upload a supported picture Type (jpg ,jpeg ,png ,svg)",
+            severity: "error",
+          });
+          return;
+        } else if (acceptedFiles[0]?.size > 3599999) {
+          setAlert({
+            show: true,
+            message: `Please upload a picture smaller than 3MB, Uploaded File is ${(
+              acceptedFiles[0]?.size / 1000000
+            ).toFixed(3)}MB`,
+            severity: "error",
+          });
+
+          return;
+        }
+        setProfilePPicBackendCall(true);
+        const file = acceptedFiles[0];
+
+        const imageBlob = new Image();
+        imageBlob.src = URL.createObjectURL(file);
+        imageBlob.onload = async () => {
+          const canvas = document.createElement("canvas");
+          const context = canvas.getContext("2d");
+
+          const maxWidth = 800;
+          const maxHeight = 800;
+
+          let width = imageBlob.width;
+          let height = imageBlob.height;
+
+          if (width > maxWidth) {
+            height *= maxWidth / width;
+            width = maxWidth;
+          }
+
+          if (height > maxHeight) {
+            width *= maxHeight / height;
+            height = maxHeight;
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+
+          context?.drawImage(imageBlob, 0, 0, width, height);
+
+          canvas.toBlob(
+            async (blob) => {
+              const formData = new FormData();
+              formData.append("image", blob as Blob);
+              formData.append("fileName", file.name as string);
+              // @ts-ignore
+              formData.append("userRole", session?.user?.role as string);
+              formData.append("fileLastModified", file.lastModified as any);
+
+              const response = await fetch("/api/uploadProfilePic", {
+                method: "POST",
+                body: formData,
+              });
+
+              if (response.status !== 200) {
+                setProfilePPicBackendCall(false);
+
+                const { message } = await response.json();
+                setAlert({
+                  show: true,
+                  message:
+                    message ??
+                    "Profile pic upload Failed due to server error, please try again!",
+                  severity: "error",
+                });
+              } else {
+                setProfilePPicBackendCall(false);
+
+                setAlert({
+                  show: true,
+                  message: "Profile pic updated!",
+                  severity: "success",
+                });
+                getProfileData();
+              }
+            },
+            "image/jpeg",
+            0.8
+          ); //image format and quality
+        };
+      } catch (error) { 
+        setProfilePPicBackendCall(false);
+
         setAlert({
-          show: false,
-          message: "",
+          show: true,
+          message: "Server Error",
           severity: "error",
         });
-      }, 6000);
-    }
-  }, []);
+      }
+    },
+    // @ts-ignore
+    [getProfileData, session?.user?.role]
+  );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
@@ -87,6 +208,31 @@ function CandidateProfileInfoCard(props: props) {
 
   return (
     <>
+      <Snackbar
+        open={!!alert?.show}
+        autoHideDuration={3000}
+        onClose={() =>
+          setAlert({
+            show: false,
+            message: "",
+            severity: "success",
+          })
+        }
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert
+          onClose={() =>
+            setAlert({
+              show: false,
+              message: "",
+              severity: "success",
+            })
+          }
+          severity={alert?.severity}
+        >
+          {alert?.message}
+        </Alert>
+      </Snackbar>
       <Card
         sx={{
           width: {
@@ -107,13 +253,25 @@ function CandidateProfileInfoCard(props: props) {
               justifyContent="center"
               mb={3}
             >
-              <Avatar sx={{ bgcolor: "red" }} aria-label="recipe">
-                R
-              </Avatar>
+              {profilePicBackendCall ? (
+                <CircularProgress />
+              ) : (
+                <Avatar
+                  src={profileData?.profilePic?.image}
+                  sx={{ bgcolor: "red" }}
+                  aria-label="recipe"
+                >
+                  {!profileData?.profilePic?.status &&
+                    session?.user?.name?.split("")[0]}
+                </Avatar>
+              )}
 
               <Button
                 variant="text"
-                style={{ pointerEvents: backendCall ? "none" : "auto" }}
+                disabled={profilePicBackendCall}
+                style={{
+                  pointerEvents: profilePicBackendCall ? "none" : "auto",
+                }}
                 {...getRootProps()}
                 className={`dropzone ${isDragActive ? "active" : ""}`}
               >
@@ -149,6 +307,7 @@ function CandidateProfileInfoCard(props: props) {
 
                 <Typography variant="body2" color="text.secondary">
                   {" "}
+                  {/* @ts-ignore */}
                   User Type: <b>{profileData?.userType ?? ""}</b>{" "}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">

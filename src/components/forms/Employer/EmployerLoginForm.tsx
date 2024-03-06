@@ -13,7 +13,7 @@ import {
   CircularProgress,
   InputAdornment,
 } from "@mui/material";
-import { Formik, Form, Field, FormikHelpers } from "formik";
+import { Formik, Form, Field } from "formik";
 import { TextField } from "formik-mui";
 import { signIn, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
@@ -35,7 +35,7 @@ type props = {
   handleLoginMethod: (val: string) => void;
 };
 
-type Alert = {
+type AlertType = {
   show: boolean;
   message: string;
   severity: "error" | "info" | "success" | "warning";
@@ -47,7 +47,7 @@ const EmployerLoginForm = (props: props) => {
   const router = useRouter();
   const { data: session } = useSession();
   const [backendCall, setBackendCall] = useState(false);
-  const [alert, setAlert] = useState<Alert>({
+  const [alert, setAlert] = useState<AlertType>({
     show: false,
     message: "",
     severity: "success",

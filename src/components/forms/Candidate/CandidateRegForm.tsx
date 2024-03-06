@@ -33,7 +33,7 @@ type initialValues = {
   acceptTerms: boolean;
 };
 
-type Alert = {
+type AlertType = {
   show: boolean;
   message: string;
   severity: "error" | "info" | "success" | "warning";
@@ -41,10 +41,9 @@ type Alert = {
 
 const CandidateRegForm = () => {
   const router = useRouter();
-  const [passwordVisibility, setPasswordVisibility] = useState(false);
   const [emailValidate, setEmailValidate] = useState(false);
   const [backendCall, setBackendCall] = useState(false);
-  const [alert, setAlert] = useState<Alert>({
+  const [alert, setAlert] = useState<AlertType>({
     show: false,
     message: "",
     severity: "success",

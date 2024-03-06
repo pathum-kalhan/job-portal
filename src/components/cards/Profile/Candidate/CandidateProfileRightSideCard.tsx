@@ -1,10 +1,10 @@
 "use client";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
-import { Avatar, Grid, Stack } from "@mui/material";
+import { Alert, Avatar, Grid, Snackbar, Stack } from "@mui/material";
 import Link from "next/link";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import { deepPurple } from "@mui/material/colors";
@@ -12,18 +12,182 @@ import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { useRouter } from "next/navigation";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { LoadingButton } from "@mui/lab";
+import { useDropzone } from "react-dropzone";
 
 type props = {
   handleClickOpenUploadCv: () => void;
+  profileData: {
+    name: string;
+    email: string;
+    contactNo: string;
+    dateOfBirth: string;
+    education: string;
+    experience: string;
+    skills: string[];
+    cvUrl: string;
+    profilePic: {
+      image: string;
+      status: {
+        type: boolean;
+      };
+    };
+    linkedInProfileUrl: string;
+  } | null;
+  getProfileData: () => void;
+};
+
+type AlertType = {
+  show: boolean;
+  message: string;
+  severity: "error" | "info" | "success" | "warning";
 };
 
 function CandidateProfileRightSideCard(props: props) {
-  const [backendCall, setBackendCall] = useState(false)
-  const router = useRouter();
+  const { getProfileData, profileData } = props;
+  const { data: session } = useSession();
 
-  const { handleClickOpenUploadCv } = props;
+  const [backendCall, setBackendCall] = useState(false);
+  const [cvBackendCall, setCvBackendCall] = useState(false);
+  const [cvDelBackendCall, setCvDelBackendCall] = useState(false);
+
+  const router = useRouter();
+  const [alert, setAlert] = useState<AlertType>({
+    show: false,
+    message: "",
+    severity: "success",
+  });
+
+  const onDrop = useCallback(
+    async (acceptedFiles: File[]) => {
+      const fileExtension = acceptedFiles[0]?.name.split(".")[1];
+
+      try {
+        if (fileExtension !== "pdf") {
+          setAlert({
+            show: true,
+            message: "Please upload a supported document Type (pdf)",
+            severity: "error",
+          });
+          return;
+        } else if (acceptedFiles[0]?.size > 3599999) {
+          setAlert({
+            show: true,
+            message: `Please upload a PDF smaller than 3MB, Uploaded File is ${(
+              acceptedFiles[0]?.size / 1000000
+            ).toFixed(3)}MB`,
+            severity: "error",
+          });
+
+          return;
+        }
+        setCvBackendCall(true);
+        const file = acceptedFiles[0];
+        const formData = new FormData();
+        formData.append("cv", file);
+        formData.append("fileName", file.name as string);
+        // @ts-ignore
+        formData.append("userRole", session?.user?.role as string);
+        formData.append("fileLastModified", file.lastModified as any);
+
+        const response = await fetch("/api/candidate/uploadCv", {
+          method: "POST",
+          body: formData,
+        });
+
+        if (response.status !== 200) {
+          setCvBackendCall(false);
+
+          const { message } = await response.json();
+          setAlert({
+            show: true,
+            message:
+              message ??
+              "CV upload Failed due to server error, please try again!",
+            severity: "error",
+          });
+        } else {
+          setCvBackendCall(false);
+
+          setAlert({
+            show: true,
+            message: "CV updated!",
+            severity: "success",
+          });
+          getProfileData();
+        }
+      } catch (error) {
+        setCvBackendCall(false);
+
+        setAlert({
+          show: true,
+          message: "Server Error",
+          severity: "error",
+        });
+      }
+    },
+    // @ts-ignore
+    [getProfileData, session?.user?.role]
+  );
+
+  const deleteCv = useCallback(async () => {
+    try {
+      setCvDelBackendCall(true);
+      const payload = {
+        // @ts-ignore
+        userRole: session?.user?.role,
+      };
+
+      const response = await fetch("/api/candidate/deleteCv", {
+        method: "DELETE",
+        body: JSON.stringify(payload),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.status !== 200) {
+        setCvDelBackendCall(false);
+
+        const { message } = await response.json();
+        setAlert({
+          show: true,
+          message:
+            message ??
+            "CV delete Failed due to server error, please try again!",
+          severity: "error",
+        });
+      } else {
+        setCvDelBackendCall(false);
+
+        setAlert({
+          show: true,
+          message: "CV deleted!",
+          severity: "success",
+        });
+        getProfileData();
+      }
+    } catch (error) {
+      setCvDelBackendCall(false);
+
+      setAlert({
+        show: true,
+        message: "Server Error",
+        severity: "error",
+      });
+    }
+
+    // @ts-ignore
+  }, [getProfileData, session?.user?.role]);
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    multiple: false,
+    accept: {
+      "application/pdf": [".pdf"],
+    },
+  });
 
   const logOutFunc = async () => {
     setBackendCall(true);
@@ -34,156 +198,194 @@ function CandidateProfileRightSideCard(props: props) {
   };
 
   return (
-    <Card
-      sx={{
-        width: {
-          lg: 500,
-          md: 500,
-          sm: 500,
-          xs: 350,
-        },
-        pb: 1,
-      }}
-    >
-      <CardContent
+    <>
+      <Snackbar
+        open={!!alert?.show}
+        autoHideDuration={3000}
+        onClose={() =>
+          setAlert({
+            show: false,
+            message: "",
+            severity: "success",
+          })
+        }
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert
+          onClose={() =>
+            setAlert({
+              show: false,
+              message: "",
+              severity: "success",
+            })
+          }
+          severity={alert?.severity}
+        >
+          {alert?.message}
+        </Alert>
+      </Snackbar>
+      <Card
         sx={{
-          maxHeight: { lg: 400, xs: 300 },
-          minHeight: { lg: 400, xs: 300 },
+          width: {
+            lg: 500,
+            md: 500,
+            sm: 500,
+            xs: 350,
+          },
+          pb: 1,
         }}
       >
-        <Grid container gap={1}>
-          <Grid
-            container
-            item
-            lg={12}
-            md={12}
-            sm={12}
-            xs={12}
-            sx={{
-              backgroundColor: "#c9c9c9",
-              padding: "1rem",
-            }}
-            alignItems="center"
-            justifyContent="space-between"
-          >
-            <Grid item lg="auto" md="auto" sm="auto" xs="auto">
-              <CalendarTodayIcon sx={{ fontSize: "4rem", cursor: "pointer" }} />
-            </Grid>
-            <Grid item lg="auto" md="auto" sm="auto" xs="auto">
-              <Button
-                color="success"
-                size="small"
-                variant="contained"
-                sx={{ textTransform: "capitalize", height: "2.5rem" }}
-                endIcon={<CloudUploadIcon />}
-                onClick={handleClickOpenUploadCv}
-              >
-                Upload new CV
-              </Button>
-            </Grid>
-            <Grid item lg="auto" md="auto" sm="auto" xs="auto">
-              <Link href="/testPDF.pdf" target="_blank">
-                <Button
-                  color="info"
+        <input {...getInputProps()} />
+        <CardContent
+          sx={{
+            maxHeight: { lg: 400, xs: 300 },
+            minHeight: { lg: 400, xs: 300 },
+          }}
+        >
+          <Grid container gap={1}>
+            <Grid
+              container
+              item
+              lg={12}
+              md={12}
+              sm={12}
+              xs={12}
+              sx={{
+                backgroundColor: "#c9c9c9",
+                padding: "1rem",
+              }}
+              alignItems="center"
+              justifyContent="space-between"
+            >
+              <Grid item lg="auto" md="auto" sm="auto" xs="auto">
+                <CalendarTodayIcon
+                  sx={{ fontSize: "4rem", cursor: "pointer" }}
+                />
+              </Grid>
+              <Grid item lg="auto" md="auto" sm="auto" xs="auto">
+                <LoadingButton
+                  loading={cvBackendCall}
+                  disabled={cvDelBackendCall || !profileData}
+                  color="success"
                   size="small"
                   variant="contained"
-                  endIcon={<OpenInNewIcon />}
                   sx={{ textTransform: "capitalize", height: "2.5rem" }}
+                  endIcon={<CloudUploadIcon />}
+                  {...getRootProps()}
                 >
-                  View CV
+                  Upload new CV
+                </LoadingButton>
+              </Grid>
+              <Grid item lg="auto" md="auto" sm="auto" xs="auto">
+                <Link href={profileData?.cvUrl ?? ""} target="_blank">
+                  <Button
+                    disabled={
+                      !profileData?.cvUrl || cvBackendCall || cvDelBackendCall
+                    }
+                    color="info"
+                    size="small"
+                    variant="contained"
+                    endIcon={<OpenInNewIcon />}
+                    sx={{ textTransform: "capitalize", height: "2.5rem" }}
+                  >
+                    View CV
+                  </Button>
+                </Link>
+              </Grid>
+
+              <Grid item lg="auto" md="auto" sm="auto" xs="auto">
+                <LoadingButton
+                  loading={cvDelBackendCall}
+                  disabled={!profileData?.cvUrl || cvBackendCall}
+                  color="error"
+                  size="small"
+                  variant="contained"
+                  endIcon={<DeleteForeverIcon fontSize="large" />}
+                  sx={{ textTransform: "capitalize", height: "2.5rem" }}
+                  onClick={deleteCv}
+                >
+                  Delete CV
+                </LoadingButton>
+              </Grid>
+            </Grid>
+
+            <Grid
+              container
+              item
+              lg={12}
+              md={12}
+              sm={12}
+              xs={12}
+              sx={{
+                backgroundColor: "#c9c9c9",
+                padding: "1rem",
+              }}
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <Grid item>
+                <Avatar
+                  sx={{
+                    padding: 1,
+                    backgroundColor: "#ebe6e6",
+                    color: "black",
+                    fontWeight: "bold",
+                  }}
+                >
+                  N/A
+                </Avatar>
+              </Grid>
+
+              <Grid item>
+                <Button
+                  size="medium"
+                  variant="contained"
+                  sx={{
+                    height: "3rem",
+                    borderRadius: 4,
+                    textTransform: "capitalize",
+                    backgroundColor: deepPurple[500],
+                    "&:hover": {
+                      backgroundColor: deepPurple[700],
+                    },
+                  }}
+                >
+                  QUIZZES
                 </Button>
-              </Link>
-            </Grid>
-
-            <Grid item lg="auto" md="auto" sm="auto" xs="auto">
-              <Button
-                color="error"
-                size="small"
-                variant="contained"
-                endIcon={<DeleteForeverIcon fontSize="large" />}
-                sx={{ textTransform: "capitalize", height: "2.5rem" }}
-              >
-                Delete CV
-              </Button>
+              </Grid>
             </Grid>
           </Grid>
+        </CardContent>
 
-          <Grid
-            container
-            item
-            lg={12}
-            md={12}
-            sm={12}
-            xs={12}
-            sx={{
-              backgroundColor: "#c9c9c9",
-              padding: "1rem",
-            }}
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <Grid item>
-              <Avatar
-                sx={{
-                  padding: 1,
-                  backgroundColor: "#ebe6e6",
-                  color: "black",
-                  fontWeight: "bold",
-                }}
-              >
-                N/A
-              </Avatar>
-            </Grid>
-
-            <Grid item>
-              <Button
-                size="medium"
-                variant="contained"
-                sx={{
-                  height: "3rem",
-                  borderRadius: 4,
-                  textTransform: "capitalize",
-                  backgroundColor: deepPurple[500],
-                  "&:hover": {
-                    backgroundColor: deepPurple[700],
-                  },
-                }}
-              >
-                QUIZZES
-              </Button>
-            </Grid>
-          </Grid>
-        </Grid>
-      </CardContent>
-
-      <Stack
-        gap={1}
-        direction="column"
-        alignItems="center"
-        justifyContent="center"
-      >
-        <CardActions>
-          <LoadingButton
-            loading={backendCall}
-            onClick={logOutFunc}
-            size="large"
-            variant="contained"
-            sx={{
-              textTransform: "capitalize",
-              textAlign: "center",
-              borderRadius: 10,
-              backgroundColor: deepPurple[500],
-              "&:hover": {
-                backgroundColor: deepPurple[700],
-              },
-            }}
-            fullWidth
-          >
-            LOGOUT
-          </LoadingButton>
-        </CardActions>
-      </Stack>
-    </Card>
+        <Stack
+          gap={1}
+          direction="column"
+          alignItems="center"
+          justifyContent="center"
+        >
+          <CardActions>
+            <LoadingButton
+              loading={backendCall}
+              onClick={logOutFunc}
+              size="large"
+              variant="contained"
+              sx={{
+                textTransform: "capitalize",
+                textAlign: "center",
+                borderRadius: 10,
+                backgroundColor: deepPurple[500],
+                "&:hover": {
+                  backgroundColor: deepPurple[700],
+                },
+              }}
+              fullWidth
+            >
+              LOGOUT
+            </LoadingButton>
+          </CardActions>
+        </Stack>
+      </Card>
+    </>
   );
 }
 

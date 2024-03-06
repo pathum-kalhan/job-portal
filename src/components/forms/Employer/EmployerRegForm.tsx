@@ -2,7 +2,6 @@
 
 import { LoadingButton } from "@mui/lab";
 import {
-  Button,
   Checkbox,
   FormControlLabel,
   Select,
@@ -24,7 +23,6 @@ import { MouseEvent, useCallback, useState } from "react";
 import * as yup from "yup";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-
 
 type initialValues = {
   companyName: string;
@@ -61,7 +59,7 @@ type selectProps = {
     error: boolean;
   };
 };
-type Alert = {
+type AlertType = {
   show: boolean;
   message: string;
   severity: "error" | "info" | "success" | "warning";
@@ -94,10 +92,10 @@ const EmployerRegForm = () => {
   const [isCodeSubmitted, setIsCodeSubmitted] = useState(false);
   const [backendCall, setBackendCall] = useState(false);
   const [passwordVisibility, setPasswordVisibility] = useState(false);
-  const [newConfirmPasswordVisibility, setNewConfirmPasswordVisibility] = useState(false);
+  const [newConfirmPasswordVisibility, setNewConfirmPasswordVisibility] =
+    useState(false);
 
-
-  const [alert, setAlert] = useState<Alert>({
+  const [alert, setAlert] = useState<AlertType>({
     show: false,
     message: "",
     severity: "success",
@@ -223,7 +221,10 @@ const EmployerRegForm = () => {
           setBackendCall(false);
           setAlert({
             show: true,
-            message: (typeof errorMessage?.message === "string" && errorMessage?.message) ?? "Something went wrong!",
+            message:
+              (typeof errorMessage?.message === "string" &&
+                errorMessage?.message) ??
+              "Something went wrong!",
             severity: "error",
           });
         } else {
@@ -269,7 +270,10 @@ const EmployerRegForm = () => {
         setBackendCall(false);
         setAlert({
           show: true,
-          message: (typeof errorMessage?.message === "string" && errorMessage?.message) ?? "Something went wrong!",
+          message:
+            (typeof errorMessage?.message === "string" &&
+              errorMessage?.message) ??
+            "Something went wrong!",
           severity: "error",
         });
       } else {
@@ -311,7 +315,10 @@ const EmployerRegForm = () => {
           setBackendCall(false);
           setAlert({
             show: true,
-            message: (typeof errorMessage?.message === "string" && errorMessage?.message) ?? "Something went wrong!",
+            message:
+              (typeof errorMessage?.message === "string" &&
+                errorMessage?.message) ??
+              "Something went wrong!",
             severity: "error",
           });
         } else {
@@ -604,7 +611,9 @@ const EmployerRegForm = () => {
                             position="end"
                             style={{ outline: "none", cursor: "pointer" }}
                             onClick={() =>
-                              setNewConfirmPasswordVisibility(!newConfirmPasswordVisibility)
+                              setNewConfirmPasswordVisibility(
+                                !newConfirmPasswordVisibility
+                              )
                             }
                           >
                             {newConfirmPasswordVisibility ? (

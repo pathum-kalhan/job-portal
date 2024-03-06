@@ -21,7 +21,7 @@ type initialValues = {
   email: string;
 };
 
-type Alert = {
+type AlertType = {
   show: boolean;
   message: string;
   severity: "error" | "info" | "success" | "warning";
@@ -35,7 +35,7 @@ const ForgotPassword = (props: props) => {
   const { data: session } = useSession();
   const router = useRouter();
   const [backendCall, setBackendCall] = useState(false);
-  const [alert, setAlert] = useState<Alert>({
+  const [alert, setAlert] = useState<AlertType>({
     show: false,
     message: "",
     severity: "success",
