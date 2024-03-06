@@ -103,8 +103,9 @@ function CandidateProfileRightSideCard(props: props) {
           setAlert({
             show: true,
             message:
-              message ??
-              "CV upload Failed due to server error, please try again!",
+              typeof message === "string"
+                ? message
+                : "CV upload Failed due to server error, please try again!",
             severity: "error",
           });
         } else {
@@ -133,15 +134,10 @@ function CandidateProfileRightSideCard(props: props) {
 
   const deleteCv = useCallback(async () => {
     try {
-      setCvDelBackendCall(true);
-      const payload = {
-        // @ts-ignore
-        userRole: session?.user?.role,
-      };
+      setCvDelBackendCall(true); 
 
       const response = await fetch("/api/candidate/deleteCv", {
         method: "DELETE",
-        body: JSON.stringify(payload),
         headers: {
           "Content-Type": "application/json",
         },
@@ -154,8 +150,9 @@ function CandidateProfileRightSideCard(props: props) {
         setAlert({
           show: true,
           message:
-            message ??
-            "CV delete Failed due to server error, please try again!",
+            typeof message === "string"
+              ? message
+              : "CV delete Failed due to server error, please try again!",
           severity: "error",
         });
       } else {
@@ -177,9 +174,8 @@ function CandidateProfileRightSideCard(props: props) {
         severity: "error",
       });
     }
-
-    // @ts-ignore
-  }, [getProfileData, session?.user?.role]);
+ 
+  }, [getProfileData]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,

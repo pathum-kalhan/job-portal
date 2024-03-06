@@ -243,7 +243,7 @@ const EmployerRegForm = () => {
         setBackendCall(false);
         setAlert({
           show: true,
-          message: e?.message ?? "Server Error",
+          message: typeof e.message === "string" ? e.message : "Server Error",
           severity: "error",
         });
       }
@@ -271,9 +271,9 @@ const EmployerRegForm = () => {
         setAlert({
           show: true,
           message:
-            (typeof errorMessage?.message === "string" &&
-              errorMessage?.message) ??
-            "Something went wrong!",
+            typeof errorMessage?.message === "string"
+              ? errorMessage?.message
+              : "Something went wrong!",
           severity: "error",
         });
       } else {
@@ -289,7 +289,7 @@ const EmployerRegForm = () => {
       setBackendCall(false);
       setAlert({
         show: true,
-        message: e?.message ?? "Server Error",
+        message: typeof e?.message === "string" ? e?.message : "Server Error",
         severity: "error",
       });
     }
@@ -334,7 +334,7 @@ const EmployerRegForm = () => {
         setBackendCall(false);
         setAlert({
           show: true,
-          message: e?.message ?? "Server Error",
+          message: typeof e?.message === "string" ? e?.message : "Server Error",
           severity: "error",
         });
       }

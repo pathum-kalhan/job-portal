@@ -158,8 +158,9 @@ function EmployerProfileInfoCard(props: props) {
                 setAlert({
                   show: true,
                   message:
-                    message ??
-                    "Profile pic upload Failed due to server error, please try again!",
+                    typeof message === "string"
+                      ? message
+                      :"Profile pic upload Failed due to server error, please try again!",
                   severity: "error",
                 });
               } else {

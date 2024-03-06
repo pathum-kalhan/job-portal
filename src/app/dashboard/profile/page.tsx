@@ -96,11 +96,12 @@ function Page() {
         const data = await response.json();
         setProfileData(data.data);
 
-        await update({ profileImage: data.data.profilePic.image });
+        await update({ profileImage: data?.data?.profilePic?.image ?? "" });
 
         setBackendCall(false);
       }
     } catch (error) {
+      console.log("error", error)
       setBackendCall(false);
       setAlert({
         show: true,
@@ -108,7 +109,7 @@ function Page() {
         severity: "error",
       });
     }
-    // @ts-ignore
+ 
   }, [session, update]);
 
   useEffect(() => {

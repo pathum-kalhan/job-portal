@@ -158,15 +158,16 @@ function CandidateProfileInfoCard(props: props) {
                 body: formData,
               });
 
-              if (response.status !== 200) {
+              if (response?.status !== 200) {
                 setProfilePPicBackendCall(false);
 
                 const { message } = await response.json();
                 setAlert({
                   show: true,
                   message:
-                    message ??
-                    "Profile pic upload Failed due to server error, please try again!",
+                    typeof message === "string"
+                      ? message
+                      : "Profile pic upload Failed due to server error, please try again!",
                   severity: "error",
                 });
               } else {
@@ -184,7 +185,7 @@ function CandidateProfileInfoCard(props: props) {
             0.8
           ); //image format and quality
         };
-      } catch (error) { 
+      } catch (error) {
         setProfilePPicBackendCall(false);
 
         setAlert({
