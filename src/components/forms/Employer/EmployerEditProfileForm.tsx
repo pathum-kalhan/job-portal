@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  Button,
   Select,
   MenuItem,
   FormControl,
@@ -11,7 +10,7 @@ import {
   Snackbar,
   Alert,
 } from "@mui/material";
-import { Formik, Form, Field, FormikProps, FormikHelpers } from "formik";
+import { Formik, Form, Field, FormikProps } from "formik";
 import { TextField } from "formik-mui";
 import * as yup from "yup";
 import { useSession } from "next-auth/react";
@@ -59,7 +58,7 @@ type selectProps = {
   };
 };
 
-type Alert = {
+type AlertType = {
   show: boolean;
   message: string;
   severity: "error" | "info" | "success" | "warning";
@@ -97,7 +96,7 @@ const EmployerEditProfileForm = (props: props) => {
   const { data: session } = useSession();
   const { getProfileData, initialData, handleCloseEditProfile } = props;
 
-  const [alert, setAlert] = useState<Alert>({
+  const [alert, setAlert] = useState<AlertType>({
     show: false,
     message: "",
     severity: "success",

@@ -14,7 +14,7 @@ import {
   CircularProgress,
   InputAdornment,
 } from "@mui/material";
-import { Formik, Form, Field, FormikHelpers } from "formik";
+import { Formik, Form, Field } from "formik";
 import { TextField } from "formik-mui";
 
 import * as yup from "yup";
@@ -38,7 +38,7 @@ type initialValues = {
 type props = {
   handleLoginMethod: (val: string) => void;
 };
-type Alert = {
+type AlertType = {
   show: boolean;
   message: string;
   severity: "error" | "info" | "success" | "warning";
@@ -52,7 +52,7 @@ const CandidateLoginForm = (props: props) => {
 
   const [passwordVisibility, setPasswordVisibility] = useState(false);
 
-  const [alert, setAlert] = useState<Alert>({
+  const [alert, setAlert] = useState<AlertType>({
     show: false,
     message: "",
     severity: "success",

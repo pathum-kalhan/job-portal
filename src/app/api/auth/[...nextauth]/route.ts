@@ -18,8 +18,8 @@ const authOptions: NextAuthOptions = {
   },
 
   providers: [
-    CredentialsProvider({ 
-      name: "Credentials", 
+    CredentialsProvider({
+      name: "Credentials",
 
       credentials: {},
 
@@ -53,6 +53,7 @@ const authOptions: NextAuthOptions = {
               id: user._id,
               email: user.email,
               name: user.name,
+              profileImage: user.profilePic.image,
               role: user.userType,
             };
           }
@@ -69,7 +70,11 @@ const authOptions: NextAuthOptions = {
     signIn: "/login",
   },
   callbacks: {
-    async jwt({ token, user }) { 
+    async jwt({ token, user, trigger, session }) {
+      if (trigger === "update" && session.profileImage) {
+        token.profileImage = session.profileImage;
+      }
+
       if (user) {
         return {
           ...token,
@@ -77,11 +82,12 @@ const authOptions: NextAuthOptions = {
           // @ts-ignore
           role: user.role,
         };
-      } 
+      }
 
       return token;
     },
 
+    // @ts-ignore
     async session({ session, user, token }) {
       return {
         ...session,
@@ -89,6 +95,7 @@ const authOptions: NextAuthOptions = {
           ...session.user,
           id: token.id,
           role: token?.role ?? "",
+          profileImage: token.profileImage,
         },
       };
     },

@@ -30,7 +30,7 @@ type initialValues = {
   confirmPassword: string;
 };
 
-type Alert = {
+type AlertType = {
   show: boolean;
   message: string;
   severity: "error" | "info" | "success" | "warning";
@@ -51,7 +51,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ open, onClose }) => {
   const [newPasswordVisibility, setNewPasswordVisibility] = useState(false);
   const [newConfirmPasswordVisibility, setNewConfirmPasswordVisibility] = useState(false);
 
-  const [alert, setAlert] = useState<Alert>({
+  const [alert, setAlert] = useState<AlertType>({
     show: false,
     message: "",
     severity: "success",

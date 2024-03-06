@@ -22,16 +22,13 @@ import { EmployerProfileInfoCard } from "@/components/cards/Profile/Employer/Emp
 import { EmployerProfileRightSideCard } from "@/components/cards/Profile/Employer/EmployerProfileRightSideCard";
 import { useRouter } from "next/navigation";
 
-type Alert = {
+type AlertType = {
   show: boolean;
   message: string;
   severity: "error" | "info" | "success" | "warning";
 };
- 
- 
 
 function Page() {
-
   const router = useRouter();
 
   const [openEditProfile, setOpenEditProfile] = useState(false);
@@ -40,13 +37,13 @@ function Page() {
   const [backendCall, setBackendCall] = useState(false);
   const [profileData, setProfileData] = useState(null);
 
-  const [alert, setAlert] = useState<Alert>({
+  const [alert, setAlert] = useState<AlertType>({
     show: false,
     message: "",
     severity: "success",
   });
 
-  const { data: session } = useSession();
+  const { data: session, update } = useSession();
 
   // Edit profile
   const handleClickOpenEditProfile = () => {
@@ -98,6 +95,9 @@ function Page() {
       } else {
         const data = await response.json();
         setProfileData(data.data);
+
+        await update({ profileImage: data.data.profilePic.image });
+
         setBackendCall(false);
       }
     } catch (error) {
@@ -109,7 +109,7 @@ function Page() {
       });
     }
     // @ts-ignore
-  }, [session?.user?.email, session?.user?.role]);
+  }, [session, update]);
 
   useEffect(() => {
     if (!profileData) {
@@ -117,9 +117,8 @@ function Page() {
     }
 
     if (!session) {
-      router.push("/login"); 
+      router.push("/login");
     }
-
   }, [getProfileData, profileData, session, router]);
 
   return (
@@ -194,12 +193,14 @@ function Page() {
                     handleClickOpenEditProfile={handleClickOpenEditProfile}
                     profileData={profileData}
                     backendCall={backendCall}
+                    getProfileData={getProfileData}
                   />
                 ) : (
                   <EmployerProfileInfoCard
                     handleClickOpenEditProfile={handleClickOpenEditProfile}
                     profileData={profileData}
                     backendCall={backendCall}
+                    getProfileData={getProfileData}
                   />
                 )}
               </>
@@ -262,6 +263,8 @@ function Page() {
             {/* @ts-ignore */}
             {session && session?.user?.role === "candidate" ? (
               <CandidateProfileRightSideCard
+                getProfileData={getProfileData}
+                profileData={profileData}
                 handleClickOpenUploadCv={handleClickOpenUploadCv}
               />
             ) : (

@@ -13,9 +13,9 @@ import {
 import { Formik, Form, Field, FormikHelpers } from "formik";
 import { TextField } from "formik-mui";
 import * as yup from "yup";
-import { useState, Suspense, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { LoadingButton } from "@mui/lab";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
@@ -24,7 +24,7 @@ type initialValues = {
   reenterPassword: string;
 };
 
-type Alert = {
+type AlertType = {
   show: boolean;
   message: string;
   severity: "error" | "info" | "success" | "warning";
@@ -42,7 +42,7 @@ const NewPassword = (props: props) => {
   const router = useRouter();
 
   const [backendCall, setBackendCall] = useState(false);
-  const [alert, setAlert] = useState<Alert>({
+  const [alert, setAlert] = useState<AlertType>({
     show: false,
     message: "",
     severity: "success",

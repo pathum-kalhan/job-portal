@@ -122,7 +122,7 @@ function NavBar() {
                 display: { xs: "none", md: "flex" },
               }}
             >
-              <Image src="/CGPLogo.png" alt="CGPLogo" width={70} height={40} />
+              <Image priority src="/CGPLogo.png" alt="CGPLogo" width={70} height={40} />
             </Card>
           </Link>
           {/* Desktop desktop Logo end */}
@@ -271,16 +271,17 @@ function NavBar() {
           </Grid>
           {/* Desktop nav Menu end */}
 
-          {/* Nav bar Profile Icon start */}
-          <Box sx={{ flexGrow: 0 }}>
+          {/* Nav bar Profile Icon start */} 
+          {session && <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="View Profile">
               <Link href="/dashboard/profile">
                 <IconButton sx={{ p: 0 }}>
-                  <Avatar alt="Profile Icon" src="/profilepic.jpeg" />
+                  {/* @ts-ignore */} 
+                  <Avatar alt="Profile Icon" src={session?.user?.profileImage ?? ""} />
                 </IconButton>
               </Link>
             </Tooltip>
-          </Box>
+          </Box>}
           {/* Nav bar Profile Icon end */}
 
           {/* Nav dropdown menu start */}

@@ -2,7 +2,6 @@
 
 import { LoadingButton } from "@mui/lab";
 import {
-  Button,
   Chip,
   Grid,
   TextField as MUITextField,
@@ -10,7 +9,7 @@ import {
   Snackbar,
   Alert,
 } from "@mui/material";
-import { Formik, Form, Field, FormikHelpers } from "formik";
+import { Formik, Form, Field } from "formik";
 import { TextField } from "formik-mui";
 import { useSession } from "next-auth/react";
 import { useCallback, useEffect, useState } from "react";
@@ -36,7 +35,7 @@ type initialData = {
   skills?: string[];
 };
 
-type Alert = {
+type AlertType = {
   show: boolean;
   message: string;
   severity: "error" | "info" | "success" | "warning";
@@ -56,7 +55,7 @@ const CandidateEditProfileForm = (props: props) => {
   const { data: session } = useSession();
 
   const [backendCall, setBackendCall] = useState(false);
-  const [alert, setAlert] = useState<Alert>({
+  const [alert, setAlert] = useState<AlertType>({
     show: false,
     message: "",
     severity: "success",
