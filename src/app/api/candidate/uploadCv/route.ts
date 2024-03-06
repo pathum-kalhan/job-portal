@@ -3,7 +3,6 @@ import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import CandidateModel from "../../models/Candidate";
 import { storage } from "@/utils/firebase";
-import EmployerModel from "../../models/Employer";
 
 export async function POST(request: Request) {
   try {
@@ -27,10 +26,7 @@ export async function POST(request: Request) {
     const userRole = formData.get("userRole");
     const cvBlob = new Blob([cv as BlobPart]);
 
-    const user =
-      userRole === "candidate"
-        ? CandidateModel.findOne({ email: sessionData?.user?.email })
-        : EmployerModel.findOne({ email: sessionData?.user?.email });
+    const user = await CandidateModel.findOne({ email: sessionData?.user?.email }) 
 
     if (!user) {
       return NextResponse.json(
@@ -55,7 +51,7 @@ export async function POST(request: Request) {
     }
     const storageRef = storage.ref();
     const fileRef = storageRef.child(
-      `JobPortal/${userRole}/CV/${sessionData?.user?.email}/${fileName}`
+      `JobPortal/${userRole}/CV/${sessionData?.user?.email}/${sessionData?.user?.name?.split(" ")[0]}_CV`
     );
 
     const uploadTaskSnapshot = await fileRef.put(cvBlob, {
@@ -64,17 +60,8 @@ export async function POST(request: Request) {
 
     const pdfUrl = await uploadTaskSnapshot.ref.getDownloadURL();
 
-    if (pdfUrl) {
-      if (userRole === "candidate") {
+    if (pdfUrl) { 
         await CandidateModel.findOneAndUpdate(
-          { email: sessionData?.user?.email },
-          {
-            cvUrl: pdfUrl,
-          },
-          { new: true }
-        );
-      } else if (userRole === "employer") {
-        await EmployerModel.findOneAndUpdate(
           { email: sessionData?.user?.email },
           {
             cvUrl: pdfUrl,
@@ -99,17 +86,8 @@ export async function POST(request: Request) {
         {
           status: 200,
         }
-      );
-    } else {
-      return NextResponse.json(
-        {
-          message: "CV upload failed!",
-        },
-        {
-          status: 422,
-        }
-      );
-    }
+    ); 
+    
   } catch (error) {
     return NextResponse.json(
       {

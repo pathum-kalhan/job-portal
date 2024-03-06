@@ -29,8 +29,8 @@ export async function POST(request: Request) {
 
     const user =
       userRole === "candidate"
-        ? CandidateModel.findOne({ email: sessionData?.user?.email })
-        : EmployerModel.findOne({ email: sessionData?.user?.email });
+        ? await CandidateModel.findOne({ email: sessionData?.user?.email })
+        : await EmployerModel.findOne({ email: sessionData?.user?.email });
 
     if (!user) {
       return NextResponse.json(
@@ -55,7 +55,7 @@ export async function POST(request: Request) {
     }
     const storageRef = storage.ref();
     const fileRef = storageRef.child(
-      `JobPortal/${userRole}/profilePics/${sessionData?.user?.email}/${fileName}`
+      `JobPortal/${userRole}/profilePics/${sessionData?.user?.email}/${sessionData?.user?.name?.split(" ")[0]}_ProfilePic`
     );
 
     const uploadTaskSnapshot = await fileRef.put(imageBlob, {
@@ -108,6 +108,7 @@ export async function POST(request: Request) {
       );
     }
   } catch (error) {
+    console.log("error", error)
     return NextResponse.json(
       {
         message: error,
