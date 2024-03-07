@@ -2,12 +2,12 @@ import { NextResponse } from "next/server";
 import mail from "@sendgrid/mail";
 import { Constant } from "@/utils/Constents";
 
-export async function POST(response: Response) {
+export async function POST(request: Request) {
   const apiKey: string = `${process.env.SENDGRID_API_KEY}`;
 
   try {
 
-    const { message, senderEmail, SenderName} = await response.json();
+    const { message, senderEmail, SenderName} = await request.json();
 
     // send mail
     const templateData = {

@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 import CandidateModel from "../models/Candidate";
 import EmployerModel from "../models/Employer";
 
-export async function DELETE(response: Response) {
+export async function DELETE(request: Request) {
   try {
     const sessionData = await getServerSession();
     if (!sessionData) {
@@ -20,7 +20,7 @@ export async function DELETE(response: Response) {
 
     await DbMongoose();
 
-    const { userRole } = await response.json();
+    const { userRole } = await request.json();
 
     const user =
       userRole === "candidate"

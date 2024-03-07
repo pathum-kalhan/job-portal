@@ -5,7 +5,7 @@ import EmployerModel from "../models/Employer";
 import mail from "@sendgrid/mail";
 import { Constant } from "@/utils/Constents";
 
-export async function POST(response: Response) {
+export async function POST(request: Request) {
   const apiKey: string = `${process.env.SENDGRID_API_KEY}`;
 
   try {
@@ -22,7 +22,7 @@ export async function POST(response: Response) {
       );
     }
 
-    const formData = await response.formData();
+    const formData = await request.formData();
     const subject = formData.get("subject");
     const message = formData.get("message");
     const priorityLevel = formData.get("priorityLevel");
