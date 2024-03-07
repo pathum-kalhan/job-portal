@@ -197,7 +197,7 @@ function Page() {
                     getProfileData={getProfileData}
                   />
                 ) : // @ts-ignore
-                session?.user?.role === "candidate" ? (
+                session?.user?.role === "employer" ? (
                   <EmployerProfileInfoCard
                     handleClickOpenEditProfile={handleClickOpenEditProfile}
                     profileData={profileData}
