@@ -1,4 +1,3 @@
-
 import DbMongoose from "../../../lib/db_mongoose";
 import Candidates from "../models/Candidate";
 import { NextResponse } from "next/server";
@@ -7,9 +6,7 @@ import { getServerSession } from "next-auth";
 
 export async function POST(request: Request) {
   try {
-
     const sessionData = await getServerSession();
-    
     if (!sessionData) {
       return NextResponse.json(
         {
@@ -21,12 +18,28 @@ export async function POST(request: Request) {
       );
     }
 
-    await DbMongoose(); 
+    await DbMongoose();
     const data = await request.json();
 
     const normalizedEmail = data?.email?.toLowerCase().trim();
 
-    const [user] = data?.userRole === 'candidate' ?  await Candidates.find({ email: normalizedEmail }) :  await Employer.find({ email: normalizedEmail })
+    const user =
+      data?.userRole === "candidate"
+        ? await Candidates.findOne({ email: normalizedEmail })
+        : data?.userRole === "employer"
+        ? await Employer.findOne({ email: normalizedEmail })
+        : null;
+
+    if (!user) {
+      return NextResponse.json(
+        {
+          message: "Unauthorized",
+        },
+        {
+          status: 401,
+        }
+      );
+    }
 
     return NextResponse.json(
       {

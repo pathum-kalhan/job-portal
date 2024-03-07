@@ -66,12 +66,12 @@ function EditProfileDialogBox(props: props) {
               initialData={initialData}
               handleCloseEditProfile={handleCloseEditProfile}
             />
-          ) : (
+          ) : userRole === "employer" ? (
               <EmployerEditProfileForm
               getProfileData={getProfileData}
               initialData={initialData}
               handleCloseEditProfile={handleCloseEditProfile}/>
-          )}
+          ): <></>}
         </CardContent>}
       </Card>
     </Dialog>

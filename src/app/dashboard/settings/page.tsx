@@ -1,12 +1,14 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Alert,
   Button,
   Grid,
   Link,
+  Snackbar,
   Typography,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -18,11 +20,26 @@ import ReviewsIcon from "@mui/icons-material/Reviews";
 import SupportAgentIcon from "@mui/icons-material/SupportAgent";
 import PasswordIcon from "@mui/icons-material/Password";
 import { ChangePassword } from "../../../components/forms/ChangePassword";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
+import { LoadingButton } from "@mui/lab";
+import { useRouter } from "next/navigation";
+
+type AlertType = {
+  show: boolean;
+  message: string;
+  severity: "error" | "info" | "success" | "warning";
+};
 
 function Page() {
+  const router = useRouter();
   const { data: session } = useSession();
+  const [backendCall, setBackendCall] = useState(false);
 
+  const [alert, setAlert] = useState<AlertType>({
+    show: false,
+    message: "",
+    severity: "success",
+  });
   const [isOptInNewsLetter, setIsOptInNewsLetter] = useState(false);
   const [isOptInJobAlert, setIsOptInJobAlert] = useState(false);
   const [isOptInApplicationStatus, setIsOptInApplicationStatus] =
@@ -35,6 +52,59 @@ function Page() {
   const handleCloseChangePassword = () => {
     setOpenChangePassword(false);
   };
+
+  const handelDeleteAccount = useCallback(async () => {
+    try {
+      setBackendCall(true);
+
+      const response = await fetch("/api/deleteAccount", {
+        method: "DELETE",
+        body: JSON.stringify({
+          // @ts-ignore
+          userRole: session?.user?.role,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response?.status !== 200) {
+        setBackendCall(false);
+        const { message } = await response.json();
+        setAlert({
+          show: true,
+          message:
+            typeof message === "string"
+              ? message
+              : "Account deletion failed due to server error, please try again!",
+          severity: "error",
+        });
+      } else {
+        setBackendCall(false);
+
+        setAlert({
+          show: true,
+          message: "Account deleted successfully!",
+          severity: "success",
+        });
+        
+        await signOut({ redirect: false, callbackUrl: "/" });
+
+        setTimeout(() => {
+          router.replace("/login");
+        }, 2000);
+      }
+    } catch (error) {
+      setBackendCall(false);
+      setAlert({
+        show: true,
+        message: "Server Error",
+        severity: "error",
+      });
+    }
+
+    // @ts-ignore
+  }, [router, session?.user?.role]);
 
   const handleOpenChangePassword = () => {
     setOpenChangePassword(true);
@@ -60,6 +130,32 @@ function Page() {
 
   return (
     <>
+      <Snackbar
+        open={!!alert?.show}
+        autoHideDuration={3000}
+        onClose={() =>
+          setAlert({
+            show: false,
+            message: "",
+            severity: "success",
+          })
+        }
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert
+          onClose={() =>
+            setAlert({
+              show: false,
+              message: "",
+              severity: "success",
+            })
+          }
+          severity={alert?.severity}
+        >
+          {alert?.message}
+        </Alert>
+      </Snackbar>
+
       <Accordion defaultExpanded>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
@@ -118,13 +214,15 @@ function Page() {
                   Account management
                 </Typography>
                 <Typography>
-                  <Button
+                  <LoadingButton
+                    loading={backendCall}
+                    disabled={backendCall}
                     color={"error"}
                     startIcon={<DeleteForeverIcon />}
-                    onClick={handelChangeNewsLetterOpt}
+                    onClick={handelDeleteAccount}
                   >
                     Delete
-                  </Button>{" "}
+                  </LoadingButton>{" "}
                   account permanently.
                 </Typography>
               </Grid>

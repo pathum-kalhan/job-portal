@@ -105,7 +105,7 @@ function CandidateProfileRightSideCard(props: props) {
             message:
               typeof message === "string"
                 ? message
-                : "CV upload Failed due to server error, please try again!",
+                : "CV upload failed due to server error, please try again!",
             severity: "error",
           });
         } else {
@@ -152,7 +152,7 @@ function CandidateProfileRightSideCard(props: props) {
           message:
             typeof message === "string"
               ? message
-              : "CV delete Failed due to server error, please try again!",
+              : "CV delete failed due to server error, please try again!",
           severity: "error",
         });
       } else {

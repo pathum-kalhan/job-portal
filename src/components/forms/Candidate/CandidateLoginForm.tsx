@@ -28,7 +28,6 @@ import Link from "next/link";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
-
 type initialValues = {
   email: string;
   password: string;
@@ -96,7 +95,7 @@ const CandidateLoginForm = (props: props) => {
         setBackendCall(false);
         setAlert({
           show: true,
-          message: "Please check your email and password!",
+          message: "Please check your email and password are correct!",
           severity: "error",
         });
       } else {
@@ -266,7 +265,6 @@ const CandidateLoginForm = (props: props) => {
                         name="password"
                         label="Password"
                         component={TextField}
-                        
                         type={passwordVisibility ? "text" : "password"}
                         InputProps={{
                           endAdornment: (
@@ -286,7 +284,6 @@ const CandidateLoginForm = (props: props) => {
                           ),
                         }}
                       />
-                      
                     </Grid>
                     <Grid
                       container
@@ -330,14 +327,14 @@ const CandidateLoginForm = (props: props) => {
                         xs={"auto"}
                       >
                         <Link href="/candidate/forgot-password">
-                        <Button
-                          disabled={backendCall}
-                          sx={{ textTransform: "capitalize" }}
-                          variant="text"
-                        >
-                          Forgot Password?
+                          <Button
+                            disabled={backendCall}
+                            sx={{ textTransform: "capitalize" }}
+                            variant="text"
+                          >
+                            Forgot Password?
                           </Button>
-                          </Link>
+                        </Link>
                       </Grid>
                     </Grid>
 

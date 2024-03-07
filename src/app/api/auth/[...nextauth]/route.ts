@@ -35,9 +35,11 @@ const authOptions: NextAuthOptions = {
                 ? await CandidateModel.findOne({
                     email: email?.toLowerCase()?.trim(),
                   })
-                : await EmployerModel.findOne({
+                : role === "employer"
+                ? await EmployerModel.findOne({
                     email: email?.toLowerCase()?.trim(),
-                  });
+                  })
+                : null;
 
             if (!user) {
               throw new Error("No user found");
@@ -86,7 +88,6 @@ const authOptions: NextAuthOptions = {
 
       return token;
     },
- 
     async session({ session, user, token }) {
       return {
         ...session,

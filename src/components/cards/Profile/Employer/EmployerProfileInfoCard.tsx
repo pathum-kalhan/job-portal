@@ -62,7 +62,6 @@ function EmployerProfileInfoCard(props: props) {
     getProfileData,
   } = props;
   const { data: session } = useSession();
-  const [formData, setFormData] = useState<IFormData["file"]>({ file: null });
   const [openChangePassword, setOpenChangePassword] = useState(false);
   const [profilePicBackendCall, setProfilePicBackendCall] = useState(false);
 
@@ -160,7 +159,7 @@ function EmployerProfileInfoCard(props: props) {
                   message:
                     typeof message === "string"
                       ? message
-                      :"Profile pic upload Failed due to server error, please try again!",
+                      :"Profile pic upload failed due to server error, please try again!",
                   severity: "error",
                 });
               } else {

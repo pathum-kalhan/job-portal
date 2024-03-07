@@ -101,7 +101,7 @@ function Page() {
         setBackendCall(false);
       }
     } catch (error) {
-      console.log("error", error)
+      console.log("error", error);
       setBackendCall(false);
       setAlert({
         show: true,
@@ -196,13 +196,16 @@ function Page() {
                     backendCall={backendCall}
                     getProfileData={getProfileData}
                   />
-                ) : (
+                ) : // @ts-ignore
+                session?.user?.role === "candidate" ? (
                   <EmployerProfileInfoCard
                     handleClickOpenEditProfile={handleClickOpenEditProfile}
                     profileData={profileData}
                     backendCall={backendCall}
                     getProfileData={getProfileData}
                   />
+                ) : (
+                  <></>
                 )}
               </>
             ) : (
@@ -268,8 +271,11 @@ function Page() {
                 profileData={profileData}
                 handleClickOpenUploadCv={handleClickOpenUploadCv}
               />
-            ) : (
+            ) : // @ts-ignore
+            session && session?.user?.role === "employer" ? (
               <EmployerProfileRightSideCard />
+            ) : (
+              <></>
             )}
           </Grid>
         </Grid>
