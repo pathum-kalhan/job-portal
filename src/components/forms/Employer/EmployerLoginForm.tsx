@@ -92,7 +92,7 @@ const EmployerLoginForm = (props: props) => {
         setBackendCall(false);
         setAlert({
           show: true,
-          message: "Please check your email and password!",
+          message: "Please check your email and password are correct!",
           severity: "error",
         });
       } else {

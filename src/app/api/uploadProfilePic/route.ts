@@ -28,9 +28,11 @@ export async function POST(request: Request) {
     const imageBlob = new Blob([image as BlobPart]);
 
     const user =
-      userRole === "candidate"
-        ? await CandidateModel.findOne({ email: sessionData?.user?.email })
-        : await EmployerModel.findOne({ email: sessionData?.user?.email });
+    userRole === "candidate"
+      ? await CandidateModel.findOne({ email: sessionData?.user?.email })
+      : userRole === "employer"
+      ? await EmployerModel.findOne({ email: sessionData?.user?.email })
+      : null;
 
     if (!user) {
       return NextResponse.json(
@@ -76,7 +78,7 @@ export async function POST(request: Request) {
           },
           { new: true }
         );
-      } else {
+      } else if (userRole === "employer") {
         await EmployerModel.findOneAndUpdate(
           { email: sessionData?.user?.email },
           {
@@ -86,6 +88,15 @@ export async function POST(request: Request) {
             },
           },
           { new: true }
+        );
+      } else { 
+        return NextResponse.json(
+          {
+            message: "Unauthorized",
+          },
+          {
+            status: 401,
+          }
         );
       }
 

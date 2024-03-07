@@ -118,9 +118,10 @@ export async function POST(request: Request) {
       }
     );
   } catch (error: any) { 
+    console.log("error", error)
     return NextResponse.json(
       {
-        message: error,
+        message: error.message ==="string" ? error.message : "Please try again.",
       },
       {
         status: 500,

@@ -18,15 +18,6 @@ import { ChangePassword } from "../../../forms/ChangePassword";
 import { LoadingButton } from "@mui/lab";
 import { useSession } from "next-auth/react";
 
-type FormDataObj = {
-  file:
-    | {
-        image: Blob;
-        fileName: string;
-        fileLastModified: number;
-      }
-    | any;
-};
 
 type props = {
   handleClickOpenEditProfile: () => void;
@@ -167,7 +158,7 @@ function CandidateProfileInfoCard(props: props) {
                   message:
                     typeof message === "string"
                       ? message
-                      : "Profile pic upload Failed due to server error, please try again!",
+                      : "Profile pic upload failed due to server error, please try again!",
                   severity: "error",
                 });
               } else {

@@ -1,76 +1,200 @@
-import React from 'react';
-import { Formik, Form, Field } from 'formik';
-import * as Yup from 'yup';
-import { TextField, Button, Card, CardContent, CardHeader } from '@mui/material';
+import React, { useCallback, useState } from "react";
+import { Formik, Form, Field, FormikHelpers } from "formik";
+import * as yup from "yup";
+import {
+  TextField,
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  Alert,
+  Snackbar,
+} from "@mui/material";
+import { useSession } from "next-auth/react";
+import { LoadingButton } from "@mui/lab";
+
+type AlertType = {
+  show: boolean;
+  message: string;
+  severity: "error" | "info" | "success" | "warning";
+};
+
+type initialValuesType = {
+  name: string;
+  email: string;
+  message: string;
+};
 
 const ContactUsForm: React.FC = () => {
-  const initialValues = {
-    name: '',
-    email: '',
-    message: '',
-  };
-
-  const accountValidationSchema = Yup.object({
-    name: Yup.string().required('Required'),
-    email: Yup.string().email('Invalid email address').required('Required'),
-    message: Yup.string().required('Required'),
+  const [backendCall, setBackendCall] = useState(false);
+  const [alert, setAlert] = useState<AlertType>({
+    show: false,
+    message: "",
+    severity: "success",
   });
 
-  const handleSubmit = (values: typeof initialValues, { resetForm }: any) => {
-    // Handle form submission here
-    console.log(values);
-    resetForm();
+  const initialValues: initialValuesType = {
+    name: "",
+    email: "",
+    message: "",
   };
+
+  const accountValidationSchema = yup.object({
+    name: yup.string().required("Required"),
+    email: yup
+      .string()
+      .email("Invalid email format")
+      .required("Email is required"),
+    message: yup.string().required("Required"),
+  });
+
+  const handleSubmit = useCallback(
+    async (
+      values: initialValuesType,
+      formikHelpers: FormikHelpers<initialValuesType>
+    ) => {
+      try {
+        setBackendCall(true);
+
+        const payLoad = {
+          message: values.message,
+          senderEmail: values.email,
+          SenderName: values.name,
+        };
+
+        const response = await fetch("/api/contactUsForm", {
+          method: "POST",
+          body: JSON.stringify(payLoad),
+        });
+
+        if (response.status !== 200) {
+          setBackendCall(false);
+
+          const { message } = await response.json();
+          setAlert({
+            show: true,
+            message:
+              typeof message === "string"
+                ? message
+                : "Message send failed due to server error, please try again!",
+            severity: "error",
+          });
+        } else {
+          setBackendCall(false);
+
+          setAlert({
+            show: true,
+            message: "Message sent successfully!",
+            severity: "success",
+          });
+          formikHelpers.resetForm();
+        }
+      } catch (error) {
+        setAlert({
+          show: true,
+          message: typeof error === "string" ? error : "Server Error",
+          severity: "error",
+        });
+
+        setBackendCall(false);
+      }
+    },
+
+    []
+  );
 
   return (
     <Card>
-      <CardHeader title="Send us a message" sx={{textTransform:"uppercase", textAlign:"center"}} />
-    <CardContent>
-      <Formik
-        initialValues={initialValues}
-        onSubmit={handleSubmit}
-        validationSchema={accountValidationSchema}
-        enableReinitialize
+      <Snackbar
+        open={!!alert?.show}
+        autoHideDuration={3000}
+        onClose={() =>
+          setAlert({
+            show: false,
+            message: "",
+            severity: "success",
+          })
+        }
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
       >
-        {({ isValid, dirty }) => (
-          <Form>
-            <Field
-              fullWidth
-              name="name"
-              label="Name"
-              component={TextField}
-              margin="normal"
-            />
-            <Field
-              fullWidth
-              name="email"
-              label="Email"
-              component={TextField}
-              margin="normal"
-            />
-            <Field
-              fullWidth
-              name="message"
-              label="Message"
-              component={TextField}
-              multiline
-              rows={4}
-              margin="normal"
-            />
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              disabled={!isValid || !dirty}
-            >
-              Submit
-            </Button>
-          </Form>
-        )}
-      </Formik>
+        <Alert
+          onClose={() =>
+            setAlert({
+              show: false,
+              message: "",
+              severity: "success",
+            })
+          }
+          severity={alert?.severity}
+        >
+          {alert?.message}
+        </Alert>
+      </Snackbar>
+      <CardHeader
+        title="Send us a message"
+        sx={{ textTransform: "uppercase", textAlign: "center" }}
+      />
+      <CardContent>
+        <Formik
+          initialValues={initialValues}
+          onSubmit={handleSubmit}
+          validationSchema={accountValidationSchema}
+          enableReinitialize
+        >
+          {(formik) => {
+            const { isValid, dirty, errors, touched } = formik;
+            return (
+              <Form>
+                <Field
+                  disabled={backendCall}
+                  fullWidth
+                  name="name"
+                  label="Name"
+                  as={TextField}
+                  margin="normal"
+                  error={errors.name && touched.name}
+                  helperText={errors.name && touched.name ? errors.name : ""}
+                />
+                <Field
+                  disabled={backendCall}
+                  fullWidth
+                  name="email"
+                  label="Email"
+                  as={TextField}
+                  margin="normal"
+                  error={errors.email && touched.email}
+                  helperText={errors.email && touched.email ? errors.email : ""}
+                />
+                <Field
+                  disabled={backendCall}
+                  fullWidth
+                  name="message"
+                  label="Message"
+                  as={TextField}
+                  multiline
+                  rows={4}
+                  margin="normal"
+                  error={errors.message && touched.message}
+                  helperText={
+                    errors.message && touched.message ? errors.message : ""
+                  }
+                />
+                <LoadingButton
+                  loading={backendCall}
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  disabled={!isValid || !dirty}
+                >
+                  Submit
+                </LoadingButton>
+              </Form>
+            );
+          }}
+        </Formik>
       </CardContent>
-      </Card>
+    </Card>
   );
 };
 
-export {ContactUsForm};
+export { ContactUsForm };
