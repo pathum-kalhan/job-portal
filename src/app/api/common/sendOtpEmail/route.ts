@@ -7,7 +7,7 @@ import Candidates from "../../models/Candidate";
 import { Constant } from "../../../../utils/Constents";
 import Employer from "../../models/Employer";
 
-const apiKey: string = `${process.env.SENDGRID_API_KEY}`
+const apiKey: string = `${process.env.SENDGRID_API_KEY}`;
 
 export async function POST(request: Request) {
   try {
@@ -20,7 +20,7 @@ export async function POST(request: Request) {
     const checkValidEmail = () => {
       email.test(emailRegex);
     };
-
+    console.log("checkValidEmail", checkValidEmail);
     if (!checkValidEmail) {
       return NextResponse.json(
         {
@@ -32,12 +32,13 @@ export async function POST(request: Request) {
       );
     }
 
-    email = email.toLowerCase().trim();
+    const emailLowerCase = email.toLowerCase().trim();
+    console.log("email lower", emailLowerCase);
 
     const [user] =
       userType === "employer"
-        ? await Employer.find({ email })
-        : await Candidates.find({ email });
+        ? await Employer.find({ email: emailLowerCase })
+        : await Candidates.find({ email: emailLowerCase });
 
     if (user && user?.emailVerification?.status) {
       return NextResponse.json(
@@ -57,7 +58,7 @@ export async function POST(request: Request) {
       if (user?.email && !user?.name) {
         await Employer.findOneAndUpdate(
           {
-            email,
+            email:emailLowerCase,
           },
           {
             emailVerification: {
@@ -67,7 +68,7 @@ export async function POST(request: Request) {
         );
       } else {
         await Employer.create({
-          email,
+          email:emailLowerCase,
           emailVerification: {
             otpCode: `${otpCode}`,
           },
@@ -77,7 +78,7 @@ export async function POST(request: Request) {
       if (user?.email && !user?.name) {
         await Candidates.findOneAndUpdate(
           {
-            email,
+            email:emailLowerCase,
           },
           {
             emailVerification: {
@@ -87,7 +88,7 @@ export async function POST(request: Request) {
         );
       } else {
         await Candidates.create({
-          email,
+          email:emailLowerCase,
           emailVerification: {
             otpCode: `${otpCode}`,
           },
@@ -97,10 +98,10 @@ export async function POST(request: Request) {
 
     //  Send the verification email
     const verifyCode = otpCode;
-    const templateData = { verifyCode, name: user.name };
+    const templateData = { verifyCode, name: user?.name };
     mail.setApiKey(apiKey);
     await mail.send({
-      to: email,
+      to: emailLowerCase,
       from: {
         name: `${Constant?.companyName}`,
         email: `${Constant?.companyEmail}`,
@@ -117,11 +118,12 @@ export async function POST(request: Request) {
         status: 200,
       }
     );
-  } catch (error: any) { 
-    console.log("error", error)
+  } catch (error: any) {
+    console.log("error", error);
     return NextResponse.json(
       {
-        message: error.message ==="string" ? error.message : "Please try again.",
+        message:
+          error.message === "string" ? error.message : "Please try again.",
       },
       {
         status: 500,
