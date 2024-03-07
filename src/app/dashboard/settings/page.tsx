@@ -232,7 +232,7 @@ function Page() {
                   Feedback and Support
                 </Typography>
                 <Typography>
-                  <Link href="/help">
+                  <Link href="/dashboard/help">
                     <Button color="success" startIcon={<ReviewsIcon />}>
                       Provide feedback
                     </Button>

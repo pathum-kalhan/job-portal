@@ -38,7 +38,7 @@ function RightSideAttachedMenu() {
       </Link>
 
       <Link
-        href="/help"
+        href="/dashboard/help"
         style={{
           textDecoration: "none",
           color: "black",

@@ -16,17 +16,12 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Link from "next/link";
-import { SupportTicketForm } from "../../components/forms/SupportTicketForm";
+import { SupportTicketForm } from "../../../components/forms/SupportTicketForm";
 import EmailIcon from "@mui/icons-material/Email";
 import PhoneIcon from "@mui/icons-material/Phone";
 import FaxIcon from "@mui/icons-material/Fax";
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
 
 function Page() {
-  const { data: session } = useSession();
-  const router = useRouter();
 
   const contactInfo = [
     {
@@ -78,12 +73,6 @@ function Page() {
       `,
     },
   ];
-
-  useEffect(() => {
-    if (!session) {
-      router.replace("/login");
-    }
-  }, [router, session]);
 
   return (
     <>
