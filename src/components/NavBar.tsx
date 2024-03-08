@@ -113,7 +113,7 @@ function NavBar() {
             style={{
               textDecoration: "none",
             }}
-            href="/"
+            href={session ? "/dashboard/profile" :"/"}
           >
             <Card
               sx={{
