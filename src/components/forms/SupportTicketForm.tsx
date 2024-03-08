@@ -16,11 +16,10 @@ import {
   Typography,
   IconButton,
   Stack,
-  Alert,
-  Snackbar,
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { useSession } from "next-auth/react";
+import SnackBarComponent from "../common/SnackBarComponent";
 
 const priorityLevels = [
   { value: "low", label: "Low" },
@@ -215,31 +214,7 @@ const SupportTicketForm = () => {
 
   return (
     <Grid container>
-      <Snackbar
-        open={!!alert?.show}
-        autoHideDuration={3000}
-        onClose={() =>
-          setAlert({
-            show: false,
-            message: "",
-            severity: "success",
-          })
-        }
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-      >
-        <Alert
-          onClose={() =>
-            setAlert({
-              show: false,
-              message: "",
-              severity: "success",
-            })
-          }
-          severity={alert?.severity}
-        >
-          {alert?.message}
-        </Alert>
-      </Snackbar>
+      <SnackBarComponent alert={alert} setAlert={setAlert} />
 
       <Grid
         container
@@ -255,8 +230,7 @@ const SupportTicketForm = () => {
           onSubmit={handleSubmit}
         >
           {(formik) => {
-            const { errors, touched, isValid, dirty } =
-              formik;
+            const { errors, touched, isValid, dirty } = formik;
             return (
               <Form>
                 <Grid item xs={12} mb={2}>

@@ -5,8 +5,6 @@ import {
   Card,
   CardHeader,
   Stack,
-  Alert,
-  Snackbar,
   CircularProgress,
 } from "@mui/material";
 import { Formik, Form, Field, FormikHelpers } from "formik";
@@ -16,6 +14,7 @@ import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { LoadingButton } from "@mui/lab";
 import { useRouter } from "next/navigation";
+import SnackBarComponent from "../common/SnackBarComponent";
 
 type initialValues = {
   email: string;
@@ -77,7 +76,10 @@ const ForgotPassword = (props: props) => {
         setBackendCall(false);
         setAlert({
           show: true,
-          message: (typeof errorMessage?.message === "string" && errorMessage?.message) ?? "Something went wrong!",
+          message:
+            (typeof errorMessage?.message === "string" &&
+              errorMessage?.message) ??
+            "Something went wrong!",
           severity: "error",
         });
       } else {
@@ -89,10 +91,9 @@ const ForgotPassword = (props: props) => {
           severity: "success",
         });
 
-         setTimeout(() => {
+        setTimeout(() => {
           router.push("/");
         }, 3000);
-       
       }
     } catch (e: any) {
       setBackendCall(false);
@@ -120,31 +121,7 @@ const ForgotPassword = (props: props) => {
       }}
       elevation={3}
     >
-      <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        autoHideDuration={3000}
-        open={alert.show}
-        onClose={() =>
-          setAlert({
-            show: false,
-            message: "",
-            severity: "success",
-          })
-        }
-      >
-        <Alert
-          onClose={() =>
-            setAlert({
-              show: false,
-              message: "",
-              severity: "success",
-            })
-          }
-          severity={alert.severity}
-        >
-          {alert.message}
-        </Alert>
-      </Snackbar>
+      <SnackBarComponent alert={alert} setAlert={setAlert} />
 
       <CardHeader
         title={

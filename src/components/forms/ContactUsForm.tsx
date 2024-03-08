@@ -7,11 +7,9 @@ import {
   Card,
   CardContent,
   CardHeader,
-  Alert,
-  Snackbar,
 } from "@mui/material";
-import { useSession } from "next-auth/react";
 import { LoadingButton } from "@mui/lab";
+import SnackBarComponent from "../common/SnackBarComponent";
 
 type AlertType = {
   show: boolean;
@@ -105,31 +103,7 @@ const ContactUsForm: React.FC = () => {
 
   return (
     <Card>
-      <Snackbar
-        open={!!alert?.show}
-        autoHideDuration={3000}
-        onClose={() =>
-          setAlert({
-            show: false,
-            message: "",
-            severity: "success",
-          })
-        }
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-      >
-        <Alert
-          onClose={() =>
-            setAlert({
-              show: false,
-              message: "",
-              severity: "success",
-            })
-          }
-          severity={alert?.severity}
-        >
-          {alert?.message}
-        </Alert>
-      </Snackbar>
+       <SnackBarComponent alert={alert} setAlert={setAlert} />
       <CardHeader
         title="Send us a message"
         sx={{ textTransform: "uppercase", textAlign: "center" }}

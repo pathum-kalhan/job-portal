@@ -1,13 +1,11 @@
 import React, { useState } from "react";
 import {
-  Alert,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   InputAdornment,
-  Snackbar,
   TextField,
 } from "@mui/material";
 import { Formik, Form, Field, ErrorMessage, FormikHelpers } from "formik";
@@ -17,6 +15,7 @@ import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import SnackBarComponent from "../common/SnackBarComponent";
 
 // Define prop types for the ChangePassword component
 type ChangePasswordProps = {
@@ -222,30 +221,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ open, onClose }) => {
               <ErrorMessage name="confirmPassword" component="div" />
             </DialogContent>
 
-            <Snackbar
-              open={alert.show}
-              onClose={() =>
-                setAlert({
-                  show: false,
-                  message: "",
-                  severity: "success",
-                })
-              }
-              anchorOrigin={{ vertical: "top", horizontal: "center" }}
-            >
-              <Alert
-                severity={alert.severity}
-                onClose={() =>
-                  setAlert({
-                    show: false,
-                    message: "",
-                    severity: "success",
-                  })
-                }
-              >
-                {alert.message}
-              </Alert>
-            </Snackbar>
+            <SnackBarComponent autoHideDuration={null} alert={alert} setAlert={setAlert} />
 
             <DialogActions>
               <Button onClick={handleClose} color="primary">

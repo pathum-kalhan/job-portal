@@ -9,8 +9,6 @@ import {
   CardHeader,
   Typography,
   Stack,
-  Alert,
-  Snackbar,
   CircularProgress,
   InputAdornment,
 } from "@mui/material";
@@ -27,6 +25,7 @@ import { LoadingButton } from "@mui/lab";
 import Link from "next/link";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import SnackBarComponent from "@/components/common/SnackBarComponent";
 
 type initialValues = {
   email: string;
@@ -138,31 +137,7 @@ const CandidateLoginForm = (props: props) => {
       }}
       elevation={3}
     >
-      <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        autoHideDuration={3000}
-        open={alert.show}
-        onClose={() =>
-          setAlert({
-            show: false,
-            message: "",
-            severity: "success",
-          })
-        }
-      >
-        <Alert
-          onClose={() =>
-            setAlert({
-              show: false,
-              message: "",
-              severity: "success",
-            })
-          }
-          severity={alert.severity}
-        >
-          {alert.message}
-        </Alert>
-      </Snackbar>
+      <SnackBarComponent alert={alert} setAlert={setAlert} />
 
       <CardHeader
         title={

@@ -6,10 +6,8 @@ import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import {
-  Alert,
   Avatar,
   CircularProgress,
-  Snackbar,
   Stack,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
@@ -17,6 +15,7 @@ import { useDropzone } from "react-dropzone";
 import { ChangePassword } from "../../../forms/ChangePassword";
 import { LoadingButton } from "@mui/lab";
 import { useSession } from "next-auth/react";
+import SnackBarComponent from "@/components/common/SnackBarComponent";
 
 
 type props = {
@@ -200,31 +199,7 @@ function CandidateProfileInfoCard(props: props) {
 
   return (
     <>
-      <Snackbar
-        open={!!alert?.show}
-        autoHideDuration={3000}
-        onClose={() =>
-          setAlert({
-            show: false,
-            message: "",
-            severity: "success",
-          })
-        }
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-      >
-        <Alert
-          onClose={() =>
-            setAlert({
-              show: false,
-              message: "",
-              severity: "success",
-            })
-          }
-          severity={alert?.severity}
-        >
-          {alert?.message}
-        </Alert>
-      </Snackbar>
+   <SnackBarComponent alert={alert} setAlert={setAlert} />
       <Card
         sx={{
           width: {

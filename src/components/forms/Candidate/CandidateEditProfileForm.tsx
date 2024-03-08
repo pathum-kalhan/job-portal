@@ -1,13 +1,12 @@
 "use client";
 
+import SnackBarComponent from "@/components/common/SnackBarComponent";
 import { LoadingButton } from "@mui/lab";
 import {
   Chip,
   Grid,
   TextField as MUITextField,
   Autocomplete,
-  Snackbar,
-  Alert,
 } from "@mui/material";
 import { Formik, Form, Field } from "formik";
 import { TextField } from "formik-mui";
@@ -153,30 +152,7 @@ const CandidateEditProfileForm = (props: props) => {
 
   return (
     <>
-      <Snackbar
-        open={alert.show}
-        autoHideDuration={6000}
-        onClose={() =>
-          setAlert({
-            show: false,
-            message: "",
-            severity: "success",
-          })
-        }
-      >
-        <Alert
-          onClose={() =>
-          setAlert({
-            show: false,
-            message: "",
-            severity: "success",
-          })
-        }
-          severity={alert.severity}
-        >
-          {alert.message}
-        </Alert>
-      </Snackbar>
+      <SnackBarComponent autoHideDuration={null} alert={alert} setAlert={setAlert} />
       <Formik
         initialValues={initialValues}
         onSubmit={handleSubmit}
