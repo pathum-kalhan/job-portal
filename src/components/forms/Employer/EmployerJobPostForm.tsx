@@ -1,13 +1,10 @@
 "use client";
 
+import SnackBarComponent from "@/components/common/SnackBarComponent";
+import { LoadingButton } from "@mui/lab";
 import {
-  Button,
   Checkbox,
   FormControlLabel,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
   Grid,
   Card,
   CardHeader,
@@ -18,6 +15,7 @@ import {
 } from "@mui/material";
 import { Formik, Form, Field, FormikProps, FormikHelpers } from "formik";
 import { TextField } from "formik-mui";
+import { useCallback, useState } from "react";
 import * as yup from "yup";
 
 type initialValues = {
@@ -33,53 +31,23 @@ type initialValues = {
   acceptTerms: boolean;
 };
 
-type selectProps = {
-  children: React.ReactNode;
-  form: FormikProps<initialValues>;
-  field: {
-    name: string;
-    value: string;
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    onBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
-    ref: React.Ref<HTMLInputElement>;
-    type: string;
-    id: string;
-    placeholder: string;
-    multiline: boolean;
-    rows: number;
-    maxRows: number;
-    minRows: number;
-    fullWidth: boolean;
-    required: boolean;
-    label: string;
-    error: boolean;
-  };
-};
 
-const CustomizedSelectForFormik = (selectProps: selectProps) => {
-  const { children, form, field } = selectProps;
-
-  const { name, value } = field;
-  const { setFieldValue } = form;
-
-  return (
-    <Select
-      label="Locations"
-      name={name}
-      value={value}
-      fullWidth
-      onChange={(e) => {
-        setFieldValue(name, e.target.value);
-      }}
-    >
-      {children}
-    </Select>
-  );
+type AlertType = {
+  show: boolean;
+  message: string;
+  severity: "error" | "info" | "success" | "warning";
 };
 
 const EmployerJobPostForm = () => {
   const industryArray = ["Industry1", "Industry2"];
   const skillsArray = ["Option 1", "Option 2", "Option 3", "Option 4"];
+
+  const [backendCall, setBackendCall] = useState(false);
+  const [alert, setAlert] = useState<AlertType>({
+    show: false,
+    message: "",
+    severity: "success",
+  });
 
   const accountValidationSchemaWithEmailField = yup.object({
     companyName: yup
@@ -97,12 +65,19 @@ const EmployerJobPostForm = () => {
       .url("Invalid URL format")
       .required("Website URL is required"),
     location: yup.string().required("Location is required"),
-    industry: yup.string().required("Industry is required"),
+    industry: yup
+      .string()
+      .required(
+        "Industry is required (Hit Enter key on the keyboard if you already typed)"
+      ),
     position: yup.string().required("Position is required"),
     jobDescription: yup.string().required("Job Description is required"),
     requiredQualifications: yup
       .array()
-      .min(1, "Please select at least one qualification"),
+      .min(
+        1,
+        "Please select at least one qualification (Hit Enter key on the keyboard if you already typed)"
+      ),
     workingHoursPerDay: yup
       .number()
       .required("Working Hours Per Day is required"),
@@ -122,14 +97,67 @@ const EmployerJobPostForm = () => {
     acceptTerms: false,
   };
 
-  const handleSubmit = (
-    values: initialValues,
-    formikHelpers: FormikHelpers<initialValues>
-  ) => {
-    console.log(values);
+  const handleSubmit = useCallback(
+    async (
+      values: initialValues,
+      formikHelpers: FormikHelpers<initialValues>
+    ) => {
+      setBackendCall(true);
+      const payLoad = {
+        companyName: values.companyName,
+        companyDetails: values.companyDetails,
+        websiteUrl: values.websiteUrl,
+        location: values.location,
+        industry: values.industry,
+        position: values.position,
+        jobDescription: values.jobDescription,
+        requiredQualifications: values.requiredQualifications,
+        workingHoursPerDay: values.workingHoursPerDay,
+      };
 
-    formikHelpers.resetForm();
-  };
+      try {
+      
+
+        const response = await fetch("/api/employer/job/createJob", {
+          method: "POST",
+          body: JSON.stringify(payLoad),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (response.status !== 200) {
+          const errorMessage = await response.json();
+          setBackendCall(false);
+          setAlert({
+            show: true,
+            message:
+              (typeof errorMessage?.message === "string" &&
+                errorMessage?.message) ??
+              "Something went wrong!",
+            severity: "error",
+          });
+        } else {
+          formikHelpers.resetForm();
+          setBackendCall(false);
+          setAlert({
+            show: true,
+            message: "Job Created successfully!!",
+            severity: "success",
+          });
+        }
+      } catch (e: any) {
+        setBackendCall(false);
+        setAlert({
+          show: true,
+          message: typeof e.message === "string" ? e.message : "Server Error",
+          severity: "error",
+        });
+      }
+    },
+
+    []
+  );
 
   return (
     <Card
@@ -147,7 +175,9 @@ const EmployerJobPostForm = () => {
       }}
       elevation={3}
     >
-      <CardHeader title="Create account to post a job" align="center" />
+      <SnackBarComponent alert={alert} setAlert={setAlert} />
+
+      <CardHeader title="Post a job" align="center" />
       <Formik
         initialValues={initialValues}
         onSubmit={handleSubmit}
@@ -168,6 +198,7 @@ const EmployerJobPostForm = () => {
                 >
                   <Grid item lg={12} md={12} sm={12} xs={12}>
                     <Field
+                      disabled={backendCall}
                       fullWidth
                       id="companyName"
                       name="companyName"
@@ -177,6 +208,7 @@ const EmployerJobPostForm = () => {
                   </Grid>
                   <Grid item lg={12} md={12} sm={12} xs={12}>
                     <Field
+                      disabled={backendCall}
                       id="companyDetails"
                       name="companyDetails"
                       maxRows={3}
@@ -189,6 +221,7 @@ const EmployerJobPostForm = () => {
                   </Grid>
                   <Grid item lg={12} md={12} sm={12} xs={12}>
                     <Field
+                      disabled={backendCall}
                       fullWidth
                       id="websiteUrl"
                       name="websiteUrl"
@@ -199,6 +232,7 @@ const EmployerJobPostForm = () => {
 
                   <Grid item lg={12} md={12} sm={12} xs={12}>
                     <Field
+                      disabled={backendCall}
                       fullWidth
                       id="location"
                       name="location"
@@ -208,33 +242,42 @@ const EmployerJobPostForm = () => {
                   </Grid>
 
                   <Grid item lg={12} md={12} sm={12} xs={12}>
-                    <FormControl error={!!errors.industry} fullWidth>
-                      <InputLabel id="demo-simple-select-label">
-                        Industry
-                      </InputLabel>
-                      <Field
-                        fullWidth
-                        name="industry"
-                        component={CustomizedSelectForFormik}
-                      >
-                        {industryArray.map((item) => (
-                          <MenuItem
-                            sx={{ textTransform: "capitalize" }}
-                            key={item}
-                            value={item}
-                          >
-                            {item}
-                          </MenuItem>
-                        ))}
-                      </Field>
-                      <FormHelperText error={!!errors.industry}>
-                        {errors.industry}
-                      </FormHelperText>
-                    </FormControl>
+                    <Autocomplete
+                      disabled={backendCall}
+                      freeSolo
+                      options={industryArray}
+                      value={values.industry}
+                      onChange={(event, value) => {
+                        setFieldValue("industry", value);
+                      }}
+                      renderTags={(value, getTagProps) =>
+                        value.map((option, index) => (
+                          <Chip
+                            label={option}
+                            {...getTagProps({ index })}
+                            key={option}
+                          />
+                        ))
+                      }
+                      renderInput={(params) => (
+                        <Field
+                          {...params}
+                          variant="outlined"
+                          value={values.industry}
+                          label="Industry (You need to hit ENTER key if you are adding a custom  industry)"
+                          placeholder="+ Add Industry"
+                          component={MUITextField}
+                          name="industry"
+                          error={!!errors.industry}
+                          helperText={errors.industry}
+                        />
+                      )}
+                    />
                   </Grid>
 
                   <Grid item lg={12} md={12} sm={12} xs={12}>
                     <Field
+                      disabled={backendCall}
                       fullWidth
                       id="position"
                       name="position"
@@ -245,6 +288,7 @@ const EmployerJobPostForm = () => {
 
                   <Grid item lg={12} md={12} sm={12} xs={12}>
                     <Field
+                      disabled={backendCall}
                       id="jobDescription"
                       name="jobDescription"
                       maxRows={3}
@@ -258,6 +302,7 @@ const EmployerJobPostForm = () => {
 
                   <Grid item lg={12} md={12} sm={12} xs={12}>
                     <Autocomplete
+                      disabled={backendCall}
                       multiple
                       freeSolo
                       options={skillsArray}
@@ -279,7 +324,7 @@ const EmployerJobPostForm = () => {
                           {...params}
                           variant="outlined"
                           value={values.requiredQualifications}
-                          label="Required Qualifications"
+                          label="Required Qualifications (You need to hit ENTER key if you are adding a custom qualification)"
                           placeholder="+ Add Qualifications"
                           component={MUITextField}
                           name="requiredQualifications"
@@ -292,6 +337,7 @@ const EmployerJobPostForm = () => {
 
                   <Grid item lg={12} md={12} sm={12} xs={12}>
                     <Field
+                      disabled={backendCall}
                       fullWidth
                       id="workingHoursPerDay"
                       name="workingHoursPerDay"
@@ -303,6 +349,7 @@ const EmployerJobPostForm = () => {
 
                   <Grid item lg={12} md={12} sm={12} xs={12}>
                     <FormControlLabel
+                      disabled={backendCall}
                       control={
                         <Checkbox
                           id="acceptTerms"
@@ -322,15 +369,16 @@ const EmployerJobPostForm = () => {
                   </Grid>
 
                   <Grid item lg={"auto"}>
-                    <Button
+                    <LoadingButton
+                      loading={backendCall}
                       disabled={!isValid || !dirty}
                       color="primary"
                       variant="contained"
                       size="large"
                       type="submit"
                     >
-                      Create Account
-                    </Button>
+                      Create Job
+                    </LoadingButton>
                   </Grid>
                 </Grid>
               </Grid>
