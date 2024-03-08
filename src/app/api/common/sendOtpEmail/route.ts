@@ -20,7 +20,6 @@ export async function POST(request: Request) {
     const checkValidEmail = () => {
       email.test(emailRegex);
     };
-    console.log("checkValidEmail", checkValidEmail);
     if (!checkValidEmail) {
       return NextResponse.json(
         {
@@ -33,7 +32,6 @@ export async function POST(request: Request) {
     }
 
     const emailLowerCase = email.toLowerCase().trim();
-    console.log("email lower", emailLowerCase);
 
     const [user] =
       userType === "employer"

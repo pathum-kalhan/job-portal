@@ -4,13 +4,11 @@ import { CandidateProfileInfoCard } from "@/components/cards/Profile/Candidate/C
 import { CandidateProfileRightSideCard } from "@/components/cards/Profile/Candidate/CandidateProfileRightSideCard";
 import { RightSideAttachedMenu } from "@/components/sideAttachMenu/profile/RightSideAttachedMenu";
 import {
-  Alert,
   Card,
   CardContent,
   CircularProgress,
   Grid,
   Skeleton,
-  Snackbar,
   Stack,
 } from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -21,6 +19,7 @@ import { useSession } from "next-auth/react";
 import { EmployerProfileInfoCard } from "@/components/cards/Profile/Employer/EmployerProfileInfoCard";
 import { EmployerProfileRightSideCard } from "@/components/cards/Profile/Employer/EmployerProfileRightSideCard";
 import { useRouter } from "next/navigation";
+import SnackBarComponent from "@/components/common/SnackBarComponent";
 
 type AlertType = {
   show: boolean;
@@ -43,7 +42,7 @@ function Page() {
     severity: "success",
   });
 
-  const { data: session, update } = useSession();
+  const { data: session, update, status } = useSession();
 
   // Edit profile
   const handleClickOpenEditProfile = () => {
@@ -101,7 +100,6 @@ function Page() {
         setBackendCall(false);
       }
     } catch (error) {
-      console.log("error", error);
       setBackendCall(false);
       setAlert({
         show: true,
@@ -109,18 +107,18 @@ function Page() {
         severity: "error",
       });
     }
- 
   }, [session, update]);
 
   useEffect(() => {
-    if (!profileData) {
+    if (status === "authenticated" && !profileData) {
       getProfileData();
     }
 
-    if (!session) {
+    if (status !== "loading" && !session) {
       router.push("/login");
     }
-  }, [getProfileData, profileData, session, router]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [status]);
 
   return (
     <>
@@ -295,31 +293,7 @@ function Page() {
         )}
       </Grid>
 
-      <Snackbar
-        open={!!alert?.show}
-        autoHideDuration={3000}
-        onClose={() =>
-          setAlert({
-            show: false,
-            message: "",
-            severity: "success",
-          })
-        }
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-      >
-        <Alert
-          onClose={() =>
-            setAlert({
-              show: false,
-              message: "",
-              severity: "success",
-            })
-          }
-          severity={alert?.severity}
-        >
-          {alert?.message}
-        </Alert>
-      </Snackbar>
+      <SnackBarComponent alert={alert} setAlert={setAlert} />
     </>
   );
 }

@@ -8,8 +8,6 @@ import {
   Card,
   CardHeader,
   Stack,
-  Alert,
-  Snackbar,
   CircularProgress,
   InputAdornment,
 } from "@mui/material";
@@ -24,6 +22,7 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
 import * as yup from "yup";
 import Link from "next/link";
+import SnackBarComponent from "@/components/common/SnackBarComponent";
 
 type initialValues = {
   email: string;
@@ -135,31 +134,7 @@ const EmployerLoginForm = (props: props) => {
       }}
       elevation={3}
     >
-      <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        autoHideDuration={3000}
-        open={alert.show}
-        onClose={() =>
-          setAlert({
-            show: false,
-            message: "",
-            severity: "success",
-          })
-        }
-      >
-        <Alert
-          onClose={() =>
-            setAlert({
-              show: false,
-              message: "",
-              severity: "success",
-            })
-          }
-          severity={alert.severity}
-        >
-          {alert.message}
-        </Alert>
-      </Snackbar>
+      <SnackBarComponent alert={alert} setAlert={setAlert} />
 
       <CardHeader
         title="Login as a Employer"

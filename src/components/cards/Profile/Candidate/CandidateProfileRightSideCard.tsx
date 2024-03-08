@@ -4,7 +4,7 @@ import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
-import { Alert, Avatar, Grid, Snackbar, Stack } from "@mui/material";
+import { Avatar, Grid, Stack } from "@mui/material";
 import Link from "next/link";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import { deepPurple } from "@mui/material/colors";
@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 import { LoadingButton } from "@mui/lab";
 import { useDropzone } from "react-dropzone";
+import SnackBarComponent from "@/components/common/SnackBarComponent";
 
 type props = {
   handleClickOpenUploadCv: () => void;
@@ -195,31 +196,7 @@ function CandidateProfileRightSideCard(props: props) {
 
   return (
     <>
-      <Snackbar
-        open={!!alert?.show}
-        autoHideDuration={3000}
-        onClose={() =>
-          setAlert({
-            show: false,
-            message: "",
-            severity: "success",
-          })
-        }
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-      >
-        <Alert
-          onClose={() =>
-            setAlert({
-              show: false,
-              message: "",
-              severity: "success",
-            })
-          }
-          severity={alert?.severity}
-        >
-          {alert?.message}
-        </Alert>
-      </Snackbar>
+     <SnackBarComponent alert={alert} setAlert={setAlert} />
       <Card
         sx={{
           width: {

@@ -8,8 +8,6 @@ import {
   Card,
   CardHeader,
   FormHelperText,
-  Snackbar,
-  Alert,
   InputAdornment,
 } from "@mui/material";
 import { Formik, Form, Field, FormikHelpers } from "formik";
@@ -19,6 +17,7 @@ import { MouseEvent, useCallback, useState } from "react";
 import * as yup from "yup";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import SnackBarComponent from "@/components/common/SnackBarComponent";
 
 
 type initialValues = {
@@ -289,27 +288,7 @@ const CandidateRegForm = () => {
       }}
       elevation={3}
     >
-      <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        autoHideDuration={3000}
-        open={alert.show}
-        onClose={() => setAlert({
-          show: false,
-          message: "",
-          severity: "success",
-        })}
-      >
-        <Alert
-          onClose={() => setAlert({
-            show: false,
-            message: "",
-            severity: "success",
-          })}
-          severity={alert.severity}
-        >
-          {alert.message}
-        </Alert>
-      </Snackbar>
+ <SnackBarComponent alert={alert} setAlert={setAlert} />
 
       <CardHeader title="Create account to post a job" align="center" />
       <Formik

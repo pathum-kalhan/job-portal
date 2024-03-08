@@ -5,8 +5,6 @@ import {
   Card,
   CardHeader,
   Stack,
-  Alert,
-  Snackbar,
   CircularProgress,
   InputAdornment,
 } from "@mui/material";
@@ -18,6 +16,7 @@ import { LoadingButton } from "@mui/lab";
 import { useRouter } from "next/navigation";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import SnackBarComponent from "../common/SnackBarComponent";
 
 type initialValues = {
   newPassword: string;
@@ -142,32 +141,8 @@ const NewPassword = (props: props) => {
       }}
       elevation={3}
     >
-      <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        autoHideDuration={3000}
-        open={alert.show}
-        onClose={() =>
-          setAlert({
-            show: false,
-            message: "",
-            severity: "success",
-          })
-        }
-      >
-        <Alert
-          onClose={() =>
-            setAlert({
-              show: false,
-              message: "",
-              severity: "success",
-            })
-          }
-          severity={alert.severity}
-          sx={{ width: "100%" }}
-        >
-          {alert.message}
-        </Alert>
-      </Snackbar>
+      
+    <SnackBarComponent alert={alert} setAlert={setAlert} />
 
       <CardHeader
         title={
