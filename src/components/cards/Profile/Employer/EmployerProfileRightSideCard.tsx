@@ -13,11 +13,12 @@ import AddIcon from "@mui/icons-material/Add";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { LoadingButton } from "@mui/lab";
+import Link from "next/link";
 
 type props = {};
 
 function EmployerProfileRightSideCard(props: props) {
-  const [backendCall, setBackendCall] = useState(false)
+  const [backendCall, setBackendCall] = useState(false);
 
   const router = useRouter();
   const {} = props;
@@ -67,15 +68,17 @@ function EmployerProfileRightSideCard(props: props) {
               <CalendarTodayIcon sx={{ fontSize: "4rem", cursor: "pointer" }} />
             </Grid>
             <Grid item lg="auto" md="auto" sm="auto" xs="auto">
-              <Button
-                color="success"
-                size="small"
-                variant="contained"
-                sx={{ textTransform: "capitalize", height: "2.5rem" }}
-                endIcon={<AddIcon />}
-              >
-                POST JOb
-              </Button>
+              <Link href="/dashboard/employer/post-a-job">
+                <Button
+                  color="success"
+                  size="small"
+                  variant="contained"
+                  sx={{ textTransform: "capitalize", height: "2.5rem" }}
+                  endIcon={<AddIcon />}
+                >
+                  POST JOB
+                </Button>
+              </Link>
             </Grid>
             <Grid item lg="auto" md="auto" sm="auto" xs="auto">
               <Button
