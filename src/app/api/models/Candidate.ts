@@ -38,6 +38,7 @@ const CandidateSchema = new Schema(
         },
       },
     ],
+    savedJobs: [{ type: Schema.Types.ObjectId, ref: "JobPost" }],
     experience: String,
     skills: Array,
     education: String,

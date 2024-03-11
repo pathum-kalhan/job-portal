@@ -11,7 +11,6 @@ import {
 } from "@mui/material";
 import router from "next/router";
 import { useSession } from "next-auth/react";
-import JobFilter from "@/components/common/JobFilter";
 
 type jobPostInfo = {
   _id: string;
@@ -29,16 +28,17 @@ type jobPostInfo = {
 };
 
 function Page() {
-  const [backendCall, setBackendCall] = useState(true);
-  const { data: session, update, status } = useSession();
-  const [jobPostInfo, setJobPostInfo] = useState([]);
   const [industrySelection, setIndustrySelection] = useState("");
+  const { data: session, update, status } = useSession();
+  const [backendCall, setBackendCall] = useState(true);
+
+  const [jobPostInfo, setJobPostInfo] = React.useState([]);
 
   const loadJobs = useCallback(async () => {
     try {
       setBackendCall(true);
 
-      const response = await fetch("/api/candidate/job/getSavedJobs", {
+      const response = await fetch("/api/candidate/job/getAllJobs", {
         method: "POST",
         body: JSON.stringify({
           email: session?.user?.email,
@@ -77,37 +77,38 @@ function Page() {
 
   return (
     <Grid container gap={10}>
-    {/* Filter Section */}
-      <JobFilter jobPostInfo={jobPostInfo} setJobPostInfo={setJobPostInfo} />
-    <Grid
-      container
-      item
-      alignItems="center"
-      justifyContent="center"
-      xs={12}
-      gap={3}
-    >
-        {!backendCall ? (
-          !jobPostInfo.length ? (
-            <Stack alignItems="center" justifyContent="center">
-              <Typography variant="h5">No Jobs Created Yet.</Typography>
-            </Stack>
+      {/* Filter Section */}
+
+      <Grid
+        container
+        item
+        alignItems="center"
+        justifyContent="center"
+        xs={12}
+        gap={3}
+      >
+          {!backendCall ? (
+            !jobPostInfo.length ? (
+              <Stack alignItems="center" justifyContent="center">
+                <Typography variant="h5">No Jobs Created Yet.</Typography>
+              </Stack>
+            ) : (
+              jobPostInfo.map((item: jobPostInfo) => {
+                return (
+                  <Grid item xs={12} key={item?._id}>
+                    <JobListCard jobPostInfo={item} saveJobOption loadJobs={loadJobs}/>
+                  </Grid>
+                );
+              })
+            )
           ) : (
-            jobPostInfo.map((item: jobPostInfo) => {
-              return (
-                <Grid item xs={12} key={item?._id}>
-                  <JobListCard jobPostInfo={item} saveJobOption loadJobs={loadJobs} allAreSavedJobs />
-                </Grid>
-              );
-            })
-          )
-        ) : (
-          <Stack alignItems="center" justifyContent="center">
-            <CircularProgress />
-          </Stack>
-        )}
+            <Stack alignItems="center" justifyContent="center">
+              <CircularProgress />
+            </Stack>
+          )}
+
+      </Grid>
     </Grid>
-  </Grid>
   );
 }
 

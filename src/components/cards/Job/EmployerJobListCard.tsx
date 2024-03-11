@@ -16,7 +16,6 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import { useRouter } from "next/navigation";
 import { LoadingButton } from "@mui/lab";
 import SnackBarComponent from "@/components/common/SnackBarComponent";
 import { EditJobDialogBox } from "@/components/dialogBoxes/Job/EditJobDialogBox";
@@ -47,7 +46,6 @@ type AlertType = {
 
 function EmployerJobListCard(props: props) {
   const { saveJobOption = false, companyInfo, loadCreatedJobs } = props;
-  const router = useRouter();
 
   const [openEditProfile, setOpenEditProfile] = useState(false);
 
