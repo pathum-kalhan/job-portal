@@ -1,7 +1,7 @@
 import * as Yup from "yup";
 
 const validationSchema = {
-  companyName: Yup.string().min(1).max(30).required("Company Name is required"),
+  companyName: Yup.string().min(1).max(30),
   companyDetails: Yup.string()
     .min(1)
     .max(300)

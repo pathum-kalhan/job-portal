@@ -104,7 +104,6 @@ function EditJobDialogBox(props: props) {
     async (values: initialValues) => {
       setBackendCall(true);
       const payLoad = {
-        companyName: values?.companyName,
         companyDetails: values?.companyDetails,
         websiteUrl: values?.websiteUrl,
         location: values?.location,
@@ -215,7 +214,7 @@ function EditJobDialogBox(props: props) {
                     >
                       <Grid item lg={12} md={12} sm={12} xs={12}>
                         <Field
-                          disabled={backendCall}
+                          disabled
                           fullWidth
                           id="companyName"
                           name="companyName"
