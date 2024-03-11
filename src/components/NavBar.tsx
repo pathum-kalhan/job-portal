@@ -44,6 +44,7 @@ const logedInEmployer = [
     title: "Employer/ Post a Job",
     dropdownItems: [
       { link: "/dashboard/employer/post-a-job", title: "Post Job" },
+      { link: "/dashboard/employer/manage-jobs", title: "Manage Jobs" },
       { link: "/dashboard/employer/applicants-view", title: "Application View" },
       { link: "/dashboard/employer/interview-schedule", title: "Interview Schedule" },
     ],
