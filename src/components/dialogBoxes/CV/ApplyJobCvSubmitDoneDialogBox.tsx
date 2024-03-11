@@ -7,11 +7,11 @@ import {
   CardContent,
   CardActions,
   Grid,
-    IconButton,
-    Typography
+  IconButton,
+  Typography,
 } from "@mui/material";
-import CloseIcon from '@mui/icons-material/Close';
- 
+import CloseIcon from "@mui/icons-material/Close";
+
 type props = {
   openUploadCv: boolean;
   handleClickCloseUploadCv: () => void;
@@ -24,24 +24,27 @@ function UploadCvDialogBox(props: props) {
     <Dialog
       fullScreen={false}
       fullWidth
-          maxWidth="sm"
-        
+      maxWidth="sm"
       open={openUploadCv}
-      onClose={handleClickCloseUploadCv} 
-    >  
-
-          <Card sx={{padding:{lg:"2rem", md:"2rem", sm:"2rem", xs:"1rem"}}}>
-              <CardHeader
-                  action={
-                      <IconButton onClick={handleClickCloseUploadCv} autoFocus>
-                          <CloseIcon fontSize="large" sx={{color:"black"}} />
-                      </IconButton>
-                  } 
-                  
-                  sx={{textAlign:"center"}}
-        /> 
+      onClose={handleClickCloseUploadCv}
+    >
+      <Card
+        sx={{ padding: { lg: "2rem", md: "2rem", sm: "2rem", xs: "1rem" } }}
+      >
+        <CardHeader
+          action={
+            <IconButton onClick={handleClickCloseUploadCv} autoFocus>
+              <CloseIcon fontSize="large" sx={{ color: "black" }} />
+            </IconButton>
+          }
+          sx={{ textAlign: "center" }}
+        />
         <CardContent>
-          <Typography sx={{textAlign:"center", fontSize:"2rem", fontWeight:"bold"}}>CV SUBMIT DONE !</Typography> 
+          <Typography
+            sx={{ textAlign: "center", fontSize: "2rem", fontWeight: "bold" }}
+          >
+            CV SUBMIT DONE !
+          </Typography>
         </CardContent>
 
         <CardActions>
@@ -53,7 +56,7 @@ function UploadCvDialogBox(props: props) {
                   size="large"
                   color="success"
                   autoFocus
-                  sx={{ borderRadius: 3, fontWeight:"bold" }}
+                  sx={{ borderRadius: 3, fontWeight: "bold" }}
                 >
                   Participate the Quizz
                 </Button>
@@ -66,4 +69,4 @@ function UploadCvDialogBox(props: props) {
   );
 }
 
-export {UploadCvDialogBox};
+export { UploadCvDialogBox };

@@ -21,16 +21,17 @@ import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 type props = {
   saveJobOption?: boolean;
   companyInfo: {
-    companyName: string,
-    companyDetails: string,
-    companyWebsite: string,
-    location: string,
-    industry: string,
-    position: string,
-    jobDescription: string,
-    requiredQualifications: string,
-    workingHoursPerDay: string,
-    jobRole: string,
+    websiteUrl: string;
+    companyName?: string,
+    companyDetails?: string,
+    companyWebsite?: string,
+    location?: string,
+    industry?: string,
+    position?: string,
+    jobDescription?: string,
+    requiredQualifications?: string,
+    workingHoursPerDay?: string,
+    jobRole?: string,
   }
 }
 
@@ -99,7 +100,7 @@ function JobListCard(props: props) {
                       <b>Company Details :</b> {!companyInfo ? "" :companyInfo.companyDetails}
                     </Typography>
                     <Typography sx={{ textAlign: "left" }}>
-                      <b>Company website :</b> {!companyInfo ? "" :companyInfo.companyWebsite}
+                      <b>Company website :</b> {!companyInfo ? "" :companyInfo?.websiteUrl}
                     </Typography>
                   </>
                 )}
@@ -129,10 +130,6 @@ function JobListCard(props: props) {
                     </Typography>
                   </>
                 )}
-
-                <Typography sx={{ textAlign: "left" }}>
-                  <b>Job Role :</b> {!companyInfo ? "" :companyInfo.jobRole}
-                </Typography>
               </Stack>
             </Grid>
           </Grid>

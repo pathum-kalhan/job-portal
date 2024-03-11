@@ -7,13 +7,12 @@ import Button from "@mui/material/Button";
 import { Grid, Stack } from "@mui/material";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import { deepPurple } from "@mui/material/colors";
-import CreateIcon from "@mui/icons-material/Create";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import AddIcon from "@mui/icons-material/Add";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { LoadingButton } from "@mui/lab";
 import Link from "next/link";
+import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 
 type props = {};
 
@@ -81,28 +80,18 @@ function EmployerProfileRightSideCard(props: props) {
               </Link>
             </Grid>
             <Grid item lg="auto" md="auto" sm="auto" xs="auto">
-              <Button
-                color="info"
-                size="small"
-                variant="contained"
-                endIcon={<CreateIcon />}
-                sx={{ textTransform: "capitalize", height: "2.5rem" }}
-              >
-                EDIT JOB
-              </Button>
-            </Grid>
-
-            <Grid item lg="auto" md="auto" sm="auto" xs="auto">
-              <Button
-                color="error"
-                size="small"
-                variant="contained"
-                endIcon={<DeleteForeverIcon fontSize="large" />}
-                sx={{ textTransform: "capitalize", height: "2.5rem" }}
-              >
-                DELETE JOB
-              </Button>
-            </Grid>
+              <Link href="/dashboard/employer/created-jobs">
+                <Button
+                  color="info"
+                  size="small"
+                  variant="contained"
+                  endIcon={<FormatListBulletedIcon />}
+                  sx={{ textTransform: "capitalize", height: "2.5rem" }}
+                >
+                  MANAGE JOBS
+                </Button>
+              </Link>
+            </Grid> 
           </Grid>
         </Grid>
       </CardContent>

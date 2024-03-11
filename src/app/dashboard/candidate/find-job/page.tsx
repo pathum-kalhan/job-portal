@@ -20,7 +20,7 @@ function Page() {
   const [companyInfo, setCompanyInfo] = React.useState({
     companyName: "xxxxxxxxxx",
     companyDetails: "xxxxxxxxxx",
-    companyWebsite: "xxxxxxxxxx",
+    websiteUrl: "xxxxxxxxxx",
     location: "xxxxxxxxxx",
     industry: "xxxxxxxxxx",
     position: "xxxxxxxxxx",
