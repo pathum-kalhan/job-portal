@@ -12,9 +12,12 @@ import {
   Autocomplete,
   TextField as MUITextField,
   Chip,
+  CircularProgress,
+  Stack,
 } from "@mui/material";
 import { Formik, Form, Field, FormikProps, FormikHelpers } from "formik";
 import { TextField } from "formik-mui";
+import { useSession } from "next-auth/react";
 import { useCallback, useState } from "react";
 import * as yup from "yup";
 
@@ -31,7 +34,6 @@ type initialValues = {
   acceptTerms: boolean;
 };
 
-
 type AlertType = {
   show: boolean;
   message: string;
@@ -41,6 +43,7 @@ type AlertType = {
 const EmployerJobPostForm = () => {
   const industryArray = ["Industry1", "Industry2"];
   const skillsArray = ["Option 1", "Option 2", "Option 3", "Option 4"];
+  const { data: session, status } = useSession();
 
   const [backendCall, setBackendCall] = useState(false);
   const [alert, setAlert] = useState<AlertType>({
@@ -85,9 +88,10 @@ const EmployerJobPostForm = () => {
   });
 
   const initialValues: initialValues = {
-    companyName: "",
+    companyName: session?.user?.name ?? "",
     companyDetails: "",
-    websiteUrl: "",
+    // @ts-ignore
+    websiteUrl: session?.user?.webUrl ?? "",
     location: "",
     industry: "",
     position: "",
@@ -104,7 +108,6 @@ const EmployerJobPostForm = () => {
     ) => {
       setBackendCall(true);
       const payLoad = {
-        companyName: values.companyName,
         companyDetails: values.companyDetails,
         websiteUrl: values.websiteUrl,
         location: values.location,
@@ -116,8 +119,6 @@ const EmployerJobPostForm = () => {
       };
 
       try {
-      
-
         const response = await fetch("/api/employer/job/createJob", {
           method: "POST",
           body: JSON.stringify(payLoad),
@@ -178,214 +179,221 @@ const EmployerJobPostForm = () => {
       <SnackBarComponent alert={alert} setAlert={setAlert} />
 
       <CardHeader title="Post a job" align="center" />
-      <Formik
-        initialValues={initialValues}
-        onSubmit={handleSubmit}
-        validationSchema={accountValidationSchemaWithEmailField}
-        enableReinitialize
-      >
-        {(formik) => {
-          const { isValid, dirty, values, errors, setFieldValue } = formik;
-          return (
-            <Form>
-              <Grid container alignItems="center" justifyContent="center">
-                <Grid
-                  item
-                  container
-                  alignItems="center"
-                  justifyContent="center"
-                  gap={2}
-                >
-                  <Grid item lg={12} md={12} sm={12} xs={12}>
-                    <Field
-                      disabled={backendCall}
-                      fullWidth
-                      id="companyName"
-                      name="companyName"
-                      label="Company Name"
-                      component={TextField}
-                    />
-                  </Grid>
-                  <Grid item lg={12} md={12} sm={12} xs={12}>
-                    <Field
-                      disabled={backendCall}
-                      id="companyDetails"
-                      name="companyDetails"
-                      maxRows={3}
-                      minRows={3}
-                      fullWidth
-                      placeholder="Company Details"
-                      multiline
-                      component={TextField}
-                    />
-                  </Grid>
-                  <Grid item lg={12} md={12} sm={12} xs={12}>
-                    <Field
-                      disabled={backendCall}
-                      fullWidth
-                      id="websiteUrl"
-                      name="websiteUrl"
-                      label="Website URL"
-                      component={TextField}
-                    />
-                  </Grid>
 
-                  <Grid item lg={12} md={12} sm={12} xs={12}>
-                    <Field
-                      disabled={backendCall}
-                      fullWidth
-                      id="location"
-                      name="location"
-                      label="Location"
-                      component={TextField}
-                    />
-                  </Grid>
+      {status === "authenticated" ? (
+        <Formik
+          initialValues={initialValues}
+          onSubmit={handleSubmit}
+          validationSchema={accountValidationSchemaWithEmailField}
+          enableReinitialize
+        >
+          {(formik) => {
+            const { isValid, dirty, values, errors, setFieldValue } = formik;
+            return (
+              <Form>
+                <Grid container alignItems="center" justifyContent="center">
+                  <Grid
+                    item
+                    container
+                    alignItems="center"
+                    justifyContent="center"
+                    gap={2}
+                  >
+                    <Grid item lg={12} md={12} sm={12} xs={12}>
+                      <Field
+                        disabled
+                        fullWidth
+                        id="companyName"
+                        name="companyName"
+                        label="Company Name"
+                        component={TextField}
+                      />
+                    </Grid>
+                    <Grid item lg={12} md={12} sm={12} xs={12}>
+                      <Field
+                        disabled={backendCall}
+                        id="companyDetails"
+                        name="companyDetails"
+                        maxRows={3}
+                        minRows={3}
+                        fullWidth
+                        placeholder="Company Details"
+                        multiline
+                        component={TextField}
+                      />
+                    </Grid>
+                    <Grid item lg={12} md={12} sm={12} xs={12}>
+                      <Field
+                        disabled={backendCall}
+                        fullWidth
+                        id="websiteUrl"
+                        name="websiteUrl"
+                        label="Website URL"
+                        component={TextField}
+                      />
+                    </Grid>
 
-                  <Grid item lg={12} md={12} sm={12} xs={12}>
-                    <Autocomplete
-                      disabled={backendCall}
-                      freeSolo
-                      options={industryArray}
-                      value={values.industry}
-                      onChange={(event, value) => {
-                        setFieldValue("industry", value);
-                      }}
-                      renderTags={(value, getTagProps) =>
-                        value.map((option, index) => (
-                          <Chip
-                            label={option}
-                            {...getTagProps({ index })}
-                            key={option}
+                    <Grid item lg={12} md={12} sm={12} xs={12}>
+                      <Field
+                        disabled={backendCall}
+                        fullWidth
+                        id="location"
+                        name="location"
+                        label="Location"
+                        component={TextField}
+                      />
+                    </Grid>
+
+                    <Grid item lg={12} md={12} sm={12} xs={12}>
+                      <Autocomplete
+                        disabled={backendCall}
+                        freeSolo
+                        options={industryArray}
+                        value={values.industry}
+                        onChange={(event, value) => {
+                          setFieldValue("industry", value);
+                        }}
+                        renderTags={(value, getTagProps) =>
+                          value.map((option, index) => (
+                            <Chip
+                              label={option}
+                              {...getTagProps({ index })}
+                              key={option}
+                            />
+                          ))
+                        }
+                        renderInput={(params) => (
+                          <Field
+                            {...params}
+                            variant="outlined"
+                            value={values.industry}
+                            label="Industry (You need to hit ENTER key if you are adding a custom  industry)"
+                            placeholder="+ Add Industry"
+                            component={MUITextField}
+                            name="industry"
+                            error={!!errors.industry}
+                            helperText={errors.industry}
                           />
-                        ))
-                      }
-                      renderInput={(params) => (
-                        <Field
-                          {...params}
-                          variant="outlined"
-                          value={values.industry}
-                          label="Industry (You need to hit ENTER key if you are adding a custom  industry)"
-                          placeholder="+ Add Industry"
-                          component={MUITextField}
-                          name="industry"
-                          error={!!errors.industry}
-                          helperText={errors.industry}
-                        />
-                      )}
-                    />
-                  </Grid>
+                        )}
+                      />
+                    </Grid>
 
-                  <Grid item lg={12} md={12} sm={12} xs={12}>
-                    <Field
-                      disabled={backendCall}
-                      fullWidth
-                      id="position"
-                      name="position"
-                      label="Position"
-                      component={TextField}
-                    />
-                  </Grid>
+                    <Grid item lg={12} md={12} sm={12} xs={12}>
+                      <Field
+                        disabled={backendCall}
+                        fullWidth
+                        id="position"
+                        name="position"
+                        label="Position"
+                        component={TextField}
+                      />
+                    </Grid>
 
-                  <Grid item lg={12} md={12} sm={12} xs={12}>
-                    <Field
-                      disabled={backendCall}
-                      id="jobDescription"
-                      name="jobDescription"
-                      maxRows={3}
-                      minRows={3}
-                      fullWidth
-                      placeholder="Job Description"
-                      multiline
-                      component={TextField}
-                    />
-                  </Grid>
+                    <Grid item lg={12} md={12} sm={12} xs={12}>
+                      <Field
+                        disabled={backendCall}
+                        id="jobDescription"
+                        name="jobDescription"
+                        maxRows={3}
+                        minRows={3}
+                        fullWidth
+                        placeholder="Job Description"
+                        multiline
+                        component={TextField}
+                      />
+                    </Grid>
 
-                  <Grid item lg={12} md={12} sm={12} xs={12}>
-                    <Autocomplete
-                      disabled={backendCall}
-                      multiple
-                      freeSolo
-                      options={skillsArray}
-                      value={values.requiredQualifications}
-                      onChange={(event, value) => {
-                        setFieldValue("requiredQualifications", value);
-                      }}
-                      renderTags={(value, getTagProps) =>
-                        value.map((option, index) => (
-                          <Chip
-                            label={option}
-                            {...getTagProps({ index })}
-                            key={option}
+                    <Grid item lg={12} md={12} sm={12} xs={12}>
+                      <Autocomplete
+                        disabled={backendCall}
+                        multiple
+                        freeSolo
+                        options={skillsArray}
+                        value={values.requiredQualifications}
+                        onChange={(event, value) => {
+                          setFieldValue("requiredQualifications", value);
+                        }}
+                        renderTags={(value, getTagProps) =>
+                          value.map((option, index) => (
+                            <Chip
+                              label={option}
+                              {...getTagProps({ index })}
+                              key={option}
+                            />
+                          ))
+                        }
+                        renderInput={(params) => (
+                          <Field
+                            {...params}
+                            variant="outlined"
+                            value={values.requiredQualifications}
+                            label="Required Qualifications (You need to hit ENTER key if you are adding a custom qualification)"
+                            placeholder="+ Add Qualifications"
+                            component={MUITextField}
+                            name="requiredQualifications"
+                            error={!!errors.requiredQualifications}
+                            helperText={errors.requiredQualifications}
                           />
-                        ))
-                      }
-                      renderInput={(params) => (
-                        <Field
-                          {...params}
-                          variant="outlined"
-                          value={values.requiredQualifications}
-                          label="Required Qualifications (You need to hit ENTER key if you are adding a custom qualification)"
-                          placeholder="+ Add Qualifications"
-                          component={MUITextField}
-                          name="requiredQualifications"
-                          error={!!errors.requiredQualifications}
-                          helperText={errors.requiredQualifications}
-                        />
-                      )}
-                    />
-                  </Grid>
+                        )}
+                      />
+                    </Grid>
 
-                  <Grid item lg={12} md={12} sm={12} xs={12}>
-                    <Field
-                      disabled={backendCall}
-                      fullWidth
-                      id="workingHoursPerDay"
-                      name="workingHoursPerDay"
-                      label="Working Hours Per Day"
-                      type="number"
-                      component={TextField}
-                    />
-                  </Grid>
+                    <Grid item lg={12} md={12} sm={12} xs={12}>
+                      <Field
+                        disabled={backendCall}
+                        fullWidth
+                        id="workingHoursPerDay"
+                        name="workingHoursPerDay"
+                        label="Working Hours Per Day"
+                        type="number"
+                        component={TextField}
+                      />
+                    </Grid>
 
-                  <Grid item lg={12} md={12} sm={12} xs={12}>
-                    <FormControlLabel
-                      disabled={backendCall}
-                      control={
-                        <Checkbox
-                          id="acceptTerms"
-                          name="acceptTerms"
-                          color="primary"
-                          checked={values.acceptTerms}
-                          onChange={(e, newValue) => {
-                            setFieldValue("acceptTerms", newValue);
-                          }}
-                        />
-                      }
-                      label="Accept terms and conditions"
-                    />
-                    <FormHelperText error={!!errors.acceptTerms}>
-                      {errors.acceptTerms}
-                    </FormHelperText>
-                  </Grid>
+                    <Grid item lg={12} md={12} sm={12} xs={12}>
+                      <FormControlLabel
+                        disabled={backendCall}
+                        control={
+                          <Checkbox
+                            id="acceptTerms"
+                            name="acceptTerms"
+                            color="primary"
+                            checked={values.acceptTerms}
+                            onChange={(e, newValue) => {
+                              setFieldValue("acceptTerms", newValue);
+                            }}
+                          />
+                        }
+                        label="Accept terms and conditions"
+                      />
+                      <FormHelperText error={!!errors.acceptTerms}>
+                        {errors.acceptTerms}
+                      </FormHelperText>
+                    </Grid>
 
-                  <Grid item lg={"auto"}>
-                    <LoadingButton
-                      loading={backendCall}
-                      disabled={!isValid || !dirty}
-                      color="primary"
-                      variant="contained"
-                      size="large"
-                      type="submit"
-                    >
-                      Create Job
-                    </LoadingButton>
+                    <Grid item lg={"auto"}>
+                      <LoadingButton
+                        loading={backendCall}
+                        disabled={!isValid || !dirty}
+                        color="primary"
+                        variant="contained"
+                        size="large"
+                        type="submit"
+                      >
+                        Create Job
+                      </LoadingButton>
+                    </Grid>
                   </Grid>
                 </Grid>
-              </Grid>
-            </Form>
-          );
-        }}
-      </Formik>
+              </Form>
+            );
+          }}
+        </Formik>
+      ) : ( 
+          <Stack alignItems="center" justifyContent="center">
+            <CircularProgress />
+            </Stack>
+      )}
     </Card>
   );
 };

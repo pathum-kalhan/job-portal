@@ -45,7 +45,6 @@ export async function POST(request: Request) {
     // validate and sanitize the input
     const isValid = await accountValidations.validate(data);
     const {
-      companyName,
       companyDetails,
       websiteUrl,
       location,
@@ -59,7 +58,6 @@ export async function POST(request: Request) {
     await JobPosteModel.findOneAndUpdate(
       { _id: data.jobId },
       {
-        companyName,
         companyDetails,
         websiteUrl,
         location,

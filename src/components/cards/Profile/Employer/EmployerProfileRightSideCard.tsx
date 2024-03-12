@@ -80,7 +80,7 @@ function EmployerProfileRightSideCard(props: props) {
               </Link>
             </Grid>
             <Grid item lg="auto" md="auto" sm="auto" xs="auto">
-              <Link href="/dashboard/employer/created-jobs">
+              <Link href="/dashboard/employer/manage-jobs">
                 <Button
                   color="info"
                   size="small"

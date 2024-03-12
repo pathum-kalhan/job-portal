@@ -57,6 +57,7 @@ const authOptions: NextAuthOptions = {
               name: user.name,
               profileImage: user.profilePic.image,
               role: user.userType,
+              websiteUrl: user.websiteUrl ?? null,
             };
           }
 
@@ -83,6 +84,8 @@ const authOptions: NextAuthOptions = {
           id: user.id,
           // @ts-ignore
           role: user.role,
+           // @ts-ignore
+           websiteUrl: user.websiteUrl,
         };
       }
 
@@ -96,6 +99,8 @@ const authOptions: NextAuthOptions = {
           id: token.id,
           role: token?.role ?? "",
           profileImage: token.profileImage,
+          // @ts-ignore
+          webUrl: token.websiteUrl,
         },
       };
     },
