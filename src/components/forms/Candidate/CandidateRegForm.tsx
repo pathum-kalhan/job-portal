@@ -13,12 +13,12 @@ import {
 import { Formik, Form, Field, FormikHelpers } from "formik";
 import { TextField } from "formik-mui";
 import { useRouter } from "next/navigation";
-import { MouseEvent, useCallback, useState } from "react";
+import { MouseEvent, useCallback, useEffect, useState } from "react";
 import * as yup from "yup";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import SnackBarComponent from "@/components/common/SnackBarComponent";
-
+import { useSession } from "next-auth/react";
 
 type initialValues = {
   name: string;
@@ -40,6 +40,7 @@ type AlertType = {
 
 const CandidateRegForm = () => {
   const router = useRouter();
+  const { status } = useSession();
   const [emailValidate, setEmailValidate] = useState(false);
   const [backendCall, setBackendCall] = useState(false);
   const [alert, setAlert] = useState<AlertType>({
@@ -49,7 +50,8 @@ const CandidateRegForm = () => {
   });
 
   const [newPasswordVisibility, setNewPasswordVisibility] = useState(false);
-  const [newConfirmPasswordVisibility, setNewConfirmPasswordVisibility] = useState(false);
+  const [newConfirmPasswordVisibility, setNewConfirmPasswordVisibility] =
+    useState(false);
 
   const [isCodeSubmitted, setIsCodeSubmitted] = useState(false);
   const phoneNumberRegex = /^07\d{8}$/;
@@ -152,15 +154,18 @@ const CandidateRegForm = () => {
             "Content-Type": "application/json",
           },
         });
- 
+
         if (response.status !== 200) {
           const errorMessage = await response.json();
-        setBackendCall(false);
-        setAlert({
-          show: true,
-          message: (typeof errorMessage?.message === "string" && errorMessage?.message) ?? "Something went wrong!",
-          severity: "error",
-        });
+          setBackendCall(false);
+          setAlert({
+            show: true,
+            message:
+              (typeof errorMessage?.message === "string" &&
+                errorMessage?.message) ??
+              "Something went wrong!",
+            severity: "error",
+          });
         } else {
           formikHelpers.resetForm();
           setEmailValidate(false);
@@ -172,7 +177,7 @@ const CandidateRegForm = () => {
             severity: "success",
           });
 
-          router.replace('/login');
+          router.replace("/login");
         }
       } catch (e: any) {
         setBackendCall(false);
@@ -199,13 +204,16 @@ const CandidateRegForm = () => {
           "Content-Type": "application/json",
         },
       });
-        
+
       if (response.status !== 200) {
         const errorMessage = await response.json();
         setBackendCall(false);
         setAlert({
           show: true,
-          message: (typeof errorMessage?.message === "string" && errorMessage?.message) ?? "Something went wrong!",
+          message:
+            (typeof errorMessage?.message === "string" &&
+              errorMessage?.message) ??
+            "Something went wrong!",
           severity: "error",
         });
       } else {
@@ -217,11 +225,11 @@ const CandidateRegForm = () => {
           severity: "success",
         });
       }
-    } catch (e:any) {
+    } catch (e: any) {
       setBackendCall(false);
       setAlert({
         show: true,
-        message:  e?.message?? "Server Error",
+        message: e?.message ?? "Server Error",
         severity: "error",
       });
     }
@@ -241,36 +249,44 @@ const CandidateRegForm = () => {
             "Content-Type": "application/json",
           },
         });
-        
 
         if (response.status !== 200) {
           const errorMessage = await response.json();
           setBackendCall(false);
           setAlert({
             show: true,
-            message: (typeof errorMessage?.message === "string" && errorMessage?.message) ?? "Something went wrong!",
+            message:
+              (typeof errorMessage?.message === "string" &&
+                errorMessage?.message) ??
+              "Something went wrong!",
             severity: "error",
           });
         } else {
           setIsCodeSubmitted(true);
           setBackendCall(false);
           setAlert({
-          show: true,
-          message: `Email is verified!`,
-          severity: "success",
-        });
+            show: true,
+            message: `Email is verified!`,
+            severity: "success",
+          });
         }
-      } catch (e:any) {
+      } catch (e: any) {
         setBackendCall(false);
-         setAlert({
-        show: true,
-        message: "Server Error",
-        severity: "error",
-      });
+        setAlert({
+          show: true,
+          message: "Server Error",
+          severity: "error",
+        });
       }
     },
     []
   );
+
+  useEffect(() => {
+    if (status == "authenticated") {
+      router.replace("/dashboard/profile");
+    }
+  }, [router, status]);
 
   return (
     <Card
@@ -288,7 +304,7 @@ const CandidateRegForm = () => {
       }}
       elevation={3}
     >
- <SnackBarComponent alert={alert} setAlert={setAlert} />
+      <SnackBarComponent alert={alert} setAlert={setAlert} />
 
       <CardHeader title="Create account to post a job" align="center" />
       <Formik
@@ -474,7 +490,6 @@ const CandidateRegForm = () => {
                           </InputAdornment>
                         ),
                       }}
-                      
                       component={TextField}
                     />
                   </Grid>
@@ -491,7 +506,9 @@ const CandidateRegForm = () => {
                             position="end"
                             style={{ outline: "none", cursor: "pointer" }}
                             onClick={() =>
-                              setNewConfirmPasswordVisibility(!newConfirmPasswordVisibility)
+                              setNewConfirmPasswordVisibility(
+                                !newConfirmPasswordVisibility
+                              )
                             }
                           >
                             {newConfirmPasswordVisibility ? (

@@ -30,7 +30,7 @@ const CandidateSchema = new Schema(
     appliedJobs: [
       {
         job: { type: Schema.Types.ObjectId, ref: "JobPost" },
-        date: Date,
+        appliedDate: Date,
         cvReviewStatus: {
           type: String,
           enum: ["received", "shortListed", "rejected"],
@@ -38,6 +38,7 @@ const CandidateSchema = new Schema(
         },
       },
     ],
+    savedJobs: [{ type: Schema.Types.ObjectId, ref: "JobPost" }],
     experience: String,
     skills: Array,
     education: String,

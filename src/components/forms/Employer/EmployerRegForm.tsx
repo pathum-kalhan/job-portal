@@ -17,11 +17,12 @@ import {
 import { Formik, Form, Field, FormikProps, FormikHelpers } from "formik";
 import { TextField } from "formik-mui";
 import { useRouter } from "next/navigation";
-import { MouseEvent, useCallback, useState } from "react";
+import { MouseEvent, useCallback, useEffect, useState } from "react";
 import * as yup from "yup";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import SnackBarComponent from "@/components/common/SnackBarComponent";
+import { useSession } from "next-auth/react";
 
 type initialValues = {
   companyName: string;
@@ -87,6 +88,7 @@ const CustomizedSelectForFormik = (selectProps: selectProps) => {
 
 const EmployerRegForm = () => {
   const router = useRouter();
+  const { status } = useSession();
   const [emailValidate, setEmailValidate] = useState(false);
   const [isCodeSubmitted, setIsCodeSubmitted] = useState(false);
   const [backendCall, setBackendCall] = useState(false);
@@ -340,6 +342,13 @@ const EmployerRegForm = () => {
     },
     []
   );
+
+
+  useEffect(() => {
+    if (status == "authenticated") {
+      router.replace("/dashboard/profile");
+    }
+  }, [router, status]);
 
   return (
     <Card

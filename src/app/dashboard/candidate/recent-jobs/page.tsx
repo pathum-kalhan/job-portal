@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import router from "next/router";
 import { useSession } from "next-auth/react";
+import JobFilter from "@/components/common/JobFilter";
 
 type jobPostInfo = {
   _id: string;
@@ -27,17 +28,17 @@ type jobPostInfo = {
 };
 
 function Page() {
-
+  const { data: session, status } = useSession();
   const [backendCall, setBackendCall] = useState(true);
-  const { data: session, update, status } = useSession();
-  const [jobPostInfo, setJobPostInfo] = useState([]);
 
+  const [jobPostInfo, setJobPostInfo] = useState([]);
+  const [filterJobPosts, setFilterJobPosts] = useState([]);
 
   const loadJobs = useCallback(async () => {
     try {
       setBackendCall(true);
 
-      const response = await fetch("/api/candidate/job/getSavedJobs", {
+      const response = await fetch("/api/candidate/job/getAllJobs", {
         method: "POST",
         body: JSON.stringify({
           email: session?.user?.email,
@@ -54,6 +55,7 @@ function Page() {
       } else {
         const data = await response.json();
         setJobPostInfo(data.data);
+        setFilterJobPosts(data.data);
         setBackendCall(false);
       }
     } catch (error) {
@@ -77,7 +79,13 @@ function Page() {
   return (
     <Grid container gap={10}>
       {/* Filter Section */}
-
+      <JobFilter
+        filterJobPosts={filterJobPosts}
+        setFilterJobPosts={setFilterJobPosts}
+        jobPostInfo={jobPostInfo}
+        setJobPostInfo={setJobPostInfo}
+        backendCall={backendCall}
+      />
       <Grid
         container
         item
@@ -86,25 +94,29 @@ function Page() {
         xs={12}
         gap={3}
       >
-          {!backendCall ? (
-            !jobPostInfo.length ? (
-              <Stack alignItems="center" justifyContent="center">
-                <Typography variant="h5">No Jobs Created Yet.</Typography>
-              </Stack>
-            ) : (
-              jobPostInfo.map((item: jobPostInfo) => {
-                return (
-                  <Grid item xs={12} key={item?._id}>
-                    <JobListCard jobPostInfo={item} saveJobOption loadJobs={loadJobs} allAreSavedJobs />
-                  </Grid>
-                );
-              })
-            )
-          ) : (
+        {!backendCall ? (
+          !filterJobPosts.length ? (
             <Stack alignItems="center" justifyContent="center">
-              <CircularProgress />
+              <Typography variant="h5">No Jobs Created Yet.</Typography>
             </Stack>
-          )}
+          ) : (
+            filterJobPosts.map((item: jobPostInfo) => {
+              return (
+                <Grid item xs={12} key={item?._id}>
+                  <JobListCard
+                    jobPostInfo={item}
+                    saveJobOption
+                    loadJobs={loadJobs}
+                  />
+                </Grid>
+              );
+            })
+          )
+        ) : (
+          <Stack alignItems="center" justifyContent="center">
+            <CircularProgress />
+          </Stack>
+        )}
       </Grid>
     </Grid>
   );

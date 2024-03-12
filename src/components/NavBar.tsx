@@ -26,7 +26,7 @@ const logedInCandidate = [
     dropdownItems: [
       { link: "/dashboard/candidate/saved-jobs", title: "Saved Jobs" },
       { link: "/dashboard/candidate/recommended-jobs", title: "Recommended Jobs" },
-      { link: "/dashboard/candidate/recent-job-views", title: "Recent Job Views" },
+      { link: "/dashboard/candidate/recent-jobs", title: "Recent Jobs" },
     ],
   },
 
