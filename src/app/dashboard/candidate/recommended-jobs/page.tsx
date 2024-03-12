@@ -5,13 +5,11 @@ import { JobListCard } from "../../../../components/cards/Job/JobListCard";
 import {
   CircularProgress,
   Grid,
-  SelectChangeEvent,
   Stack,
   Typography,
 } from "@mui/material";
 import router from "next/router";
 import { useSession } from "next-auth/react";
-import JobFilter from "@/components/common/JobFilter";
 
 type jobPostInfo = {
   _id: string;
@@ -30,9 +28,8 @@ type jobPostInfo = {
 
 function Page() {
   const [backendCall, setBackendCall] = useState(true);
-  const { data: session, update, status } = useSession();
+  const { data: session, status } = useSession();
   const [jobPostInfo, setJobPostInfo] = useState([]);
-  const [industrySelection, setIndustrySelection] = useState("");
 
   const loadJobs = useCallback(async () => {
     try {
@@ -78,7 +75,6 @@ function Page() {
   return (
     <Grid container gap={10}>
     {/* Filter Section */}
-      <JobFilter jobPostInfo={jobPostInfo} setJobPostInfo={setJobPostInfo} />
     <Grid
       container
       item
