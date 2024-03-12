@@ -5,7 +5,6 @@ import { JobListCard } from "../../../../components/cards/Job/JobListCard";
 import {
   CircularProgress,
   Grid,
-  SelectChangeEvent,
   Stack,
   Typography,
 } from "@mui/material";
@@ -28,7 +27,7 @@ type jobPostInfo = {
 };
 
 function Page() {
-  const [industrySelection, setIndustrySelection] = useState("");
+
   const [backendCall, setBackendCall] = useState(true);
   const { data: session, update, status } = useSession();
   const [jobPostInfo, setJobPostInfo] = useState([]);
