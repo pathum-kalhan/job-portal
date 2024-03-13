@@ -39,23 +39,54 @@ export async function POST(request: Request) {
       );
     }
 
+    if (!data.companyId || !user._id || !data.jobId) {
+      return NextResponse.json(
+        {
+          message: `${!data.companyId ? "Company Id," :""} ${!user._id ? "User Id," : ""} ${!data.jobId ? "Job Id," : ""} was missing}`,
+        },
+        {
+          status: 401,
+        }
+      );
+    }
+
+    const alreadyApplied = await ApplicationModel.findOne({
+      company: data.companyId,
+      candidate: user._id,
+      jobPost: data.jobId,
+    });
+
+    if (alreadyApplied) {
+      return NextResponse.json(
+        {
+          message: "You Applied for the job already!",
+        },
+        {
+          status: 403,
+        }
+      );
+    }
+
+
+    await ApplicationModel.create({
+      company: data.companyId,
+      candidate: user._id,
+      jobPost: data.jobId,
+    });
+
+
     await CandidateModel.findOneAndUpdate(
       { email: user.email },
       {
         $addToSet: {
-              appliedJobs: {
-                job: data.jobId,
-                appliedDate: new Date()
-              },        
+          appliedJobs: {
+            job: data.jobId,
+            appliedDate: new Date(),
+          },
         },
       }
     );
-      
-      await ApplicationModel.create({
-          company: data.companyId,
-          candidate: user._id,
-          jobPost: data.jobId,
-    });
+
 
     return NextResponse.json(
       {

@@ -197,7 +197,7 @@ function EmployerJobListCard(props: props) {
                     </Typography>
                     <Typography sx={{ textAlign: "left" }}>
                       <b>Required Qualifications :</b>{" "}
-                      {!companyInfo ? "" : companyInfo.requiredQualifications}
+                      {!companyInfo ? "" : companyInfo.requiredQualifications.map((item, i)=> i=== companyInfo.requiredQualifications.length - 1 ? item : `${item}, `)}
                     </Typography>
                     <Typography sx={{ textAlign: "left" }}>
                       <b>Working Hours Per Day :</b>{" "}

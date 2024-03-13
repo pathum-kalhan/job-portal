@@ -1,6 +1,7 @@
 import DbMongoose from "../../../../../lib/db_mongoose";
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
+import JobPosteModel from "../../../models/Jobpost";
 import CandidateModel from "../../../models/Candidate";
 import mongoose from "mongoose";
 
@@ -25,7 +26,7 @@ export async function POST(request: Request) {
 
     const user = await CandidateModel.findOne({
       email: normalizedEmail,
-    }).populate("savedJobs");
+    }).populate("appliedJobs.job");
 
     if (!user) {
       return NextResponse.json(
@@ -44,53 +45,57 @@ export async function POST(request: Request) {
         appliedDate: Date;
         cvReviewStatus: String;
       }) => {
-        return item.job.toString();
+        return new mongoose.Types.ObjectId(item.job.id);
       }
     );
 
-    const filteredSavedJobs = user.savedJobs.map((item: any) => {
-      if (getAllAppliedJobs.includes(item._id.toString())) {
-        return {
-          _id: item._id,
-          companyName: item.companyName,
-          employer: item.employer,
-          companyDetails: item.companyDetails,
-          websiteUrl: item.websiteUrl,
-          location: item.location,
-          industry: item.industry,
-          position: item.position,
-          jobDescription: item.jobDescription,
-          requiredQualifications: item.requiredQualifications,
-          workingHoursPerDay: item.workingHoursPerDay,
-          alreadyApplied: true,
-        };
-      }
-      return {
-        _id: item._id,
-        companyName: item.companyName,
-        employer: item.employer,
-        companyDetails: item.companyDetails,
-        websiteUrl: item.websiteUrl,
-        location: item.location,
-        industry: item.industry,
-        position: item.position,
-        jobDescription: item.jobDescription,
-        requiredQualifications: item.requiredQualifications,
-        workingHoursPerDay: item.workingHoursPerDay,
-        alreadyApplied: false,
-      };
-    });
+
+    const jobsData = await JobPosteModel.aggregate([
+      {
+        $match: { $and: [
+          { requiredQualifications: { $in: user.skills } },
+          { _id: { $nin: getAllAppliedJobs } },
+        ]},
+      },
+      {
+        $project: {
+          companyName: 1,
+          employer:1,
+          companyDetails: 1,
+          companyWebsite: 1,
+          location: 1,
+          industry: 1,
+          position: 1,
+          jobDescription: 1,
+          requiredQualifications: 1,
+          workingHoursPerDay: 1,
+          jobRole: 1,
+          websiteUrl: 1,
+          savedJob: {
+            $cond: {
+              if: { $in: ["$_id", user.savedJobs] },
+              then: true,
+              else: false,
+            },
+          },
+        },
+      },
+      {
+        $sort: { createdAt: -1 },
+      },
+    ]);
 
     return NextResponse.json(
       {
         message: "Success",
-        data: filteredSavedJobs,
+        data: jobsData,
       },
       {
         status: 200,
       }
     );
   } catch (error: any) {
+    console.log(error);
     return NextResponse.json(
       {
         message: error,

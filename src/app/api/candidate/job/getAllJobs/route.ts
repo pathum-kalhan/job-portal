@@ -1,9 +1,9 @@
 import DbMongoose from "../../../../../lib/db_mongoose";
 import { NextResponse } from "next/server";
-import Employer from "../../../models/Employer";
 import { getServerSession } from "next-auth";
 import JobPosteModel from "../../../models/Jobpost";
 import CandidateModel from "../../../models/Candidate";
+import mongoose from "mongoose";
 
 export async function POST(request: Request) {
   try {
@@ -37,10 +37,24 @@ export async function POST(request: Request) {
       );
     }
 
+    const getAllAppliedJobs = user.appliedJobs.map(
+      (item: {
+        job: mongoose.Types.ObjectId;
+        appliedDate: Date;
+        cvReviewStatus: String;
+      }) => {
+        return new mongoose.Types.ObjectId(item.job.id)
+      }
+    );
+
     const jobsData = await JobPosteModel.aggregate([
+      {
+        $match: { _id: { $nin: getAllAppliedJobs }},
+      },
       {
         $project: {
           companyName: 1,
+          employer:1,
           companyDetails: 1,
           companyWebsite: 1,
           location: 1,

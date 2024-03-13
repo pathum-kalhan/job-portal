@@ -22,21 +22,24 @@ type jobPostInfo = {
   jobDescription: string;
   requiredQualifications: string[];
   workingHoursPerDay: number;
-  jobRole: string;
   savedJob: boolean;
   employer: string;
+  cvReviewStatus: string;
+  appliedDate: string;
 };
 
 function Page() {
+
   const [backendCall, setBackendCall] = useState(true);
   const { data: session, status } = useSession();
   const [jobPostInfo, setJobPostInfo] = useState([]);
+
 
   const loadJobs = useCallback(async () => {
     try {
       setBackendCall(true);
 
-      const response = await fetch("/api/candidate/job/getRecommendedJobs", {
+      const response = await fetch("/api/candidate/job/getAppliedJobs", {
         method: "POST",
         body: JSON.stringify({
           email: session?.user?.email,
@@ -52,6 +55,7 @@ function Page() {
         setBackendCall(false);
       } else {
         const data = await response.json();
+        
         setJobPostInfo(data.data);
         setBackendCall(false);
       }
@@ -75,36 +79,37 @@ function Page() {
 
   return (
     <Grid container gap={10}>
-    {/* Filter Section */}
-    <Grid
-      container
-      item
-      alignItems="center"
-      justifyContent="center"
-      xs={12}
-      gap={3}
-    >
-        {!backendCall ? (
-          !jobPostInfo.length ? (
-            <Stack alignItems="center" justifyContent="center">
-              <Typography variant="h5">Jobs not available right now..</Typography>
-            </Stack>
+      {/* Filter Section */}
+
+      <Grid
+        container
+        item
+        alignItems="center"
+        justifyContent="center"
+        xs={12}
+        gap={3}
+      >
+          {!backendCall ? (
+            !jobPostInfo.length ? (
+              <Stack alignItems="center" justifyContent="center">
+                <Typography variant="h5">Applied jobs not available Yet.</Typography>
+              </Stack>
+            ) : (
+              jobPostInfo.map((item: jobPostInfo) => {
+                return (
+                  <Grid item xs={12} key={item?._id}>
+                    <JobListCard jobPostInfo={item} loadJobs={loadJobs} alreadyApplied showJobApplicationStatus/>
+                  </Grid>
+                );
+              })
+            )
           ) : (
-            jobPostInfo.map((item: jobPostInfo) => {
-              return (
-                <Grid item xs={12} key={item?._id}>
-                  <JobListCard jobPostInfo={item} saveJobOption loadJobs={loadJobs} allAreSavedJobs={item.savedJob} />
-                </Grid>
-              );
-            })
-          )
-        ) : (
-          <Stack alignItems="center" justifyContent="center">
-            <CircularProgress />
-          </Stack>
-        )}
+            <Stack alignItems="center" justifyContent="center">
+              <CircularProgress />
+            </Stack>
+          )}
+      </Grid>
     </Grid>
-  </Grid>
   );
 }
 

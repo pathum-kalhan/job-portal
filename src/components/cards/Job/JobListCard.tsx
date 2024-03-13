@@ -5,7 +5,6 @@ import {
   CircularProgress,
   Grid,
   IconButton,
-  SelectChangeEvent,
   Stack,
   Tooltip,
   Typography,
@@ -19,11 +18,14 @@ import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import SnackBarComponent from "@/components/common/SnackBarComponent";
+import { LoadingButton } from "@mui/lab";
 
 type props = {
   saveJobOption?: boolean;
   loadJobs: () => void;
   allAreSavedJobs?: boolean;
+  alreadyApplied?: boolean;
+  showJobApplicationStatus?: boolean;
   jobPostInfo: {
     _id: string;
     websiteUrl: string;
@@ -35,8 +37,11 @@ type props = {
     jobDescription: string;
     requiredQualifications: string[];
     workingHoursPerDay: number;
-    jobRole: string;
     savedJob: boolean;
+    employer: string;
+    cvReviewStatus?: string;
+    appliedDate?: string;
+    alreadyApplied?: boolean;
   };
 };
 
@@ -47,11 +52,21 @@ type AlertType = {
 };
 
 function JobListCard(props: props) {
-  const { saveJobOption = false, allAreSavedJobs= false, jobPostInfo, loadJobs } = props;
+  const {
+    saveJobOption = false,
+    allAreSavedJobs = false,
+    alreadyApplied = false,
+    showJobApplicationStatus = false,
+    jobPostInfo,
+    loadJobs,
+  } = props;
 
-  const [bookMarkIcon, setBookMark] = useState(allAreSavedJobs || jobPostInfo?.savedJob);
+  const [bookMarkIcon, setBookMark] = useState(
+    allAreSavedJobs || jobPostInfo?.savedJob
+  );
   const [viewMoreJobInfo, setViewMoreJobInfo] = useState(false);
   const [backendCall, setBackendCall] = useState(false);
+  const [backendCallJobApply, setBackendCallJobApply] = useState(false);
   const [applicationStatus, setApplicationStatus] = useState("");
   const [alert, setAlert] = useState<AlertType>({
     show: false,
@@ -92,7 +107,7 @@ function JobListCard(props: props) {
         setBookMark(!bookMarkIcon);
         setBackendCall(false);
         if (allAreSavedJobs) {
-          loadJobs()
+          loadJobs();
         }
         setAlert({
           show: true,
@@ -112,6 +127,55 @@ function JobListCard(props: props) {
       });
     }
   }, [allAreSavedJobs, bookMarkIcon, jobPostInfo._id, loadJobs]);
+
+  const applyTheJob = useCallback(async () => {
+    try {
+      setBackendCallJobApply(true);
+
+      const response = await fetch("/api/candidate/job/applyJob", {
+        method: "POST",
+        body: JSON.stringify({
+          jobId: jobPostInfo._id,
+          companyId: jobPostInfo.employer,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response?.status !== 200) {
+        setBackendCallJobApply(false);
+        const { message } = await response.json();
+        setAlert({
+          show: true,
+          message:
+            typeof message === "string"
+              ? message
+              : `Job apply failed due to server error, please try again!`,
+          severity: "error",
+        });
+      } else {
+        setBackendCallJobApply(false);
+        const { message } = await response.json();
+        setAlert({
+          show: true,
+          message:
+            typeof message === "string"
+              ? message
+              : `You applied for the job successfully!`,
+          severity: "success",
+        });
+        loadJobs();
+      }
+    } catch (error) {
+      setBackendCallJobApply(false);
+      setAlert({
+        show: true,
+        message: "Server Error",
+        severity: "error",
+      });
+    }
+  }, [jobPostInfo._id, jobPostInfo.employer, loadJobs]);
 
   return (
     <Card sx={{ backgroundColor: "" }}>
@@ -193,7 +257,7 @@ function JobListCard(props: props) {
                     </Typography>
                     <Typography sx={{ textAlign: "left" }}>
                       <b>Required Qualifications :</b>{" "}
-                      {!jobPostInfo ? "" : jobPostInfo.requiredQualifications}
+                      {!jobPostInfo ? "" : jobPostInfo.requiredQualifications.map((item, i)=> i=== jobPostInfo.requiredQualifications.length - 1 ? item : `${item}, `)}
                     </Typography>
                     <Typography sx={{ textAlign: "left" }}>
                       <b>Working Hours Per Day :</b>{" "}
@@ -222,6 +286,7 @@ function JobListCard(props: props) {
           >
             <Grid item xs={"auto"}>
               <Button
+                disabled={backendCallJobApply}
                 size="large"
                 endIcon={
                   !viewMoreJobInfo ? <ExpandMoreIcon /> : <ExpandLessIcon />
@@ -233,6 +298,19 @@ function JobListCard(props: props) {
                 View {!viewMoreJobInfo ? "More" : "Less"}
               </Button>
             </Grid>
+
+            {showJobApplicationStatus && <Grid item xs={"auto"}>
+              <Typography>
+                <b>Status:</b>
+                {jobPostInfo.cvReviewStatus === "received"
+                  ? " Application sent"
+                  : jobPostInfo.cvReviewStatus === "shortListed"
+                  ? " Application short listed"
+                  : jobPostInfo.cvReviewStatus === "rejected"
+                  ? " Application rejected"
+                  : " Not applied"}
+              </Typography>
+            </Grid>}
 
             {saveJobOption && (
               <Grid
@@ -247,7 +325,7 @@ function JobListCard(props: props) {
                     bookMarkIcon ? "Remove the job from save" : "Save the job"
                   }
                 >
-                  <IconButton onClick={saveJob}>
+                  <IconButton disabled={backendCallJobApply} onClick={saveJob}>
                     {backendCall ? (
                       <CircularProgress size={20} sx={{ color: "black" }} />
                     ) : bookMarkIcon ? (
@@ -287,14 +365,17 @@ function JobListCard(props: props) {
             </Grid>
 
             <Grid item>
-              <Button
+              <LoadingButton
+                disabled={alreadyApplied}
+                loading={backendCallJobApply}
+                onClick={applyTheJob}
                 size="large"
                 color="success"
                 variant="contained"
                 sx={{ borderRadius: 2 }}
               >
                 APPLY
-              </Button>
+              </LoadingButton>
             </Grid>
           </Grid>
         </Grid>

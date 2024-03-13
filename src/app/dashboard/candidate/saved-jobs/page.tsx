@@ -24,12 +24,14 @@ type jobPostInfo = {
   workingHoursPerDay: number;
   jobRole: string;
   savedJob: boolean;
+  employer: string;
+  alreadyApplied: boolean;
 };
 
 function Page() {
 
   const [backendCall, setBackendCall] = useState(true);
-  const { data: session, update, status } = useSession();
+  const { data: session, status } = useSession();
   const [jobPostInfo, setJobPostInfo] = useState([]);
 
 
@@ -89,13 +91,13 @@ function Page() {
           {!backendCall ? (
             !jobPostInfo.length ? (
               <Stack alignItems="center" justifyContent="center">
-                <Typography variant="h5">No Jobs Created Yet.</Typography>
+                <Typography variant="h5">Jobs not available right now.</Typography>
               </Stack>
             ) : (
               jobPostInfo.map((item: jobPostInfo) => {
                 return (
                   <Grid item xs={12} key={item?._id}>
-                    <JobListCard jobPostInfo={item} saveJobOption loadJobs={loadJobs} allAreSavedJobs />
+                    <JobListCard jobPostInfo={item} saveJobOption loadJobs={loadJobs} allAreSavedJobs alreadyApplied={item.alreadyApplied} />
                   </Grid>
                 );
               })
