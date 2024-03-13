@@ -24,6 +24,7 @@ type jobPostInfo = {
   requiredQualifications: string[];
   workingHoursPerDay: number;
   jobRole: string;
+  employer: string;
   savedJob: boolean;
 };
 
@@ -97,7 +98,7 @@ function Page() {
         {!backendCall ? (
           !filterJobPosts.length ? (
             <Stack alignItems="center" justifyContent="center">
-              <Typography variant="h5">No Jobs Created Yet.</Typography>
+              <Typography variant="h5">Jobs not available right now.</Typography>
             </Stack>
           ) : (
             filterJobPosts.map((item: jobPostInfo) => {

@@ -138,13 +138,23 @@ const CandidateEditProfileForm = (props: props) => {
 
   const getSkills = useCallback(async () => {
     try {
-      const response = await fetch("/api/candidate/getAllSkills");
+      const response = await fetch("/api/candidate/getAllSkills", {
+        method: "POST",
+        body: JSON.stringify({
+          // @ts-ignore
+          userRole: session?.user?.role,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
       const data = await response.json();
       setSkillsArray(data.data);
     } catch (error) {
       console.log("error", error);
     }
-  }, []);
+          // @ts-ignore
+  }, [session?.user?.role]);
 
   useEffect(() => {
     getSkills();

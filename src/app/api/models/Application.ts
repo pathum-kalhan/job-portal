@@ -2,9 +2,9 @@ import { models, model, Schema } from "mongoose";
 
 const ApplicationSchema = new Schema(
   {
-    company: [{ type: Schema.Types.ObjectId, ref: "Employer" }],
-    candidate: [{ type: Schema.Types.ObjectId, ref: "Candidate" }],
-    jobPost: [{ type: Schema.Types.ObjectId, ref: "JobPost" }],
+    company: { type: Schema.Types.ObjectId, ref: "Employer" },
+    candidate: { type: Schema.Types.ObjectId, ref: "Candidate" },
+    jobPost: { type: Schema.Types.ObjectId, ref: "JobPost" },
     cvReviewStatus: {
       type: String,
       enum: ["received", "shortListed", "rejected"],

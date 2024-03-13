@@ -15,10 +15,10 @@ import {
   CircularProgress,
   Stack,
 } from "@mui/material";
-import { Formik, Form, Field, FormikProps, FormikHelpers } from "formik";
+import { Formik, Form, Field, FormikHelpers } from "formik";
 import { TextField } from "formik-mui";
 import { useSession } from "next-auth/react";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import * as yup from "yup";
 
 type initialValues = {
@@ -41,8 +41,8 @@ type AlertType = {
 };
 
 const EmployerJobPostForm = () => {
-  const industryArray = ["Industry1", "Industry2"];
-  const skillsArray = ["Option 1", "Option 2", "Option 3", "Option 4"];
+  const industryArray = ["IT", "Health", "Education"];
+  const [skillsArray, setSkillsArray] = useState([]);
   const { data: session, status } = useSession();
 
   const [backendCall, setBackendCall] = useState(false);
@@ -159,6 +159,30 @@ const EmployerJobPostForm = () => {
 
     []
   );
+
+  const getSkills = useCallback(async () => {
+    try {
+      const response = await fetch("/api/candidate/getAllSkills", {
+        method: "POST",
+        body: JSON.stringify({
+          // @ts-ignore
+          userRole: session?.user?.role,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+      setSkillsArray(data.data);
+    } catch (error) {
+ 
+    }
+    // @ts-ignore
+  }, [session?.user?.role]);
+
+  useEffect(() => {
+    getSkills();
+  }, [getSkills]);
 
   return (
     <Card
@@ -389,10 +413,10 @@ const EmployerJobPostForm = () => {
             );
           }}
         </Formik>
-      ) : ( 
-          <Stack alignItems="center" justifyContent="center">
-            <CircularProgress />
-            </Stack>
+      ) : (
+        <Stack alignItems="center" justifyContent="center">
+          <CircularProgress />
+        </Stack>
       )}
     </Card>
   );
