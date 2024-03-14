@@ -3,7 +3,7 @@ import DbMongoose from "../../../../../lib/db_mongoose";
 import { NextResponse } from "next/server";
 import EmployerModel from "../../../models/Employer";
 import { getServerSession } from "next-auth";
-import JobPosteModel from "@/app/api/models/Jobpost";
+import JobPosteModel from "@/app/api/models/JobPost";
 
 export async function POST(request: Request) {
   try {

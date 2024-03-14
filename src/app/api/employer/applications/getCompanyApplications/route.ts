@@ -2,6 +2,7 @@ import DbMongoose from "@/lib/db_mongoose";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import EmployerModel from "../../../models/Employer";
+import JobPostModel from "@/app/api/models/JobPost";
 import ApplicationModel from "@/app/api/models/Application";
 import { Schema } from "mongoose";
 
@@ -38,7 +39,7 @@ export async function POST() {
 
     const applications = await ApplicationModel.find({
       company: user._id,
-    }).populate("job").populate("candidate")
+    }).populate({path:"job", model:JobPostModel}).populate("candidate")
 
     const reMapApplications = applications.map((item) => {
 

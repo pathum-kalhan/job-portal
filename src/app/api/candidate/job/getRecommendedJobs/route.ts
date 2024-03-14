@@ -1,7 +1,7 @@
 import DbMongoose from "../../../../../lib/db_mongoose";
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
-import JobPosteModel from "../../../models/Jobpost";
+import JobPosteModel from "../../../models/JobPost";
 import CandidateModel from "../../../models/Candidate";
 import mongoose from "mongoose";
 
