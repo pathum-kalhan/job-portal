@@ -38,7 +38,7 @@ export async function POST() {
 
     const applications = await ApplicationModel.find({
       company: user._id,
-    }).populate("candidate job");
+    }).populate("job").populate("candidate")
 
     const reMapApplications = applications.map((item) => {
 
@@ -65,6 +65,7 @@ export async function POST() {
         _id: item?._id,
         jobId: item?.job?._id,
         candidateId: item?.candidate?._id,
+        candidateCVUrl: item?.candidate?.cvUrl,
         name: item?.candidate?.name,
         email: item?.candidate?.email,
         dateOfBirth: item?.candidate?.dateOfBirth,

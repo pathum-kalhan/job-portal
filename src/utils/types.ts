@@ -57,6 +57,7 @@ export type applicationType = {
   resultOfTheQuiz: string;
   applicationStatus: string;
   industry: string;
+  candidateCVUrl?: string;
 };
 
 export type jobPostInfo = {

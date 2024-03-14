@@ -218,8 +218,8 @@ function CandidatesApplicationCard(props: props) {
                 )}
               </Grid>
             </Grid>
-            <Grid item>
-              <Stack direction="row" gap={1}>
+            <Grid item> 
+                <Link href={applicantInfo.candidateCVUrl??""} target="_blank">
                 <Button
                   size="large"
                   endIcon={<DownloadIcon />}
@@ -227,20 +227,9 @@ function CandidatesApplicationCard(props: props) {
                   color="success"
                   sx={{ borderRadius: 2 }}
                 >
-                  Download
+                 View CV / Download
                 </Button>
-
-                <Link href="/testPDF.pdf" target="_blank">
-                  <Button
-                    size="large"
-                    endIcon={<OpenInNewIcon />}
-                    variant="contained"
-                    sx={{ borderRadius: 2 }}
-                  >
-                    View CV
-                  </Button>
                 </Link>
-              </Stack>
             </Grid>
           </Grid>
         </Grid>
