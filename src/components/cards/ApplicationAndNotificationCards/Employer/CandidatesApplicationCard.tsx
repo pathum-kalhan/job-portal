@@ -213,7 +213,7 @@ function CandidatesApplicationCard(props: props) {
               </Grid>
             </Grid>
             <Grid item>
-              <Link href={applicantInfo.candidateCVUrl ?? ""} target="_blank">
+              <Link href={applicantInfo.candidateCVUrl ?? ""} target="_blank" style={{cursor:"pointer"}}>
                 <Button
                   disabled={!applicantInfo.candidateCVUrl}
                   size="large"
