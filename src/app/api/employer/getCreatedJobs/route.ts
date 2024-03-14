@@ -2,7 +2,7 @@ import DbMongoose from "../../../../lib/db_mongoose";
 import { NextResponse } from "next/server";
 import Employer from "../../models/Employer";
 import { getServerSession } from "next-auth";
-import JobPosteModel from "../../models/JobPost";
+import JobPosteModel from "../../models/Jobpost";
 
 export async function POST(request: Request) {
   try {
