@@ -10,22 +10,8 @@ import {
 } from "@mui/material";
 import router from "next/router";
 import { useSession } from "next-auth/react";
+import { jobPostInfo } from "@/utils/types";
 
-type jobPostInfo = {
-  _id: string;
-  websiteUrl: string;
-  companyName: string;
-  companyDetails: string;
-  location: string;
-  industry: string;
-  position: string;
-  jobDescription: string;
-  requiredQualifications: string[];
-  workingHoursPerDay: number;
-  jobRole: string;
-  savedJob: boolean;
-  employer: string;
-};
 
 function Page() {
   const [backendCall, setBackendCall] = useState(true);

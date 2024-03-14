@@ -53,7 +53,7 @@ export async function POST(request: Request) {
     const alreadyApplied = await ApplicationModel.findOne({
       company: data.companyId,
       candidate: user._id,
-      jobPost: data.jobId,
+      job: data.jobId,
     });
 
     if (alreadyApplied) {
@@ -71,7 +71,7 @@ export async function POST(request: Request) {
     await ApplicationModel.create({
       company: data.companyId,
       candidate: user._id,
-      jobPost: data.jobId,
+      job: data.jobId,
     });
 
 

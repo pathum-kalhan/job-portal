@@ -10,12 +10,8 @@ import {
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import SnackBarComponent from "../common/SnackBarComponent";
+import { AlertType } from "@/utils/types";
 
-type AlertType = {
-  show: boolean;
-  message: string;
-  severity: "error" | "info" | "success" | "warning";
-};
 
 type initialValuesType = {
   name: string;

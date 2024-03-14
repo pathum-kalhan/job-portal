@@ -23,6 +23,7 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import * as yup from "yup";
 import Link from "next/link";
 import SnackBarComponent from "@/components/common/SnackBarComponent";
+import { AlertType } from "@/utils/types";
 
 type initialValues = {
   email: string;
@@ -33,12 +34,7 @@ type initialValues = {
 type props = {
   handleLoginMethod: (val: string) => void;
 };
-
-type AlertType = {
-  show: boolean;
-  message: string;
-  severity: "error" | "info" | "success" | "warning";
-};
+ 
 
 const EmployerLoginForm = (props: props) => {
   const [passwordVisibility, setPasswordVisibility] = useState(false);

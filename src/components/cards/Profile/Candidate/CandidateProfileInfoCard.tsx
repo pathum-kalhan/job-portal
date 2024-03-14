@@ -16,35 +16,16 @@ import { ChangePassword } from "../../../forms/ChangePassword";
 import { LoadingButton } from "@mui/lab";
 import { useSession } from "next-auth/react";
 import SnackBarComponent from "@/components/common/SnackBarComponent";
+import { AlertType, profileData } from "@/utils/types";
 
 
 type props = {
   handleClickOpenEditProfile: () => void;
-  profileData: {
-    name: string;
-    email: string;
-    contactNo: string;
-    dateOfBirth: string;
-    education: string;
-    experience: string;
-    skills: string[];
-    profilePic: {
-      image: string;
-      status: {
-        type: boolean;
-      };
-    };
-    linkedInProfileUrl: string;
-  } | null;
+  profileData: profileData | null;
   backendCall: boolean;
   getProfileData: () => void;
 };
-
-type AlertType = {
-  show: boolean;
-  message: string;
-  severity: "error" | "info" | "success" | "warning";
-};
+ 
 
 function CandidateProfileInfoCard(props: props) {
   const [openChangePassword, setOpenChangePassword] = useState(false);

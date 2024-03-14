@@ -16,6 +16,7 @@ import { useRouter } from "next/navigation";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import SnackBarComponent from "../common/SnackBarComponent";
+import { AlertType } from "@/utils/types";
 
 // Define prop types for the ChangePassword component
 type ChangePasswordProps = {
@@ -28,12 +29,7 @@ type initialValues = {
   newPassword: string;
   confirmPassword: string;
 };
-
-type AlertType = {
-  show: boolean;
-  message: string;
-  severity: "error" | "info" | "success" | "warning";
-};
+ 
 
 const ChangePassword: React.FC<ChangePasswordProps> = ({ open, onClose }) => {
   const { data: session } = useSession();

@@ -16,42 +16,16 @@ import { ChangePassword } from "@/components/forms/ChangePassword";
 import { LoadingButton } from "@mui/lab";
 import { useSession } from "next-auth/react";
 import SnackBarComponent from "@/components/common/SnackBarComponent";
+import { AlertType, profileData } from "@/utils/types";
 
-type IFormData = {
-  file:
-    | {
-        image: Blob;
-        fileName: string;
-        fileLastModified: number;
-      }
-    | any;
-};
 
 type props = {
   handleClickOpenEditProfile: () => void;
-  profileData: {
-    name: string;
-    companyDetails: string;
-    location: string;
-    contactNo: string;
-    email: string;
-    websiteUrl: string;
-    profilePic: {
-      image: string;
-      status: {
-        type: boolean;
-      };
-    };
-  } | null;
+  profileData: profileData | null;
   backendCall: boolean;
   getProfileData: () => void;
 };
-
-type AlertType = {
-  show: boolean;
-  message: string;
-  severity: "error" | "info" | "success" | "warning";
-};
+ 
 
 function EmployerProfileInfoCard(props: props) {
   const {

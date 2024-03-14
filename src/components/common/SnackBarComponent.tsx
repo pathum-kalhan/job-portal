@@ -1,21 +1,11 @@
+import { AlertType, AnchorOriginType } from "@/utils/types";
 import { Alert, Snackbar } from "@mui/material";
 import React from "react";
 
 type props = {
-  alert: {
-    show: boolean;
-    message: string;
-    severity: "success" | "error" | "warning" | "info";
-  };
-  setAlert: (alert: {
-    show: boolean;
-    message: string;
-    severity: "success" | "error" | "warning" | "info";
-  }) => void;
-  anchorOrigin?: {
-    vertical: "top" | "bottom";
-    horizontal: "left" | "right" | "center";
-  };
+  alert: AlertType;
+  setAlert: (alert:AlertType) => void;
+  anchorOrigin?: AnchorOriginType;
   autoHideDuration?: number | null | undefined
 };
 

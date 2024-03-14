@@ -1,29 +1,72 @@
 "use client";
 
-import React, { useState } from "react";
-import { CandidatesApplicationCard } from "../../../../components/cards/ApplicationAndNotificationCards/Employer/EmployerApplicationCard";
+import React, { useCallback, useEffect, useState } from "react";
+import { CandidatesApplicationCard } from "../../../../components/cards/ApplicationAndNotificationCards/Employer/CandidatesApplicationCard";
 import {
   Button,
-  FormControl,
+  CircularProgress,
   Grid,
-  InputLabel,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
+  Typography,
 } from "@mui/material";
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import SearchIcon from '@mui/icons-material/Search';
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import { useSession } from "next-auth/react";
+import router from "next/router";
+import ApplicationsFilter from "@/components/cards/ApplicationAndNotificationCards/Employer/ApplicationsFilter";
+import { applicationType } from "@/utils/types";
+
 
 function Page() {
+  const [backendCall, setBackendCall] = useState(true);
+  const { data: session, status } = useSession();
+  const [applicationsList, setApplicationsList] = useState<applicationType[]>(
+    []
+  );
+  const [applicationsListFilter, setApplicationsListFilter] = useState<
+    applicationType[]
+  >([]);
 
-  const [industrySelection, setIndustrySelection] = useState("");
+  const loadApplications = useCallback(async () => {
+    try {
+      setBackendCall(true);
+      const response = await fetch(
+        "/api/employer/applications/getCompanyApplications",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            email: session?.user?.email,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (response?.status !== 200) {
+        setBackendCall(false);
+      } else {
+        const data = await response.json();
+        setApplicationsList(data.data);
+        setApplicationsListFilter(data.data);
+        setBackendCall(false);
+      }
+    } catch (error) {
+      setBackendCall(false);
+    }
+    // @ts-ignore
+  }, [session?.user?.email]);
 
-  const handleChangeIndustrySelection = (event: SelectChangeEvent) => {
-    setIndustrySelection(event.target.value as string);
-  };
+  useEffect(() => {
+    if (status === "authenticated" && !applicationsListFilter.length) {
+      loadApplications();
+    }
+
+    if (status !== "loading" && !session) {
+      router.push("/login");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [status]);
 
   return (
-    <Grid container gap={10}>
+    <Grid container gap={2}>
       {/* Filter Section */}
 
       <Grid
@@ -32,100 +75,69 @@ function Page() {
         alignItems="center"
         justifyContent="space-between"
         xs={12}
-
         gap={3}
+        mb={8}
       >
         <Grid
           container
           item
           alignItems="center"
-          justifyContent="center"
-          md={"auto"}
-          sm={12}
-          xs={12}
+          justifyContent="flex-end"
           gap={3}
         >
-          <Grid item
-           md={"auto"}
-           sm={12}
-           xs={12}
-          >
-            <FormControl fullWidth sx={{ width: {md:"15rem", sm:"100%", xs:"100%"} }}>
-              <InputLabel>Industry Selection</InputLabel>
-              <Select
-                value={industrySelection}
-                label="Industry Selection"
-                onChange={handleChangeIndustrySelection}
-                fullWidth
-              >
-                <MenuItem value={"industrySelection1"}>
-                  Industry Selection1
-                </MenuItem>
-                <MenuItem value={"industrySelection2"}>
-                  Industry Selection2
-                </MenuItem>
-                <MenuItem value={"industrySelection3"}>
-                  Industry Selection3
-                </MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-
-          <Grid item
-           md={"auto"}
-           sm={12}
-           xs={12}>
-            <FormControl fullWidth sx={{ width: {md:"15rem", sm:"100%", xs:"100%"} }}>
-              <InputLabel>Industry Selection</InputLabel>
-              <Select
-                value={industrySelection}
-                label="Industry Selection"
-                onChange={handleChangeIndustrySelection}
-                fullWidth
-              >
-                <MenuItem value={"industrySelection1"}>
-                  Industry Selection1
-                </MenuItem>
-                <MenuItem value={"industrySelection2"}>
-                  Industry Selection2
-                </MenuItem>
-                <MenuItem value={"industrySelection3"}>
-                  Industry Selection3
-                </MenuItem>
-              </Select>
-            </FormControl>
+          <Grid item md={"auto"} sm={12} xs={12}>
+            <Button
+              startIcon={<CalendarMonthIcon />}
+              sx={{ borderRadius: 2 }}
+              variant="contained"
+              fullWidth
+            >
+              Scheduled Interviews
+            </Button>
           </Grid>
         </Grid>
 
+        <ApplicationsFilter
+          applicationsList={applicationsList}
+          backendCall={backendCall}
+          setApplicationsListFilter={setApplicationsListFilter}
+        />
+      </Grid>
+
+      {!backendCall ? (
+        !applicationsListFilter.length ? (
+          <Grid
+            container
+            item
+            alignItems="center"
+            justifyContent="center"
+            xs={12}
+          >
+            <Typography variant="h5">Applications not available.</Typography>
+          </Grid>
+        ) : (
+          applicationsListFilter.map((applicationItem: applicationType) => {
+            return (
+              <Grid item xs={12} key={applicationItem?._id}>
+                <CandidatesApplicationCard
+                  applicantInfo={applicationItem}
+                  loadApplications={loadApplications}
+                />
+              </Grid>
+            );
+          })
+        )
+      ) : (
         <Grid
           container
           item
           alignItems="center"
           justifyContent="center"
-          md={"auto"}
-          sm={12}
           xs={12}
-          gap={3}
         >
-          <Grid item md={"auto"} sm={12} xs={12}>
-            <Button startIcon={<CalendarMonthIcon/>} sx={{borderRadius:2}} variant="contained" fullWidth>
-            Scheduled Interviews
-            </Button>
-          </Grid>
-
-          <Grid item md={"auto"} sm={12} xs={12}>
-            <Button startIcon={<SearchIcon/>} sx={{borderRadius:2}} variant="contained" fullWidth>
-            Search Applications
-            </Button>
-          </Grid>
+          <CircularProgress />
         </Grid>
-      </Grid>
-
-      <Grid container item alignItems="center" justifyContent="center" xs={12}>
-        <Grid item xs={12}>
-          <CandidatesApplicationCard />
-        </Grid>
-      </Grid>
+      )}
     </Grid>
   );
 }

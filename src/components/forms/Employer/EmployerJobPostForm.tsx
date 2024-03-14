@@ -1,6 +1,7 @@
 "use client";
 
 import SnackBarComponent from "@/components/common/SnackBarComponent";
+import { AlertType, companyInfo } from "@/utils/types";
 import { LoadingButton } from "@mui/lab";
 import {
   Checkbox,
@@ -20,26 +21,7 @@ import { TextField } from "formik-mui";
 import { useSession } from "next-auth/react";
 import { useCallback, useEffect, useState } from "react";
 import * as yup from "yup";
-
-type initialValues = {
-  companyName: string;
-  companyDetails: string;
-  websiteUrl: string;
-  location: string;
-  industry: string;
-  position: string;
-  jobDescription: string;
-  requiredQualifications: string[];
-  workingHoursPerDay: Number;
-  acceptTerms: boolean;
-};
-
-type AlertType = {
-  show: boolean;
-  message: string;
-  severity: "error" | "info" | "success" | "warning";
-};
-
+ 
 const EmployerJobPostForm = () => {
   const industryArray = ["IT", "Health", "Education"];
   const [skillsArray, setSkillsArray] = useState([]);
@@ -87,7 +69,7 @@ const EmployerJobPostForm = () => {
     acceptTerms: yup.boolean().oneOf([true], "Please accept the terms"),
   });
 
-  const initialValues: initialValues = {
+  const initialValues: companyInfo = {
     companyName: session?.user?.name ?? "",
     companyDetails: "",
     // @ts-ignore
@@ -103,8 +85,8 @@ const EmployerJobPostForm = () => {
 
   const handleSubmit = useCallback(
     async (
-      values: initialValues,
-      formikHelpers: FormikHelpers<initialValues>
+      values: companyInfo,
+      formikHelpers: FormikHelpers<companyInfo>
     ) => {
       setBackendCall(true);
       const payLoad = {

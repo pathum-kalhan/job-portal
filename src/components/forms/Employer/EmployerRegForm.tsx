@@ -4,7 +4,6 @@ import { LoadingButton } from "@mui/lab";
 import {
   Checkbox,
   FormControlLabel,
-  Select,
   MenuItem,
   FormControl,
   InputLabel,
@@ -23,6 +22,7 @@ import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import SnackBarComponent from "@/components/common/SnackBarComponent";
 import { useSession } from "next-auth/react";
+import { CustomizedSelectForFormik } from "@/components/common/CustomizedSelectForFormik";
 
 type initialValues = {
   companyName: string;
@@ -37,54 +37,13 @@ type initialValues = {
   acceptTerms: boolean;
 };
 
-type selectProps = {
-  children: React.ReactNode;
-  form: FormikProps<initialValues>;
-  field: {
-    name: string;
-    value: string;
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    onBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
-    ref: React.Ref<HTMLInputElement>;
-    type: string;
-    id: string;
-    placeholder: string;
-    multiline: boolean;
-    rows: number;
-    maxRows: number;
-    minRows: number;
-    fullWidth: boolean;
-    required: boolean;
-    label: string;
-    error: boolean;
-  };
-};
+ 
 type AlertType = {
   show: boolean;
   message: string;
   severity: "error" | "info" | "success" | "warning";
 };
 
-const CustomizedSelectForFormik = (selectProps: selectProps) => {
-  const { children, form, field } = selectProps;
-
-  const { name, value } = field;
-  const { setFieldValue } = form;
-
-  return (
-    <Select
-      label="Locations"
-      name={name}
-      value={value}
-      fullWidth
-      onChange={(e) => {
-        setFieldValue(name, e.target.value);
-      }}
-    >
-      {children}
-    </Select>
-  );
-};
 
 const EmployerRegForm = () => {
   const router = useRouter();

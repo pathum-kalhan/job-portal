@@ -20,18 +20,14 @@ import {
 import { LoadingButton } from "@mui/lab";
 import { useSession } from "next-auth/react";
 import SnackBarComponent from "../common/SnackBarComponent";
+import { AlertType } from "@/utils/types";
 
 const priorityLevels = [
   { value: "low", label: "Low" },
   { value: "medium", label: "Medium" },
   { value: "high", label: "High" },
 ];
-
-type AlertType = {
-  show: boolean;
-  message: string;
-  severity: "error" | "info" | "success" | "warning";
-};
+ 
 
 type initialValues = {
   subject: string;

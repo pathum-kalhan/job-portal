@@ -20,12 +20,8 @@ import { EmployerProfileInfoCard } from "@/components/cards/Profile/Employer/Emp
 import { EmployerProfileRightSideCard } from "@/components/cards/Profile/Employer/EmployerProfileRightSideCard";
 import { useRouter } from "next/navigation";
 import SnackBarComponent from "@/components/common/SnackBarComponent";
-
-type AlertType = {
-  show: boolean;
-  message: string;
-  severity: "error" | "info" | "success" | "warning";
-};
+import { AlertType } from "@/utils/types";
+ 
 
 function Page() {
   const router = useRouter();
