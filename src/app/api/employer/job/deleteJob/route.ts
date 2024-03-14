@@ -2,7 +2,7 @@ import DbMongoose from "../../../../../lib/db_mongoose";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import EmployerModel from "../../../models/Employer";
-import JobPosteModel from "../../../models/JobPost";
+import JobPosteModel from "../../../models/Jobpost";
 
 export async function DELETE(request: Request) {
   try {
