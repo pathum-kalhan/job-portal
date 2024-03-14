@@ -25,7 +25,6 @@ type props = {
   loadApplications: () => void;
 };
 
-
 function CandidatesApplicationCard(props: props) {
   const { applicantInfo, loadApplications } = props;
   const [backendCall, setBackendCall] = useState(false);
@@ -60,8 +59,8 @@ function CandidatesApplicationCard(props: props) {
         );
 
         if (response?.status !== 200) {
-          setBackendCall(false); 
-          setApplicationStatus(applicantInfo?.applicationStatus ?? "")
+          setBackendCall(false);
+          setApplicationStatus(applicantInfo?.applicationStatus ?? "");
           const { message } = await response.json();
           setAlert({
             show: true,
@@ -73,8 +72,8 @@ function CandidatesApplicationCard(props: props) {
           });
         } else {
           const { message } = await response.json();
-          applicantInfo.applicationStatus = event.target.value
-          console.log("applicantInfo", applicantInfo)
+          applicantInfo.applicationStatus = event.target.value;
+          console.log("applicantInfo", applicantInfo);
           setBackendCall(false);
           setAlert({
             show: true,
@@ -189,16 +188,11 @@ function CandidatesApplicationCard(props: props) {
                 justifyContent="flex-end"
                 gap={2}
               >
-                <Grid item
-                  lg={6}
-                  md={6}
-                  sm={10}
-                  xs={9}
-                >
+                <Grid item lg={6} md={6} sm={10} xs={9}>
                   <FormControl disabled={backendCall} fullWidth>
                     <InputLabel>Status of the Application</InputLabel>
                     <Select
-                      disabled={backendCall} 
+                      disabled={backendCall}
                       value={applicationStatus}
                       label="Status of the Application"
                       onChange={handleChangeApplicationStatus}
@@ -218,18 +212,19 @@ function CandidatesApplicationCard(props: props) {
                 )}
               </Grid>
             </Grid>
-            <Grid item> 
-                <Link href={applicantInfo.candidateCVUrl??""} target="_blank">
+            <Grid item>
+              <Link href={applicantInfo.candidateCVUrl ?? ""} target="_blank">
                 <Button
+                  disabled={!applicantInfo.candidateCVUrl}
                   size="large"
                   endIcon={<DownloadIcon />}
                   variant="contained"
                   color="success"
                   sx={{ borderRadius: 2 }}
                 >
-                 View CV / Download
+                  View CV / Download
                 </Button>
-                </Link>
+              </Link>
             </Grid>
           </Grid>
         </Grid>
