@@ -15,16 +15,12 @@ import { useState } from "react";
 import { LoadingButton } from "@mui/lab";
 import { useRouter } from "next/navigation";
 import SnackBarComponent from "../common/SnackBarComponent";
+import { AlertType } from "@/utils/types";
 
 type initialValues = {
   email: string;
 };
-
-type AlertType = {
-  show: boolean;
-  message: string;
-  severity: "error" | "info" | "success" | "warning";
-};
+ 
 
 type props = {
   userType: string;

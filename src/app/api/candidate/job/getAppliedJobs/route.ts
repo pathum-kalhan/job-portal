@@ -35,19 +35,19 @@ export async function POST(request: Request) {
 
     const reMapJobData = user.appliedJobs.map((item:any) => { 
       return {
-        _id: item.job._id,
-        websiteUrl: item.job.websiteUrl,
-        companyName: item.job.companyName,
-        companyDetails: item.job.companyDetails,
-        location: item.job.location,
-        industry: item.job.industry,
-        position: item.job.position,
-        jobDescription: item.job.jobDescription,
-        requiredQualifications: item.job.requiredQualifications,
-        workingHoursPerDay: item.job.workingHoursPerDay,
-        employer: item.job.employer,
-        cvReviewStatus: item.cvReviewStatus,
-        appliedDate: item.appliedDate,
+        _id: item?.job?._id,
+        websiteUrl: item?.job?.websiteUrl,
+        companyName: item?.job?.companyName,
+        companyDetails: item?.job?.companyDetails,
+        location: item?.job?.location,
+        industry: item?.job?.industry,
+        position: item?.job?.position,
+        jobDescription: item?.job?.jobDescription,
+        requiredQualifications: item?.job?.requiredQualifications,
+        workingHoursPerDay: item?.job?.workingHoursPerDay,
+        employer: item?.job?.employer,
+        cvReviewStatus: item?.cvReviewStatus,
+        appliedDate: item?.appliedDate,
       }
     })
 
@@ -61,6 +61,7 @@ export async function POST(request: Request) {
       }
     );
   } catch (error: any) {
+    console.log(error)
     return NextResponse.json(
       {
         message: error,

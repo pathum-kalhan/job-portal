@@ -26,6 +26,7 @@ import Link from "next/link";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import SnackBarComponent from "@/components/common/SnackBarComponent";
+import { AlertType } from "@/utils/types";
 
 type initialValues = {
   email: string;
@@ -36,11 +37,7 @@ type initialValues = {
 type props = {
   handleLoginMethod: (val: string) => void;
 };
-type AlertType = {
-  show: boolean;
-  message: string;
-  severity: "error" | "info" | "success" | "warning";
-};
+ 
 
 const CandidateLoginForm = (props: props) => {
   const { data: session } = useSession();

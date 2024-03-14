@@ -19,20 +19,13 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import SnackBarComponent from "../common/SnackBarComponent";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { AlertType } from "@/utils/types";
 
 type props = {
   backendCall: boolean;
   optInDataBackendCall: boolean;
-  alert: {
-    show: boolean;
-    message: string;
-    severity: "success" | "error" | "warning" | "info";
-  };
-  setAlert: (alert: {
-    show: boolean;
-    message: string;
-    severity: "success" | "error" | "warning" | "info";
-  }) => void;
+  alert: AlertType
+  setAlert: (alert: AlertType) => void;
   setBackendCall: (backendCall: boolean) => void;
   isOptInNewsLetterData: boolean;
 };

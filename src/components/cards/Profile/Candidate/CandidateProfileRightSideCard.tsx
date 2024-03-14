@@ -16,34 +16,14 @@ import { signOut, useSession } from "next-auth/react";
 import { LoadingButton } from "@mui/lab";
 import { useDropzone } from "react-dropzone";
 import SnackBarComponent from "@/components/common/SnackBarComponent";
+import { AlertType, profileData } from "@/utils/types";
 
 type props = {
   handleClickOpenUploadCv: () => void;
-  profileData: {
-    name: string;
-    email: string;
-    contactNo: string;
-    dateOfBirth: string;
-    education: string;
-    experience: string;
-    skills: string[];
-    cvUrl: string;
-    profilePic: {
-      image: string;
-      status: {
-        type: boolean;
-      };
-    };
-    linkedInProfileUrl: string;
-  } | null;
+  profileData: profileData | null;
   getProfileData: () => void;
 };
-
-type AlertType = {
-  show: boolean;
-  message: string;
-  severity: "error" | "info" | "success" | "warning";
-};
+ 
 
 function CandidateProfileRightSideCard(props: props) {
   const { getProfileData, profileData } = props;

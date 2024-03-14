@@ -10,23 +10,8 @@ import {
 } from "@mui/material";
 import router from "next/router";
 import { useSession } from "next-auth/react";
+import { jobPostInfo } from "@/utils/types";
 
-type jobPostInfo = {
-  _id: string;
-  websiteUrl: string;
-  companyName: string;
-  companyDetails: string;
-  location: string;
-  industry: string;
-  position: string;
-  jobDescription: string;
-  requiredQualifications: string[];
-  workingHoursPerDay: number;
-  jobRole: string;
-  savedJob: boolean;
-  employer: string;
-  alreadyApplied: boolean;
-};
 
 function Page() {
 
@@ -97,7 +82,7 @@ function Page() {
               jobPostInfo.map((item: jobPostInfo) => {
                 return (
                   <Grid item xs={12} key={item?._id}>
-                    <JobListCard jobPostInfo={item} saveJobOption loadJobs={loadJobs} allAreSavedJobs alreadyApplied={item.alreadyApplied} />
+                    <JobListCard jobPostInfo={item} saveJobOption loadJobs={loadJobs} allAreSavedJobs alreadyApplied={item?.alreadyApplied} />
                   </Grid>
                 );
               })

@@ -11,22 +11,8 @@ import {
 import router from "next/router";
 import { useSession } from "next-auth/react";
 import JobFilter from "@/components/common/JobFilter";
+import { jobPostInfo } from "@/utils/types";
 
-type jobPostInfo = {
-  _id: string;
-  websiteUrl: string;
-  companyName: string;
-  companyDetails: string;
-  location: string;
-  industry: string;
-  position: string;
-  jobDescription: string;
-  requiredQualifications: string[];
-  workingHoursPerDay: number;
-  jobRole: string;
-  employer: string;
-  savedJob: boolean;
-};
 
 function Page() {
   const { data: session, status } = useSession();

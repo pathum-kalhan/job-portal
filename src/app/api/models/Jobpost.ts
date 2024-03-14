@@ -30,6 +30,6 @@ const JobPostSchema = new Schema(
   }
 );
 
-const JobPosteModel = models.JobPost || model("JobPost", JobPostSchema);
+const JobPostModel = models.JobPost || model("JobPost", JobPostSchema);
 
-export default JobPosteModel;
+export default JobPostModel;

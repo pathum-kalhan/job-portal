@@ -5,9 +5,8 @@ import {
   Grid,
   InputLabel,
   MenuItem,
-  Select,
 } from "@mui/material";
-import { Field, Form, Formik, FormikProps } from "formik";
+import { Field, Form, Formik } from "formik";
 import React, {
   Dispatch,
   SetStateAction,
@@ -16,41 +15,8 @@ import React, {
   useState,
 } from "react";
 import * as yup from "yup";
-
-const CustomizedSelectForFormik = (selectProps: selectProps) => {
-  const { children, form, field } = selectProps;
-  const { name, value } = field;
-  const { setFieldValue } = form;
-
-  return (
-    <Select
-      label="Locations"
-      name={name}
-      value={value}
-      fullWidth
-      onChange={(e) => {
-        setFieldValue(name, e.target.value);
-      }}
-    >
-      {children}
-    </Select>
-  );
-};
-
-type jobPostInfo = {
-  _id: string;
-  websiteUrl: string;
-  companyName: string;
-  companyDetails: string;
-  location: string;
-  industry: string;
-  position: string;
-  jobDescription: string;
-  requiredQualifications: string[];
-  workingHoursPerDay: number;
-  jobRole: string;
-  savedJob: boolean;
-};
+import { CustomizedSelectForFormik } from "./CustomizedSelectForFormik";
+import { jobPostInfo } from "@/utils/types";
 
 type props = {
   jobPostInfo: jobPostInfo[];
@@ -64,29 +30,6 @@ type initialValues = {
   location: string;
   industrySelection: string;
   jobRole: string;
-};
-
-type selectProps = {
-  children: React.ReactNode;
-  form: FormikProps<initialValues>;
-  field: {
-    name: string;
-    value: string;
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    onBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
-    ref: React.Ref<HTMLInputElement>;
-    type: string;
-    id: string;
-    placeholder: string;
-    multiline: boolean;
-    rows: number;
-    maxRows: number;
-    minRows: number;
-    fullWidth: boolean;
-    required: boolean;
-    label: string;
-    error: boolean;
-  };
 };
 
 function JobFilter(props: props) {

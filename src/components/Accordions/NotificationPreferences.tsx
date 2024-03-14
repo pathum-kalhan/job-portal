@@ -11,15 +11,12 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { useSession } from "next-auth/react";
+import { AlertType } from "@/utils/types";
 
 type props = {
   backendCall: boolean;
   optInDataBackendCall: boolean;
-  setAlert: (alert: {
-    show: boolean;
-    message: string;
-    severity: "success" | "error" | "warning" | "info";
-  }) => void;
+  setAlert: (alert:AlertType) => void;
   optInData: {
     jobAlerts: boolean;
     jobApplicationStatus: boolean;

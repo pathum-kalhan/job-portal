@@ -19,6 +19,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import SnackBarComponent from "@/components/common/SnackBarComponent";
 import { LoadingButton } from "@mui/lab";
+import { AlertType, jobPostInfo } from "@/utils/types";
 
 type props = {
   saveJobOption?: boolean;
@@ -26,30 +27,9 @@ type props = {
   allAreSavedJobs?: boolean;
   alreadyApplied?: boolean;
   showJobApplicationStatus?: boolean;
-  jobPostInfo: {
-    _id: string;
-    websiteUrl: string;
-    companyName: string;
-    companyDetails: string;
-    location: string;
-    industry: string;
-    position: string;
-    jobDescription: string;
-    requiredQualifications: string[];
-    workingHoursPerDay: number;
-    savedJob: boolean;
-    employer: string;
-    cvReviewStatus?: string;
-    appliedDate?: string;
-    alreadyApplied?: boolean;
-  };
+  jobPostInfo:jobPostInfo
 };
-
-type AlertType = {
-  show: boolean;
-  message: string;
-  severity: "error" | "info" | "success" | "warning";
-};
+ 
 
 function JobListCard(props: props) {
   const {

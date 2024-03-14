@@ -19,6 +19,7 @@ import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import SnackBarComponent from "@/components/common/SnackBarComponent";
 import { useSession } from "next-auth/react";
+import { AlertType } from "@/utils/types";
 
 type initialValues = {
   name: string;
@@ -31,12 +32,7 @@ type initialValues = {
   reenterPassword: string;
   acceptTerms: boolean;
 };
-
-type AlertType = {
-  show: boolean;
-  message: string;
-  severity: "error" | "info" | "success" | "warning";
-};
+ 
 
 const CandidateRegForm = () => {
   const router = useRouter();

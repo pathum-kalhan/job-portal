@@ -45,7 +45,7 @@ export async function POST(request: Request) {
         appliedDate: Date;
         cvReviewStatus: String;
       }) => {
-        return new mongoose.Types.ObjectId(item.job.id);
+        return new mongoose.Types.ObjectId(item.job);
       }
     );
 

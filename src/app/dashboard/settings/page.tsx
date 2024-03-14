@@ -7,12 +7,8 @@ import SnackBarComponent from "@/components/common/SnackBarComponent";
 import AccountSettings from "@/components/Accordions/AccountSettings";
 import PrivacyPolicy from "@/components/Accordions/PrivacyPolicy";
 import NotificationPreferences from "@/components/Accordions/NotificationPreferences";
-
-type AlertType = {
-  show: boolean;
-  message: string;
-  severity: "error" | "info" | "success" | "warning";
-};
+import { AlertType } from "@/utils/types";
+ 
 
 function Page() {
   const { data: session, status } = useSession();

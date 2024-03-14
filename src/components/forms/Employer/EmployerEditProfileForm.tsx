@@ -1,7 +1,6 @@
 "use client";
 
-import {
-  Select,
+import { 
   MenuItem,
   FormControl,
   InputLabel,
@@ -15,15 +14,10 @@ import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { LoadingButton } from "@mui/lab";
 import SnackBarComponent from "@/components/common/SnackBarComponent";
+import { CustomizedSelectForFormik } from "@/components/common/CustomizedSelectForFormik";
+import { AlertType, companyInfo } from "@/utils/types";
 
-type initialValues = {
-  companyName: string;
-  companyDetails: string;
-  location: string;
-  email: string;
-  companyContactNo: string;
-  websiteUrl: string;
-};
+ 
 
 type initialData = {
   name: string;
@@ -33,35 +27,7 @@ type initialData = {
   email: string;
   websiteUrl?: string;
 };
-
-type selectProps = {
-  children: React.ReactNode;
-  form: FormikProps<initialValues>;
-  field: {
-    name: string;
-    value: string;
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    onBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
-    ref: React.Ref<HTMLInputElement>;
-    type: string;
-    id: string;
-    placeholder: string;
-    multiline: boolean;
-    rows: number;
-    maxRows: number;
-    minRows: number;
-    fullWidth: boolean;
-    required: boolean;
-    label: string;
-    error: boolean;
-  };
-};
-
-type AlertType = {
-  show: boolean;
-  message: string;
-  severity: "error" | "info" | "success" | "warning";
-};
+  
 
 type props = {
   getProfileData: () => void;
@@ -69,26 +35,6 @@ type props = {
   initialData: initialData | null;
 };
 
-const CustomizedSelectForFormik = (selectProps: selectProps) => {
-  const { children, form, field } = selectProps;
-
-  const { name, value } = field;
-  const { setFieldValue } = form;
-
-  return (
-    <Select
-      label="Locations"
-      name={name}
-      value={value}
-      fullWidth
-      onChange={(e) => {
-        setFieldValue(name, e.target.value);
-      }}
-    >
-      {children}
-    </Select>
-  );
-};
 
 const EmployerEditProfileForm = (props: props) => {
   const [backendCall, setBackendCall] = useState(false);
@@ -130,7 +76,7 @@ const EmployerEditProfileForm = (props: props) => {
       .required("Website URL is required"),
   });
 
-  const initialValues: initialValues = {
+  const initialValues: companyInfo = {
     companyName: initialData?.name ?? "",
     companyDetails: initialData?.companyDetails ?? "",
     location: initialData?.location ?? "",
@@ -139,7 +85,7 @@ const EmployerEditProfileForm = (props: props) => {
     companyContactNo: initialData?.contactNo ?? "",
   };
 
-  const handleSubmit = async (values: initialValues) => {
+  const handleSubmit = async (values: companyInfo) => {
     setBackendCall(true);
     try {
       const payload = {
