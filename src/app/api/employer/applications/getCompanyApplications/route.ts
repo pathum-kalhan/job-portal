@@ -2,7 +2,7 @@ import DbMongoose from "../../../../../lib/db_mongoose";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import EmployerModel from "../../../models/Employer";
-import JobPostModel from "../../../models/Jobpost";
+import JobPostModel from "../../../models/JobPost";
 import ApplicationModel from "../../../models/Application";
 import { Schema } from "mongoose";
 
