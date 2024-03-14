@@ -1,4 +1,4 @@
-import DbMongoose from "@/lib/db_mongoose";
+import DbMongoose from "../../../../lib/db_mongoose";
 import { NextResponse } from "next/server";
 import * as Yup from "yup";
 import CandidateModel from "../../models/Candidate";

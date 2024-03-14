@@ -10,8 +10,8 @@ import {
 } from "@mui/material";
 import router from "next/router";
 import { useSession } from "next-auth/react";
-import JobFilter from "@/components/common/JobFilter";
-import { jobPostInfo } from "@/utils/types";
+import JobFilter from "../../../../components/common/JobFilter";
+import { jobPostInfo } from "../../../../utils/types";
 
 
 function Page() {

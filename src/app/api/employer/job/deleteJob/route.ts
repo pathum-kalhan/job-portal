@@ -1,4 +1,4 @@
-import DbMongoose from "@/lib/db_mongoose";
+import DbMongoose from "../../../../../lib/db_mongoose";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import EmployerModel from "../../../models/Employer";

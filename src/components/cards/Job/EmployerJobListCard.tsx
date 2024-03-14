@@ -17,8 +17,8 @@ import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { LoadingButton } from "@mui/lab";
-import SnackBarComponent from "@/components/common/SnackBarComponent";
-import { EditJobDialogBox } from "@/components/dialogBoxes/Job/EditJobDialogBox";
+import SnackBarComponent from "../../../components/common/SnackBarComponent";
+import { EditJobDialogBox } from "../../../components/dialogBoxes/Job/EditJobDialogBox";
 
 type props = {
   saveJobOption?: boolean;

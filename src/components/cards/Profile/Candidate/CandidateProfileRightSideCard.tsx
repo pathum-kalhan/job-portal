@@ -15,8 +15,8 @@ import { useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 import { LoadingButton } from "@mui/lab";
 import { useDropzone } from "react-dropzone";
-import SnackBarComponent from "@/components/common/SnackBarComponent";
-import { AlertType, profileData } from "@/utils/types";
+import SnackBarComponent from "../../../../components/common/SnackBarComponent";
+import { AlertType, profileData } from "../../../../utils/types";
 
 type props = {
   handleClickOpenUploadCv: () => void;

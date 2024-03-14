@@ -1,7 +1,7 @@
-import DbMongoose from "@/lib/db_mongoose";
+import DbMongoose from "../../../../lib/db_mongoose";
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
-import CandidateModel from "@/app/api/models/Candidate";
+import CandidateModel from "../../../api/models/Candidate";
 
 export async function POST(request: Request) {
   try {

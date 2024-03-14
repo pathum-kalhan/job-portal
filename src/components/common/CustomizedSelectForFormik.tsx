@@ -1,4 +1,4 @@
-import { selectProps } from "@/utils/types";
+import { selectProps } from "../../utils/types";
 import { Select } from "@mui/material";
 
  export const CustomizedSelectForFormik = (selectProps: selectProps) => {

@@ -1,6 +1,6 @@
 "use client";
 
-import SnackBarComponent from "@/components/common/SnackBarComponent";
+import SnackBarComponent from "../../../components/common/SnackBarComponent";
 import { LoadingButton } from "@mui/lab";
 import {
   Grid,

@@ -20,9 +20,9 @@ import { MouseEvent, useCallback, useEffect, useState } from "react";
 import * as yup from "yup";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import SnackBarComponent from "@/components/common/SnackBarComponent";
+import SnackBarComponent from "../../../components/common/SnackBarComponent";
 import { useSession } from "next-auth/react";
-import { CustomizedSelectForFormik } from "@/components/common/CustomizedSelectForFormik";
+import { CustomizedSelectForFormik } from "../../../components/common/CustomizedSelectForFormik";
 
 type initialValues = {
   companyName: string;

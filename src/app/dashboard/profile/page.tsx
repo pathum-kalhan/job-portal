@@ -1,8 +1,8 @@
 "use client";
 import React, { useCallback, useEffect, useState } from "react";
-import { CandidateProfileInfoCard } from "@/components/cards/Profile/Candidate/CandidateProfileInfoCard";
-import { CandidateProfileRightSideCard } from "@/components/cards/Profile/Candidate/CandidateProfileRightSideCard";
-import { RightSideAttachedMenu } from "@/components/sideAttachMenu/profile/RightSideAttachedMenu";
+import { CandidateProfileInfoCard } from "../../../components/cards/Profile/Candidate/CandidateProfileInfoCard";
+import { CandidateProfileRightSideCard } from "../../../components/cards/Profile/Candidate/CandidateProfileRightSideCard";
+import { RightSideAttachedMenu } from "../../../components/sideAttachMenu/profile/RightSideAttachedMenu";
 import {
   Card,
   CardContent,
@@ -12,15 +12,15 @@ import {
   Stack,
 } from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { UploadCvDialogBox } from "@/components/dialogBoxes/CV/UploadCvDialogBox";
-import { UploadCvDoneDialogBox } from "@/components/dialogBoxes/CV/UploadCvDoneDialogBox";
-import { EditProfileDialogBox } from "@/components/dialogBoxes/Profile/EditProfileDialogBox";
+import { UploadCvDialogBox } from "../../../components/dialogBoxes/CV/UploadCvDialogBox";
+import { UploadCvDoneDialogBox } from "../../../components/dialogBoxes/CV/UploadCvDoneDialogBox";
+import { EditProfileDialogBox } from "../../../components/dialogBoxes/Profile/EditProfileDialogBox";
 import { useSession } from "next-auth/react";
-import { EmployerProfileInfoCard } from "@/components/cards/Profile/Employer/EmployerProfileInfoCard";
-import { EmployerProfileRightSideCard } from "@/components/cards/Profile/Employer/EmployerProfileRightSideCard";
+import { EmployerProfileInfoCard } from "../../../components/cards/Profile/Employer/EmployerProfileInfoCard";
+import { EmployerProfileRightSideCard } from "../../../components/cards/Profile/Employer/EmployerProfileRightSideCard";
 import { useRouter } from "next/navigation";
-import SnackBarComponent from "@/components/common/SnackBarComponent";
-import { AlertType } from "@/utils/types";
+import SnackBarComponent from "../../../components/common/SnackBarComponent";
+import { AlertType } from "../../../utils/types";
  
 
 function Page() {

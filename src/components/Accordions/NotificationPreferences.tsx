@@ -11,7 +11,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { useSession } from "next-auth/react";
-import { AlertType } from "@/utils/types";
+import { AlertType } from "../../utils/types";
 
 type props = {
   backendCall: boolean;

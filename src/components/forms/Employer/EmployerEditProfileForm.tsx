@@ -13,9 +13,9 @@ import * as yup from "yup";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { LoadingButton } from "@mui/lab";
-import SnackBarComponent from "@/components/common/SnackBarComponent";
-import { CustomizedSelectForFormik } from "@/components/common/CustomizedSelectForFormik";
-import { AlertType, companyInfo } from "@/utils/types";
+import SnackBarComponent from "../../../components/common/SnackBarComponent";
+import { CustomizedSelectForFormik } from "../../../components/common/CustomizedSelectForFormik";
+import { AlertType, companyInfo } from "../../../utils/types";
 
  
 

@@ -1,5 +1,5 @@
 "use client";
-import { StartForm } from "@/components/quiz/StartForm";
+import { StartForm } from "../../../../../components/quiz/StartForm";
 import { Grid } from "@mui/material";
 import { useRouter } from "next/navigation";
 

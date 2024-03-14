@@ -1,5 +1,5 @@
 "use client"; 
-import { ScoreDialogBox } from "@/components/quiz/ScoreDialogBox";
+import { ScoreDialogBox } from "../../../../../components/quiz/ScoreDialogBox";
 import { useRouter } from "next/navigation";
 
 function Page() {

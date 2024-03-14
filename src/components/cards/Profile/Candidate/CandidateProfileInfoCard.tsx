@@ -15,8 +15,8 @@ import { useDropzone } from "react-dropzone";
 import { ChangePassword } from "../../../forms/ChangePassword";
 import { LoadingButton } from "@mui/lab";
 import { useSession } from "next-auth/react";
-import SnackBarComponent from "@/components/common/SnackBarComponent";
-import { AlertType, profileData } from "@/utils/types";
+import SnackBarComponent from "../../../../components/common/SnackBarComponent";
+import { AlertType, profileData } from "../../../../utils/types";
 
 
 type props = {
