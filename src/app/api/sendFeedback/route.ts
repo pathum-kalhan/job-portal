@@ -3,7 +3,7 @@ import { getServerSession } from "next-auth";
 import CandidateModel from "../models/Candidate";
 import EmployerModel from "../models/Employer";
 import mail from "@sendgrid/mail";
-import { Constant } from "@/utils/Constents";
+import { Constant } from "../../../utils/Constents";
 
 export async function POST(request: Request) {
   const apiKey: string = `${process.env.SENDGRID_API_KEY}`;

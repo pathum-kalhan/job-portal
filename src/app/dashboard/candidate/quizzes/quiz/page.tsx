@@ -1,7 +1,7 @@
 "use client";
-import { CountDownTimer } from "@/components/quiz/CountDownTimer";
-import { Questions } from "@/components/quiz/Questions";
-import { questions } from "@/utils/quiz/questions";
+import { CountDownTimer } from "../../../../../components/quiz/CountDownTimer";
+import { Questions } from "../../../../../components/quiz/Questions";
+import { questions } from "../../../../../utils/quiz/questions";
 import { Grid } from "@mui/material";
 import { useRouter } from "next/navigation";
 

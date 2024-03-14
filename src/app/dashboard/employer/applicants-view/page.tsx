@@ -11,8 +11,8 @@ import {
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import { useSession } from "next-auth/react";
 import router from "next/router";
-import ApplicationsFilter from "@/components/cards/ApplicationAndNotificationCards/Employer/ApplicationsFilter";
-import { applicationType } from "@/utils/types";
+import ApplicationsFilter from "../../../../components/cards/ApplicationAndNotificationCards/Employer/ApplicationsFilter";
+import { applicationType } from "../../../../utils/types";
 
 
 function Page() {

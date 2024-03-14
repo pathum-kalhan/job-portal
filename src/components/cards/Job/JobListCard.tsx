@@ -17,9 +17,9 @@ import BookmarkIcon from "@mui/icons-material/Bookmark";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
-import SnackBarComponent from "@/components/common/SnackBarComponent";
+import SnackBarComponent from "../../../components/common/SnackBarComponent";
 import { LoadingButton } from "@mui/lab";
-import { AlertType, jobPostInfo } from "@/utils/types";
+import { AlertType, jobPostInfo } from "../../../utils/types";
 
 type props = {
   saveJobOption?: boolean;

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { NavBar } from "@/components/NavBar";
-import Provider from "@/context/Provider"; 
+import { NavBar } from "../components/NavBar";
+import Provider from "../context/Provider"; 
 
 export const metadata: Metadata = {
   title: "Career Guide Pro",

@@ -1,5 +1,5 @@
 import { Grid } from "@mui/material";
-import { NewPassword } from "@/components/forms/NewPassword";
+import { NewPassword } from "../../../components/forms/NewPassword";
 
 function Page() { 
 

@@ -12,11 +12,11 @@ import {
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import { useDropzone } from "react-dropzone";
-import { ChangePassword } from "@/components/forms/ChangePassword";
+import { ChangePassword } from "../../../../components/forms/ChangePassword";
 import { LoadingButton } from "@mui/lab";
 import { useSession } from "next-auth/react";
-import SnackBarComponent from "@/components/common/SnackBarComponent";
-import { AlertType, profileData } from "@/utils/types";
+import SnackBarComponent from "../../../../components/common/SnackBarComponent";
+import { AlertType, profileData } from "../../../../utils/types";
 
 
 type props = {

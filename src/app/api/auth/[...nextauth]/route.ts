@@ -1,8 +1,8 @@
 import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
 import CandidateModel from "../../models/Candidate";
-import DbMongoose from "@/lib/db_mongoose";
-import { verifyPassword } from "@/lib/auth";
+import DbMongoose from "../../../../lib/db_mongoose";
+import { verifyPassword } from "../../../../lib/auth";
 import { NextAuthOptions } from "next-auth";
 import EmployerModel from "../../models/Employer";
 

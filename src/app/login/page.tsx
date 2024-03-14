@@ -1,7 +1,7 @@
 "use client"
 import React, { useState } from "react";
-import {CandidateLoginForm} from "@/components/forms/Candidate/CandidateLoginForm";
-import {EmployerLoginForm} from "@/components/forms/Employer/EmployerLoginForm";
+import {CandidateLoginForm} from "../../components/forms/Candidate/CandidateLoginForm";
+import {EmployerLoginForm} from "../../components/forms/Employer/EmployerLoginForm";
 import { Grid } from "@mui/material";
 
 function Page() {

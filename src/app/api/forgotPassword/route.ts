@@ -1,8 +1,8 @@
-import DbMongoose from "@/lib/db_mongoose";
+import DbMongoose from "../../../lib/db_mongoose";
 import CandidateModel from "../models/Candidate";
 import { NextResponse } from "next/server";
-import { Constant } from "@/utils/Constents";
-import { randomString } from "@/lib/auth";
+import { Constant } from "../../../utils/Constents";
+import { randomString } from "../../../lib/auth";
 import mail from "@sendgrid/mail";
 import EmployerModel from "../models/Employer";
 

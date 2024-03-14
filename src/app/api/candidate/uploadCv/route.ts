@@ -1,8 +1,8 @@
-import DbMongoose from "@/lib/db_mongoose";
+import DbMongoose from "../../../../lib/db_mongoose";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import CandidateModel from "../../models/Candidate";
-import { storage } from "@/utils/firebase";
+import { storage } from "../../../../utils/firebase";
 
 export async function POST(request: Request) {
   try {

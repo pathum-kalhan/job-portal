@@ -3,11 +3,11 @@ import { useCallback, useEffect, useState } from "react";
 import { Card, CardContent, CircularProgress, Stack } from "@mui/material";
 import { ChangePassword } from "../../../components/forms/ChangePassword";
 import { useSession } from "next-auth/react";
-import SnackBarComponent from "@/components/common/SnackBarComponent";
-import AccountSettings from "@/components/Accordions/AccountSettings";
-import PrivacyPolicy from "@/components/Accordions/PrivacyPolicy";
-import NotificationPreferences from "@/components/Accordions/NotificationPreferences";
-import { AlertType } from "@/utils/types";
+import SnackBarComponent from "../../../components/common/SnackBarComponent";
+import AccountSettings from "../../../components/Accordions/AccountSettings";
+import PrivacyPolicy from "../../../components/Accordions/PrivacyPolicy";
+import NotificationPreferences from "../../../components/Accordions/NotificationPreferences";
+import { AlertType } from "../../../utils/types";
  
 
 function Page() {

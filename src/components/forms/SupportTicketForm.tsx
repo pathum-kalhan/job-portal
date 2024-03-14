@@ -20,7 +20,7 @@ import {
 import { LoadingButton } from "@mui/lab";
 import { useSession } from "next-auth/react";
 import SnackBarComponent from "../common/SnackBarComponent";
-import { AlertType } from "@/utils/types";
+import { AlertType } from "../../utils/types";
 
 const priorityLevels = [
   { value: "low", label: "Low" },
@@ -278,7 +278,7 @@ const SupportTicketForm = () => {
                     </Field>
                   </FormControl>
                   {errors.priorityLevel && touched.priorityLevel && (
-                    <div>{errors.priorityLevel}</div>
+                    <div>{errors?.priorityLevel as string}</div>
                   )}
                 </Grid>
                 <Grid item xs={12} mb={2}>
