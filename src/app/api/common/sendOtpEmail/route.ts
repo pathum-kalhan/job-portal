@@ -20,6 +20,7 @@ export async function POST(request: Request) {
     const checkValidEmail = () => {
       email.test(emailRegex);
     };
+    
     if (!checkValidEmail) {
       return NextResponse.json(
         {

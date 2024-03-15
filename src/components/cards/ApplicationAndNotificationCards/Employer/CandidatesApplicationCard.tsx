@@ -14,7 +14,6 @@ import {
 } from "@mui/material";
 import Image from "next/image";
 import React, { useCallback, useState } from "react";
-import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import DownloadIcon from "@mui/icons-material/Download";
 import Link from "next/link";
 import SnackBarComponent from "../../../../components/common/SnackBarComponent";
