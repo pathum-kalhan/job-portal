@@ -23,7 +23,7 @@ type companyInfo = {
 function Page() {
   const router = useRouter();
   const [backendCall, setBackendCall] = useState(true);
-  const { data: session, update, status } = useSession();
+  const { data: session, status } = useSession();
 
   const [companyInfo, setCompanyInfo] = React.useState([]);
 

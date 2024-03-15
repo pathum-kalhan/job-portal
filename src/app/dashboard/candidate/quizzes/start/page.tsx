@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 function Page() {
   const router = useRouter();
 
-  const handleStatus = (statusVal: string) => {
+  const handleStatus = () => {
       router.push("/dashboard/candidate/quizzes/quiz");
   };
 

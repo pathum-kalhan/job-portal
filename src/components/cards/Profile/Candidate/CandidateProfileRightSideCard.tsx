@@ -158,7 +158,7 @@ function CandidateProfileRightSideCard(props: props) {
  
   }, [getProfileData]);
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+  const { getRootProps, getInputProps } = useDropzone({
     onDrop,
     multiple: false,
     accept: {
