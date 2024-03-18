@@ -1,11 +1,11 @@
 "use client";
-import React, { useState, useCallback } from "react";
+import { useState, useCallback } from "react";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { Avatar, CircularProgress, Stack } from "@mui/material";
+import { Avatar, CircularProgress, Stack, Tooltip } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import { useDropzone } from "react-dropzone";
 import { ChangePassword } from "../../../../components/forms/ChangePassword";
@@ -233,41 +233,109 @@ function EmployerProfileInfoCard(props: props) {
             </Stack>
             {!backendCall && profileData ? (
               <>
-                <Typography variant="body2" color="text.secondary">
-                  {" "}
-                  Company Name: <b>
-                     {profileData && splitString(profileData?.name, 14)}
-                  </b>{" "}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {" "}
-                  Company Email: <b>{profileData && splitString(profileData?.email, 28)}</b>{" "}
-                </Typography>
+                <Tooltip
+                  title={profileData?.name.length > 14 && profileData?.name}
+                  placement="bottom-start"
+                >
+                  <Typography variant="body2" color="text.secondary">
+                    {" "}
+                    Company Name:{" "}
+                    <b>
+                      {profileData && splitString(profileData?.name, 14)}
+                    </b>{" "}
+                  </Typography>
+                </Tooltip>
 
-                <Typography variant="body2" color="text.secondary">
-                  {" "}
-                  {/* @ts-ignore */}
-                  User Type: <b>{profileData && splitString(profileData?.userType, 14)}</b>{" "}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {" "}
-                  Company Contact No:{" "}
-                  <b>{profileData && profileData?.contactNo}</b>{" "}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {" "}
-                  Company Details:{" "}
-                  <b>{profileData && splitString(profileData?.companyDetails, 28)}</b>{" "}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {" "}
-                  Company Website URL:{" "}
-                  <b>{profileData && splitString(profileData?.websiteUrl, 14)}</b>{" "}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {" "}
-                  Location: <b>{profileData && splitString(profileData?.location, 28)}</b>{" "}
-                </Typography>
+                <Tooltip
+                  title={profileData?.email.length > 14 && profileData?.email}
+                  placement="bottom-start"
+                >
+                  <Typography variant="body2" color="text.secondary">
+                    {" "}
+                    Company Email:{" "}
+                    <b>
+                      {profileData && splitString(profileData?.email, 28)}
+                    </b>{" "}
+                  </Typography>
+                </Tooltip>
+
+                <Tooltip
+                  title={
+                    //  @ts-ignore
+                    profileData?.userType.length > 14 && profileData?.userType
+                  }
+                  placement="bottom-start"
+                >
+                  <Typography variant="body2" color="text.secondary">
+                    {" "}
+                    User Type:{" "}
+                    <b>
+                      {/* @ts-ignore */}
+                      {profileData && splitString(profileData?.userType, 14)}
+                    </b>{" "}
+                  </Typography>
+                </Tooltip>
+
+                <Tooltip
+                  title={
+                    profileData?.contactNo.length > 14 && profileData?.contactNo
+                  }
+                  placement="bottom-start"
+                >
+                  <Typography variant="body2" color="text.secondary">
+                    {" "}
+                    Company Contact No:{" "}
+                    <b>{profileData && profileData?.contactNo}</b>{" "}
+                  </Typography>
+                </Tooltip>
+
+                <Tooltip
+                  title={
+                    profileData?.companyDetails.length > 14 &&
+                    profileData?.companyDetails
+                  }
+                  placement="bottom-start"
+                >
+                  <Typography variant="body2" color="text.secondary">
+                    {" "}
+                    Company Details:{" "}
+                    <b>
+                      {profileData &&
+                        splitString(profileData?.companyDetails, 28)}
+                    </b>{" "}
+                  </Typography>
+                </Tooltip>
+
+                <Tooltip
+                  title={
+                    profileData?.websiteUrl.length > 14 &&
+                    profileData?.websiteUrl
+                  }
+                  placement="bottom-start"
+                >
+                  <Typography variant="body2" color="text.secondary">
+                    {" "}
+                    Company Website URL:{" "}
+                    <b>
+                      {profileData && splitString(profileData?.websiteUrl, 14)}
+                    </b>{" "}
+                  </Typography>
+                </Tooltip>
+
+                <Tooltip
+                  title={
+                    profileData?.location.length > 14 && profileData?.location
+                  }
+                  placement="bottom-start"
+                >
+                  <Typography variant="body2" color="text.secondary">
+                    {" "}
+                    Location:{" "}
+                    <b>
+                      {profileData && splitString(profileData?.location, 28)}
+                    </b>{" "}
+                  </Typography>
+                </Tooltip>
               </>
             ) : (
               <Stack alignItems="center" justifyContent="center">

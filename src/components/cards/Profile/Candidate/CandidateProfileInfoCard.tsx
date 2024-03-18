@@ -1,15 +1,11 @@
 "use client";
-import React, { useState, useCallback } from "react";
+import { useState, useCallback } from "react";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import {
-  Avatar,
-  CircularProgress,
-  Stack,
-} from "@mui/material";
+import { Avatar, CircularProgress, Stack, Tooltip } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import { useDropzone } from "react-dropzone";
 import { ChangePassword } from "../../../forms/ChangePassword";
@@ -19,14 +15,12 @@ import SnackBarComponent from "../../../../components/common/SnackBarComponent";
 import { AlertType, profileData } from "../../../../utils/types";
 import { splitString } from "../../../../utils/splitString";
 
-
 type props = {
   handleClickOpenEditProfile: () => void;
   profileData: profileData | null;
   backendCall: boolean;
   getProfileData: () => void;
 };
- 
 
 function CandidateProfileInfoCard(props: props) {
   const [openChangePassword, setOpenChangePassword] = useState(false);
@@ -179,13 +173,9 @@ function CandidateProfileInfoCard(props: props) {
     },
   });
 
-  const mapSkillsJsx = profileData?.skills.map((item) => {
-    return `${item}`
-  })
-
   return (
     <>
-   <SnackBarComponent alert={alert} setAlert={setAlert} />
+      <SnackBarComponent alert={alert} setAlert={setAlert} />
       <Card
         sx={{
           width: {
@@ -249,58 +239,100 @@ function CandidateProfileInfoCard(props: props) {
             </Stack>
             {!backendCall && profileData ? (
               <>
-                <Typography variant="body2" color="text.secondary">
-                  {" "}
-                  Name: <b> {profileData && splitString(profileData?.name, 14)}</b>{" "}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {" "}
-                  Email: <b>{splitString(profileData?.email, 14)}</b>{" "}
-                </Typography>
-
-                <Typography variant="body2" color="text.secondary">
-                  {" "}
-                  {/* @ts-ignore */}
-                  User Type: <b>{profileData?.userType ?? ""}</b>{" "}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {" "}
-                  Contact No: <b>{profileData?.contactNo ?? ""}</b>{" "}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {" "}
-                  Date Of Birth: <b>{profileData?.dateOfBirth ?? ""}</b>{" "}
-                </Typography>
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  sx={{ textOverflow: "ellipsis" }}
+                <Tooltip
+                  title={profileData?.name.length > 14 && profileData?.name}
+                  placement="bottom-start"
                 >
-                  {" "}
-                  Educational Background: <b>
-                    {splitString(profileData?.education, 14) ?? ""}
-                  </b>{" "}
+                  <Typography variant="body2" color="text.secondary">
+                    {" "}
+                    Name:{" "}
+                    <b>
+                      {" "}
+                      {profileData && splitString(profileData?.name, 14)}
+                    </b>{" "}
+                  </Typography>
+                </Tooltip>
+
+                <Tooltip
+                  title={profileData?.email.length > 14 && profileData?.email}
+                  placement="bottom-start"
+                >
+                  <Typography variant="body2" color="text.secondary">
+                    {" "}
+                    Email: <b>{splitString(profileData?.email, 14)}</b>{" "}
+                  </Typography>
+                </Tooltip>
+
+                  <Typography variant="body2" color="text.secondary">
+                    {" "}
+                    {/* @ts-ignore */}
+                    User Type: <b>{profileData?.userType ?? ""}</b>{" "}
+                  </Typography>
+
+                  <Typography variant="body2" color="text.secondary">
+                    {" "}
+                    Contact No: <b>{profileData?.contactNo ?? ""}</b>{" "}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {" "}
-                  Work Experience: <b>{splitString(profileData?.experience, 14) ?? ""}</b>{" "}
+                
+                  <Typography variant="body2" color="text.secondary">
+                    {" "}
+                    Date Of Birth: <b>{profileData?.dateOfBirth ?? ""}</b>{" "}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {" "}
-                  Skills:{" "}
-                  <b>
-                    {profileData?.skills &&
-                      <span>
-                        {splitString(`${mapSkillsJsx}`, 28)}
-                      </span> 
-                      }
-                  </b>{" "}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {" "}
-                  LinkedIn Profile URL:{" "}
-                  <b>{splitString(profileData?.linkedInProfileUrl, 28) ?? ""}</b>{" "}
-                </Typography>
+                
+                <Tooltip
+                  title={profileData?.education.length > 14 && profileData?.education}
+                  placement="bottom-start"
+                >
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{ textOverflow: "ellipsis" }}
+                  >
+                    {" "}
+                    Educational Background:{" "}
+                    <b>{splitString(profileData?.education, 14) ?? ""}</b>{" "}
+                  </Typography>
+                </Tooltip>
+
+                <Tooltip
+                  title={profileData?.experience.length > 14 && profileData?.experience}
+                  placement="bottom-start"
+                >
+                  <Typography variant="body2" color="text.secondary">
+                    {" "}
+                    Work Experience:{" "}
+                    <b>{splitString(profileData?.experience, 14) ?? ""}</b>{" "}
+                  </Typography>
+                </Tooltip>
+
+                
+                <Tooltip
+                  title={profileData?.skills.toString().length > 28 && `${profileData?.skills.toString()}`}
+                  placement="bottom-start"
+                >
+                  <Typography variant="body2" color="text.secondary">
+                    {" "}
+                    Skills:{" "}
+                    <b>
+                      {profileData?.skills && (
+                        <span>{splitString(profileData?.skills.toString(), 28)}</span>
+                      )}
+                    </b>{" "}
+                  </Typography>
+                </Tooltip>
+
+                <Tooltip
+                  title={profileData?.linkedInProfileUrl.length > 28 && profileData?.linkedInProfileUrl}
+                  placement="bottom-start"
+                >
+                  <Typography variant="body2" color="text.secondary">
+                    {" "}
+                    LinkedIn Profile URL:{" "}
+                    <b>
+                      {splitString(profileData?.linkedInProfileUrl, 28) ?? ""}
+                    </b>{" "}
+                  </Typography>
+                </Tooltip>
               </>
             ) : (
               <Stack alignItems="center" justifyContent="center">
