@@ -1,6 +1,5 @@
 import { AlertType, AnchorOriginType } from "../../utils/types/genaral-types";
 import { Alert, Snackbar } from "@mui/material";
-import React from "react";
 
 type props = {
   alert: AlertType;
