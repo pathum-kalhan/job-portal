@@ -26,7 +26,10 @@ const CandidateSchema = new Schema(
       type: String,
       default: "candidate",
     },
-    cvUrl: String,
+    cvUrl: {
+      type: String,
+      default: null,
+    },
     appliedJobs: [
       {
         job: { type: Schema.Types.ObjectId, ref: "JobPost" },
@@ -37,7 +40,7 @@ const CandidateSchema = new Schema(
           default: "received",
         },
         quiz: {
-        score: { type: Number, default: 0 },
+        score: { type: Number, default: null },
         status: { type: String, enum: ["completed", "incomplete"], default: "incomplete" },
         quizId: { type: Schema.Types.ObjectId, ref: "Quiz" },
         quizResult: { type: String, enum: ["pass", "fail"], default: "incomplete" },

@@ -34,11 +34,11 @@ const EmployerJobPostForm = () => {
     severity: "success",
   });
 
-  const accountValidationSchemaWithEmailField = yup.object({
+  const employerAccountValidationSchema = yup.object({
     companyName: yup
       .string()
       .min(1)
-      .max(30)
+      .max(80)
       .required("Company Name is required"),
     companyDetails: yup
       .string()
@@ -190,7 +190,7 @@ const EmployerJobPostForm = () => {
         <Formik
           initialValues={initialValues}
           onSubmit={handleSubmit}
-          validationSchema={accountValidationSchemaWithEmailField}
+          validationSchema={employerAccountValidationSchema}
           enableReinitialize
         >
           {(formik) => {

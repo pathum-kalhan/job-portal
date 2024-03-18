@@ -1,4 +1,4 @@
-import { backEndAccountValidation } from "../../../../utils/validations-types/employerAccount";
+import { backEndEmployerAccountValidation } from "../../../../utils/backend-yup-validations/employerAccount";
 import DbMongoose from "../../../../lib/db_mongoose";
 import Employer from "../../models/Employer";
 import { Constant } from "../../../../utils/Constents";
@@ -10,7 +10,7 @@ export async function POST(request: Request) {
     await DbMongoose();
     const data = await request.json();
 
-    const accountValidations = backEndAccountValidation();
+    const accountValidations = backEndEmployerAccountValidation();
 
     // validate and sanitize the input
     const isValid = await accountValidations.validate(data);

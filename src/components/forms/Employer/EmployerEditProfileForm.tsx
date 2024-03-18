@@ -7,7 +7,7 @@ import {
   Grid,
   FormHelperText,
 } from "@mui/material";
-import { Formik, Form, Field, FormikProps } from "formik";
+import { Formik, Form, Field } from "formik";
 import { TextField } from "formik-mui";
 import * as yup from "yup";
 import { useSession } from "next-auth/react";
@@ -50,11 +50,11 @@ const EmployerEditProfileForm = (props: props) => {
   const locationsArray = ["colombo", "kandy"];
   const phoneNumberRegex = /^07\d{8}$/;
 
-  const accountValidationSchema = yup.object({
+  const employerAccountValidationSchema = yup.object({
     companyName: yup
       .string()
       .min(1)
-      .max(30)
+      .max(80)
       .required("Company Name is required"),
     email: yup
       .string()
@@ -144,7 +144,7 @@ const EmployerEditProfileForm = (props: props) => {
       <Formik
         initialValues={initialValues}
         onSubmit={handleSubmit}
-        validationSchema={accountValidationSchema}
+        validationSchema={employerAccountValidationSchema}
         enableReinitialize
       >
         {(formik) => {

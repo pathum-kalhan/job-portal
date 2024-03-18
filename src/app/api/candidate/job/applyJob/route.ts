@@ -39,6 +39,29 @@ export async function POST(request: Request) {
       );
     }
 
+    if (!user.cvUrl) {
+      return NextResponse.json(
+        {
+          message: "Upload your Cv before applying for jobs!, Please wait, You will be automatically redirect to the profile",
+          cvMissing: true,
+        },
+        {
+          status: 401,
+        }
+      );
+    }
+
+    if (!data.companyId || !user._id || !data.jobId) {
+      return NextResponse.json(
+        {
+          message: `${!data.companyId ? "Company Id," :""} ${!user._id ? "User Id," : ""} ${!data.jobId ? "Job Id," : ""} was missing}`,
+        },
+        {
+          status: 401,
+        }
+      );
+    }
+
     if (!data.companyId || !user._id || !data.jobId) {
       return NextResponse.json(
         {
@@ -90,7 +113,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json(
       {
-        message: "Applied for the job successfully!",
+        message: "Successfully applied for the job!",
       },
       {
         status: 200,

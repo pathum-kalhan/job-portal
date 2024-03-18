@@ -1,4 +1,4 @@
-import { backEndAccountValidation } from "../../../../../utils/validations-types/jobPost";
+import { backEndAccountValidation } from "../../../../../utils/backend-yup-validations/jobPost";
 import DbMongoose from "../../../../../lib/db_mongoose";
 import { NextResponse } from "next/server";
 import EmployerModel from "../../../models/Employer";

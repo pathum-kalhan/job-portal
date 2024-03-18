@@ -1,5 +1,5 @@
 
-import { backEndAccountValidation } from "../../../../utils/validations-types/candidateAccount";
+import { backEndAccountValidation } from "../../../../utils/backend-yup-validations/candidateAccount";
 import DbMongoose from "../../../../lib/db_mongoose";
 import Candidates from "../../models/Candidate";
 import { Constant } from "../../../../utils/Constents";

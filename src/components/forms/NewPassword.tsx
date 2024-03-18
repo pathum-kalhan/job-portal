@@ -44,7 +44,7 @@ const NewPassword = (props: props) => {
   });
   const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
 
-  const loginValidationSchema = yup.object({
+  const newPasswordValidationSchema = yup.object({
     newPassword: yup
       .string()
       .matches(
@@ -153,7 +153,7 @@ const NewPassword = (props: props) => {
         <Formik
           initialValues={initialValues}
           onSubmit={handleSubmit}
-          validationSchema={loginValidationSchema}
+          validationSchema={newPasswordValidationSchema}
           enableReinitialize
         >
           {(formik) => {

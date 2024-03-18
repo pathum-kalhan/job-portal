@@ -110,7 +110,7 @@ const EmployerLoginForm = (props: props) => {
 
   useEffect(() => {
     if (session?.user?.email && !backendCall) {
-      router.push("/dashboard/profile");
+      router.push("/");
     }
   }, [session?.user?.email, backendCall, router]);
 

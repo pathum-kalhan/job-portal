@@ -60,7 +60,7 @@ const CandidateEditProfileForm = (props: props) => {
     severity: "success",
   });
 
-  const accountValidationSchema = yup.object({
+  const candidateAccountValidationSchema = yup.object({
     name: yup.string().min(1).max(30).required("Name is required"),
     linkedInProfileUrl: yup.string().url("Invalid URL format"),
     email: yup.string().email("Invalid email format"),
@@ -166,7 +166,7 @@ const CandidateEditProfileForm = (props: props) => {
       <Formik
         initialValues={initialValues}
         onSubmit={handleSubmit}
-        validationSchema={accountValidationSchema}
+        validationSchema={candidateAccountValidationSchema}
         enableReinitialize
       >
         {(formik) => {

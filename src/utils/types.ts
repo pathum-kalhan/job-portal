@@ -54,7 +54,7 @@ export type applicationType = {
   jobRole: string;
   jobSkills: string;
   candidateSkills: string;
-  resultOfTheQuiz: string;
+  resultOfTheQuiz: string | number;
   applicationStatus: string;
   industry: string;
   candidateCVUrl?: string;

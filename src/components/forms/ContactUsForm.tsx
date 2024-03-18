@@ -32,7 +32,7 @@ const ContactUsForm: React.FC = () => {
     message: "",
   };
 
-  const accountValidationSchema = yup.object({
+  const contactUsValidationSchema = yup.object({
     name: yup.string().required("Required"),
     email: yup
       .string()
@@ -107,7 +107,7 @@ const ContactUsForm: React.FC = () => {
         <Formik
           initialValues={initialValues}
           onSubmit={handleSubmit}
-          validationSchema={accountValidationSchema}
+          validationSchema={contactUsValidationSchema}
           enableReinitialize
         >
           {(formik) => {

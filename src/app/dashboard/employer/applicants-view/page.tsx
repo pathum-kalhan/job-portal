@@ -10,12 +10,13 @@ import {
 } from "@mui/material";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import { useSession } from "next-auth/react";
-import router from "next/router";
+import { useRouter } from "next/navigation";
 import ApplicationsFilter from "../../../../components/cards/ApplicationAndNotificationCards/Employer/ApplicationsFilter";
 import { applicationType } from "../../../../utils/types";
 
 
 function Page() {
+    const router = useRouter();
   const [backendCall, setBackendCall] = useState(true);
   const { data: session, status } = useSession();
   const [applicationsList, setApplicationsList] = useState<applicationType[]>(
