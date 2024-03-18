@@ -75,7 +75,7 @@ export async function POST() {
         industry: item?.job?.industry,
         jobSkills,
         candidateSkills,
-        resultOfTheQuiz,
+        resultOfTheQuiz:resultOfTheQuiz ?? "Not done yet",
       };
     });
 

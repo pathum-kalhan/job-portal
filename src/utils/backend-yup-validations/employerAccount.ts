@@ -3,7 +3,7 @@ import * as Yup from "yup";
 const validationSchema = {
   name: Yup.string()
     .required("Name is required.")
-    .max(30, "Maximum length for the first name is 15.")
+    .max(80, "Maximum length for the first name is 15.")
     .min(3, "Minimum length for the first name is 3."),
   email: Yup.string()
     .required("Email is required.")
@@ -18,9 +18,9 @@ const validationSchema = {
     .min(8, "Minimum length for the password is 8."),
 };
 
-export const accountValidationSchema = Yup.object().shape(validationSchema);
+export const employerAccountValidationSchema = Yup.object().shape(validationSchema);
 
-export const backEndAccountValidation = () => {
+export const backEndEmployerAccountValidation = () => {
   const copiedValidationSchema = { ...validationSchema };
   //   @ts-ignore
   delete copiedValidationSchema.confirmEmail;

@@ -19,7 +19,7 @@ import Image from "next/image";
 import { useSession } from "next-auth/react";
 
 const logedInCandidate = [
-  { link: "/dashboard/candidate/find-job", title: "Find Job" },
+  { link: "/dashboard/candidate/find-jobs", title: "Find Job" },
   {
     title: "Job Listings",
     link: "",
@@ -27,7 +27,6 @@ const logedInCandidate = [
       { link: "/dashboard/candidate/saved-jobs", title: "Saved Jobs" },
       { link: "/dashboard/candidate/applied-jobs", title: "Applied Jobs" },
       { link: "/dashboard/candidate/recommended-jobs", title: "Recommended Jobs" },
-      { link: "/dashboard/candidate/recent-jobs", title: "Recent Jobs" },
     ],
   },
 
@@ -115,7 +114,7 @@ function NavBar() {
             style={{
               textDecoration: "none",
             }}
-            href={session ? "/dashboard/profile" :"/"}
+            href={"/"}
           >
             <Card
               sx={{

@@ -8,13 +8,15 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import router from "next/router";
+
+import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import JobFilter from "../../../../components/common/JobFilter";
 import { jobPostInfo } from "../../../../utils/types";
 
 
 function Page() {
+    const router = useRouter();
   const { data: session, status } = useSession();
   const [backendCall, setBackendCall] = useState(true);
 

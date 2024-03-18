@@ -17,6 +17,7 @@ import { LoadingButton } from "@mui/lab";
 import { useSession } from "next-auth/react";
 import SnackBarComponent from "../../../../components/common/SnackBarComponent";
 import { AlertType, profileData } from "../../../../utils/types";
+import { splitString } from "../../../../utils/splitString";
 
 
 type props = {
@@ -178,6 +179,10 @@ function CandidateProfileInfoCard(props: props) {
     },
   });
 
+  const mapSkillsJsx = profileData?.skills.map((item) => {
+    return `${item}`
+  })
+
   return (
     <>
    <SnackBarComponent alert={alert} setAlert={setAlert} />
@@ -246,11 +251,11 @@ function CandidateProfileInfoCard(props: props) {
               <>
                 <Typography variant="body2" color="text.secondary">
                   {" "}
-                  Name: <b>Mr. {profileData && profileData?.name}</b>{" "}
+                  Name: <b> {profileData && splitString(profileData?.name, 14)}</b>{" "}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
                   {" "}
-                  Email: <b>{profileData?.email}</b>{" "}
+                  Email: <b>{splitString(profileData?.email, 14)}</b>{" "}
                 </Typography>
 
                 <Typography variant="body2" color="text.secondary">
@@ -273,27 +278,28 @@ function CandidateProfileInfoCard(props: props) {
                 >
                   {" "}
                   Educational Background: <b>
-                    {profileData?.education ?? ""}
+                    {splitString(profileData?.education, 14) ?? ""}
                   </b>{" "}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
                   {" "}
-                  Work Experience: <b>{profileData?.experience ?? ""}</b>{" "}
+                  Work Experience: <b>{splitString(profileData?.experience, 14) ?? ""}</b>{" "}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
                   {" "}
                   Skills:{" "}
                   <b>
                     {profileData?.skills &&
-                      profileData?.skills.map((item) => {
-                        return <span key={item}>{item}, </span>;
-                      })}
+                      <span>
+                        {splitString(`${mapSkillsJsx}`, 28)}
+                      </span> 
+                      }
                   </b>{" "}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
                   {" "}
                   LinkedIn Profile URL:{" "}
-                  <b>{profileData?.linkedInProfileUrl ?? ""}</b>{" "}
+                  <b>{splitString(profileData?.linkedInProfileUrl, 28) ?? ""}</b>{" "}
                 </Typography>
               </>
             ) : (

@@ -36,7 +36,7 @@ const ForgotPassword = (props: props) => {
     severity: "success",
   });
 
-  const loginValidationSchema = yup.object({
+  const forgotPasswordValidationSchema = yup.object({
     email: yup
       .string()
       .email("Invalid email format")
@@ -132,7 +132,7 @@ const ForgotPassword = (props: props) => {
         <Formik
           initialValues={initialValues}
           onSubmit={handleSubmit}
-          validationSchema={loginValidationSchema}
+          validationSchema={forgotPasswordValidationSchema}
           enableReinitialize
         >
           {(formik) => {

@@ -20,6 +20,8 @@ import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import SnackBarComponent from "../../../components/common/SnackBarComponent";
 import { LoadingButton } from "@mui/lab";
 import { AlertType, jobPostInfo } from "../../../utils/types";
+import { useRouter } from "next/navigation";
+import { ApplyJobCvSubmitDoneDialogBox } from "../../dialogBoxes/CV/ApplyJobCvSubmitDoneDialogBox";
 
 type props = {
   saveJobOption?: boolean;
@@ -32,6 +34,8 @@ type props = {
  
 
 function JobListCard(props: props) {
+  const router = useRouter();
+  
   const {
     saveJobOption = false,
     allAreSavedJobs = false,
@@ -47,6 +51,8 @@ function JobListCard(props: props) {
   const [viewMoreJobInfo, setViewMoreJobInfo] = useState(false);
   const [backendCall, setBackendCall] = useState(false);
   const [backendCallJobApply, setBackendCallJobApply] = useState(false);
+  const [participateTheQuiz, setParticipateTheQuiz] = useState(false);
+
   const [applicationStatus, setApplicationStatus] = useState("");
   const [alert, setAlert] = useState<AlertType>({
     show: false,
@@ -125,7 +131,7 @@ function JobListCard(props: props) {
 
       if (response?.status !== 200) {
         setBackendCallJobApply(false);
-        const { message } = await response.json();
+        const { message, cvMissing } = await response.json();
         setAlert({
           show: true,
           message:
@@ -134,6 +140,13 @@ function JobListCard(props: props) {
               : `Job apply failed due to server error, please try again!`,
           severity: "error",
         });
+
+        if(cvMissing){
+        setTimeout(() => {
+          router.push("/dashboard/profile");
+        }, 3000);
+        }
+        
       } else {
         setBackendCallJobApply(false);
         const { message } = await response.json();
@@ -144,8 +157,10 @@ function JobListCard(props: props) {
               ? message
               : `You applied for the job successfully!`,
           severity: "success",
-        });
-        loadJobs();
+        }); 
+
+        setParticipateTheQuiz(true);
+        jobPostInfo.alreadyApplied=true
       }
     } catch (error) {
       setBackendCallJobApply(false);
@@ -155,11 +170,12 @@ function JobListCard(props: props) {
         severity: "error",
       });
     }
-  }, [jobPostInfo._id, jobPostInfo.employer, loadJobs]);
+  }, [jobPostInfo, router]);
 
   return (
     <Card sx={{ backgroundColor: "" }}>
       <SnackBarComponent alert={alert} setAlert={setAlert} />
+      <ApplyJobCvSubmitDoneDialogBox setParticipateTheQuiz={setParticipateTheQuiz} openUploadCv={participateTheQuiz}/>
       <Grid
         container
         alignItems="center"
@@ -201,7 +217,7 @@ function JobListCard(props: props) {
               <Stack direction="column">
                 <Typography sx={{ textAlign: "left" }}>
                   <b>Company Name :</b>{" "}
-                  {!jobPostInfo ? "" : jobPostInfo.companyName}
+                  {!jobPostInfo ? "" : jobPostInfo?.companyName}
                 </Typography>
 
                 {viewMoreJobInfo && (
@@ -209,7 +225,7 @@ function JobListCard(props: props) {
                     {" "}
                     <Typography sx={{ textAlign: "left" }}>
                       <b>Company Details :</b>{" "}
-                      {!jobPostInfo ? "" : jobPostInfo.companyDetails}
+                      {!jobPostInfo ? "" : jobPostInfo?.companyDetails}
                     </Typography>
                     <Typography sx={{ textAlign: "left" }}>
                       <b>Company website :</b>{" "}
@@ -219,29 +235,29 @@ function JobListCard(props: props) {
                 )}
 
                 <Typography sx={{ textAlign: "left" }}>
-                  <b>Location :</b> {!jobPostInfo ? "" : jobPostInfo.location}
+                  <b>Location :</b> {!jobPostInfo ? "" : jobPostInfo?.location}
                 </Typography>
                 <Typography sx={{ textAlign: "left" }}>
-                  <b>Industry :</b> {!jobPostInfo ? "" : jobPostInfo.industry}
+                  <b>Industry :</b> {!jobPostInfo ? "" : jobPostInfo?.industry}
                 </Typography>
 
                 {viewMoreJobInfo && (
                   <>
                     <Typography sx={{ textAlign: "left" }}>
                       <b>Position :</b>{" "}
-                      {!jobPostInfo ? "" : jobPostInfo.position}
+                      {!jobPostInfo ? "" : jobPostInfo?.position}
                     </Typography>
                     <Typography sx={{ textAlign: "left" }}>
                       <b>Job description :</b>{" "}
-                      {!jobPostInfo ? "" : jobPostInfo.jobDescription}
+                      {!jobPostInfo ? "" : jobPostInfo?.jobDescription}
                     </Typography>
                     <Typography sx={{ textAlign: "left" }}>
                       <b>Required Qualifications :</b>{" "}
-                      {!jobPostInfo ? "" : jobPostInfo.requiredQualifications.map((item, i)=> i=== jobPostInfo.requiredQualifications.length - 1 ? item : `${item}, `)}
+                      {!jobPostInfo ? "" : jobPostInfo?.requiredQualifications?.map((item, i)=> i=== jobPostInfo?.requiredQualifications?.length - 1 ? item : `${item}, `)}
                     </Typography>
                     <Typography sx={{ textAlign: "left" }}>
                       <b>Working Hours Per Day :</b>{" "}
-                      {!jobPostInfo ? "" : jobPostInfo.workingHoursPerDay}
+                      {!jobPostInfo ? "" : jobPostInfo?.workingHoursPerDay}
                     </Typography>
                   </>
                 )}
@@ -282,11 +298,11 @@ function JobListCard(props: props) {
             {showJobApplicationStatus && <Grid item xs={"auto"}>
               <Typography>
                 <b>Status:</b>
-                {jobPostInfo.cvReviewStatus === "received"
+                {jobPostInfo?.cvReviewStatus === "received"
                   ? " Application sent"
-                  : jobPostInfo.cvReviewStatus === "shortListed"
+                  : jobPostInfo?.cvReviewStatus === "shortListed"
                   ? " Application short listed"
-                  : jobPostInfo.cvReviewStatus === "rejected"
+                  : jobPostInfo?.cvReviewStatus === "rejected"
                   ? " Application rejected"
                   : " Not applied"}
               </Typography>
@@ -331,7 +347,7 @@ function JobListCard(props: props) {
             gap={{ md: 20, sm: 3, xs: 3 }}
           >
             <Grid item>
-              <Link href={jobPostInfo?.websiteUrl} target="_blank">
+              <Link href={jobPostInfo?.websiteUrl ?? ""} target="_blank">
                 <Button
                   size="large"
                   endIcon={<OpenInNewIcon />}
@@ -346,7 +362,7 @@ function JobListCard(props: props) {
 
             <Grid item>
               <LoadingButton
-                disabled={alreadyApplied}
+                disabled={alreadyApplied || jobPostInfo?.alreadyApplied}
                 loading={backendCallJobApply}
                 onClick={applyTheJob}
                 size="large"

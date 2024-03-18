@@ -66,11 +66,11 @@ function EditJobDialogBox(props: props) {
     severity: "success",
   });
 
-  const accountValidationSchemaWithEmailField = yup.object({
+  const jobValidationSchemaWithEmailField = yup.object({
     companyName: yup
       .string()
       .min(1)
-      .max(30)
+      .max(80)
       .required("Company Name is required"),
     companyDetails: yup
       .string()
@@ -197,7 +197,7 @@ function EditJobDialogBox(props: props) {
           <Formik
             initialValues={initialValues}
             onSubmit={handleSubmit}
-            validationSchema={accountValidationSchemaWithEmailField}
+            validationSchema={jobValidationSchemaWithEmailField}
             enableReinitialize
           >
             {(formik) => {

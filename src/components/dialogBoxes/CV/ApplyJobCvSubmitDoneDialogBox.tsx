@@ -14,11 +14,16 @@ import CloseIcon from "@mui/icons-material/Close";
 
 type props = {
   openUploadCv: boolean;
-  handleClickCloseUploadCv: () => void;
+  setParticipateTheQuiz: (val:boolean) => void;
 };
 
-function UploadCvDialogBox(props: props) {
-  const { openUploadCv, handleClickCloseUploadCv } = props;
+function ApplyJobCvSubmitDoneDialogBox(props: props) {
+  const { openUploadCv, setParticipateTheQuiz } = props;
+
+  const handleClickCloseUploadCv = () => {
+    setParticipateTheQuiz(false)
+   }
+
 
   return (
     <Dialog
@@ -58,7 +63,7 @@ function UploadCvDialogBox(props: props) {
                   autoFocus
                   sx={{ borderRadius: 3, fontWeight: "bold" }}
                 >
-                  Participate the Quizz
+                  Participate the Quiz
                 </Button>
               </Grid>
             </Grid>
@@ -69,4 +74,4 @@ function UploadCvDialogBox(props: props) {
   );
 }
 
-export { UploadCvDialogBox };
+export { ApplyJobCvSubmitDoneDialogBox };

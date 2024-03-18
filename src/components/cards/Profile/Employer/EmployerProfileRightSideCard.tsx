@@ -88,10 +88,25 @@ function EmployerProfileRightSideCard(props: props) {
                   endIcon={<FormatListBulletedIcon />}
                   sx={{ textTransform: "capitalize", height: "2.5rem" }}
                 >
-                  MANAGE JOBS
+                  JOBS
                 </Button>
               </Link>
             </Grid> 
+
+            <Grid item lg="auto" md="auto" sm="auto" xs="auto">
+              <Link href="/dashboard/employer/applicants-view">
+                <Button
+                  color="warning"
+                  size="small"
+                  variant="contained"
+                  endIcon={<FormatListBulletedIcon />}
+                  sx={{  height: "2.5rem" }}
+                >
+                 Applications
+                </Button>
+              </Link>
+            </Grid> 
+
           </Grid>
         </Grid>
       </CardContent>

@@ -72,7 +72,6 @@ function CandidatesApplicationCard(props: props) {
         } else {
           const { message } = await response.json();
           applicantInfo.applicationStatus = event.target.value;
-          console.log("applicantInfo", applicantInfo);
           setBackendCall(false);
           setAlert({
             show: true,
@@ -197,7 +196,7 @@ function CandidatesApplicationCard(props: props) {
                       onChange={handleChangeApplicationStatus}
                       fullWidth
                     >
-                      <MenuItem value={"shortlisted"}>Shortlisted</MenuItem>
+                      <MenuItem value={"shortListed"}>Shortlisted</MenuItem>
                       <MenuItem value={"received"}>Received</MenuItem>
                       <MenuItem value={"rejected"}>Rejected</MenuItem>
                     </Select>

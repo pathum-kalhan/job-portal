@@ -65,11 +65,11 @@ const EmployerRegForm = () => {
 
   const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
 
-  const accountValidationSchemaWithEmailField = yup.object({
+  const employerAccountValidationSchemaWithEmailField = yup.object({
     companyName: yup
       .string()
       .min(1)
-      .max(30)
+      .max(80)
       .required("Company Name is required"),
     companyDetails: yup
       .string()
@@ -103,7 +103,7 @@ const EmployerRegForm = () => {
     acceptTerms: yup.boolean().oneOf([true], "Please accept the terms"),
   });
 
-  const accountValidationSchemaWithVerifyField = yup.object({
+  const employerAccountValidationSchemaWithVerifyField = yup.object({
     companyName: yup
       .string()
       .min(1)
@@ -305,7 +305,7 @@ const EmployerRegForm = () => {
 
   useEffect(() => {
     if (status == "authenticated") {
-      router.replace("/dashboard/profile");
+      router.replace("/");
     }
   }, [router, status]);
 
@@ -333,8 +333,8 @@ const EmployerRegForm = () => {
         onSubmit={handleSubmit}
         validationSchema={
           emailValidate
-            ? accountValidationSchemaWithVerifyField
-            : accountValidationSchemaWithEmailField
+            ? employerAccountValidationSchemaWithVerifyField
+            : employerAccountValidationSchemaWithEmailField
         }
         enableReinitialize
       >

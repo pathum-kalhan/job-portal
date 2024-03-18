@@ -46,7 +46,7 @@ const SupportTicketForm = () => {
     severity: "success",
   });
 
-  const validationSchema = Yup.object({
+  const supportTicketValidationSchema = Yup.object({
     subject: Yup.string().required("Subject is required"),
     message: Yup.string().required("Message is required"),
     priorityLevel: Yup.string().required("Priority level is required"),
@@ -222,7 +222,7 @@ const SupportTicketForm = () => {
       >
         <Formik
           initialValues={initialValues}
-          validationSchema={validationSchema}
+          validationSchema={supportTicketValidationSchema}
           onSubmit={handleSubmit}
         >
           {(formik) => {
@@ -294,7 +294,7 @@ const SupportTicketForm = () => {
                     {...getRootProps()}
                     className={`dropzone ${isDragActive ? "active" : ""}`}
                   >
-                    Select a Attachment
+                    Select a attachment
                   </Button>
                   {/* @ts-ignore */}
                   {imageData?.name && (
@@ -317,6 +317,7 @@ const SupportTicketForm = () => {
                   )}
                 </Grid>
                 <LoadingButton
+                  fullWidth
                   loading={backendCall}
                   disabled={!isValid || !dirty}
                   type="submit"

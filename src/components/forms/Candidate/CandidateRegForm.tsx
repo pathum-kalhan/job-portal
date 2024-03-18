@@ -54,7 +54,7 @@ const CandidateRegForm = () => {
 
   const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
 
-  const accountValidationSchemaWithEmailField = yup.object({
+  const candidateAccountValidationSchemaWithEmailField = yup.object({
     name: yup.string().min(1).max(30).required("Name is required"),
     linkedInProfileUrl: yup
       .string()
@@ -86,7 +86,7 @@ const CandidateRegForm = () => {
       .required(),
   });
 
-  const accountValidationSchemaWithVerifyField = yup.object({
+  const CandidateAccountValidationSchemaWithVerifyField = yup.object({
     name: yup.string().min(1).max(30).required("Name is required"),
     linkedInProfileUrl: yup
       .string()
@@ -280,7 +280,7 @@ const CandidateRegForm = () => {
 
   useEffect(() => {
     if (status == "authenticated") {
-      router.replace("/dashboard/profile");
+      router.replace("/");
     }
   }, [router, status]);
 
@@ -308,8 +308,8 @@ const CandidateRegForm = () => {
         onSubmit={handleSubmit}
         validationSchema={
           emailValidate
-            ? accountValidationSchemaWithVerifyField
-            : accountValidationSchemaWithEmailField
+            ? CandidateAccountValidationSchemaWithVerifyField
+            : candidateAccountValidationSchemaWithEmailField
         }
         enableReinitialize
       >

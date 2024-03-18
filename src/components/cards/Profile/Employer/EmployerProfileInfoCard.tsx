@@ -5,11 +5,7 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import {
-  Avatar,
-  CircularProgress,
-  Stack,
-} from "@mui/material";
+import { Avatar, CircularProgress, Stack } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import { useDropzone } from "react-dropzone";
 import { ChangePassword } from "../../../../components/forms/ChangePassword";
@@ -17,7 +13,7 @@ import { LoadingButton } from "@mui/lab";
 import { useSession } from "next-auth/react";
 import SnackBarComponent from "../../../../components/common/SnackBarComponent";
 import { AlertType, profileData } from "../../../../utils/types";
-
+import { splitString } from "../../../../utils/splitString";
 
 type props = {
   handleClickOpenEditProfile: () => void;
@@ -25,7 +21,6 @@ type props = {
   backendCall: boolean;
   getProfileData: () => void;
 };
- 
 
 function EmployerProfileInfoCard(props: props) {
   const {
@@ -241,18 +236,18 @@ function EmployerProfileInfoCard(props: props) {
                 <Typography variant="body2" color="text.secondary">
                   {" "}
                   Company Name: <b>
-                    Mr. {profileData && profileData?.name}
+                     {profileData && splitString(profileData?.name, 14)}
                   </b>{" "}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
                   {" "}
-                  Company Email: <b>{profileData && profileData?.email}</b>{" "}
+                  Company Email: <b>{profileData && splitString(profileData?.email, 28)}</b>{" "}
                 </Typography>
 
                 <Typography variant="body2" color="text.secondary">
                   {" "}
                   {/* @ts-ignore */}
-                  User Type: <b>{profileData && profileData?.userType}</b>{" "}
+                  User Type: <b>{profileData && splitString(profileData?.userType, 14)}</b>{" "}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
                   {" "}
@@ -262,16 +257,16 @@ function EmployerProfileInfoCard(props: props) {
                 <Typography variant="body2" color="text.secondary">
                   {" "}
                   Company Details:{" "}
-                  <b>{profileData && profileData?.companyDetails}</b>{" "}
+                  <b>{profileData && splitString(profileData?.companyDetails, 28)}</b>{" "}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
                   {" "}
                   Company Website URL:{" "}
-                  <b>{profileData && profileData?.websiteUrl}</b>{" "}
+                  <b>{profileData && splitString(profileData?.websiteUrl, 14)}</b>{" "}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
                   {" "}
-                  Location: <b>{profileData && profileData?.location}</b>{" "}
+                  Location: <b>{profileData && splitString(profileData?.location, 28)}</b>{" "}
                 </Typography>
               </>
             ) : (

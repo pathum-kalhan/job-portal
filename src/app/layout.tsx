@@ -25,7 +25,8 @@ export default function RootLayout({
             paddingBottom: "5rem",
             minHeight:"100vh",
             maxHeight:"100%",
-            backgroundColor: "#f0f0f0",
+              backgroundColor: "#f0f0f0",
+            color:"black"
           }}
           >
           {children} 
