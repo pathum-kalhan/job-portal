@@ -12,7 +12,7 @@ import {
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import JobFilter from "../../../../components/common/JobFilter";
-import { jobPostInfo } from "../../../../utils/types";
+import { jobPostInfo } from "../../../../utils/types/genaral-types";
 
 
 function Page() {

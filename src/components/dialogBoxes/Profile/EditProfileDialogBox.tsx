@@ -9,7 +9,7 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import { CandidateEditProfileForm } from "../../../components/forms/Candidate/CandidateEditProfileForm";
 import { EmployerEditProfileForm } from "../../../components/forms/Employer/EmployerEditProfileForm";
-import { profileData } from "../../../utils/types";
+import { profileData } from "../../../utils/types/genaral-types";
  
 
 type props = {

@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import SnackBarComponent from "../common/SnackBarComponent";
-import { AlertType } from "../../utils/types";
+import { AlertType } from "../../utils/types/genaral-types";
 
 
 type initialValuesType = {

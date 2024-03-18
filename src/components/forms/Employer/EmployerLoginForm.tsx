@@ -23,7 +23,7 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import * as yup from "yup";
 import Link from "next/link";
 import SnackBarComponent from "../../../components/common/SnackBarComponent";
-import { AlertType } from "../../../utils/types";
+import { AlertType } from "../../../utils/types/genaral-types";
 
 type initialValues = {
   email: string;

@@ -17,7 +17,7 @@ import React, { useCallback, useState } from "react";
 import DownloadIcon from "@mui/icons-material/Download";
 import Link from "next/link";
 import SnackBarComponent from "../../../../components/common/SnackBarComponent";
-import { AlertType, applicationType } from "../../../../utils/types";
+import { AlertType, applicationType } from "../../../../utils/types/genaral-types";
 
 type props = {
   applicantInfo: applicationType;
