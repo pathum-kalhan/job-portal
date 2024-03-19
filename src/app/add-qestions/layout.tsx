@@ -2,7 +2,7 @@ import { Card, Grid, Typography } from "@mui/material";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Quizzes",
+  title: "Add Questions",
 };
 
 export default function Layout({
