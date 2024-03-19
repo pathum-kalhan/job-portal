@@ -1,6 +1,6 @@
 "use client";
 import { Button, Grid } from "@mui/material";
-import React from "react";
+import React, { useCallback } from "react";
 import { Formik, Form } from "formik";
 import { QuestionCard } from "./QuestionCard";
 import { useRouter } from "next/navigation";
@@ -17,6 +17,7 @@ type Answer = {
 };
 
 type Question = {
+  _id: string;
   question: string;
   answers: Answer[];
   image?: string; // Optional Image type
@@ -25,22 +26,33 @@ type Question = {
 
 type Props = {
   questions: Question[];
+  handleSubmit: (values: {}) => void;
+  formikRef: any;
 };
 
-const Questions = ({ questions }: Props) => {
-
+const Questions = ({ questions, handleSubmit, formikRef }: Props) => {
   const router = useRouter();
-  const handleSubmit = (values: {}) => { 
-    router.push("/dashboard/candidate/quizzes/results");
-  };
 
+
+  // const quizValidationSchema = yup.object({
+
+  // });
+
+  const initialValues = {};
 
   return (
-    <Formik initialValues={{}} onSubmit={handleSubmit}>
-      {() => {
-        return (
-          <Form>
-            <Grid container>
+    <Grid container>
+      <Formik
+        innerRef={formikRef}
+        initialValues={initialValues}
+        onSubmit={handleSubmit}
+        // validationSchema={quizValidationSchema}
+        enableReinitialize
+      >
+        {(formik) => {
+          const { isValid, dirty, errors, touched, values } = formik;
+          return (
+            <Form>
               <Grid
                 container
                 item
@@ -55,11 +67,11 @@ const Questions = ({ questions }: Props) => {
                   </Button>
                 </Grid>
               </Grid>
-            </Grid>
-          </Form>
-        );
-      }}
-    </Formik>
+            </Form>
+          );
+        }}
+      </Formik>
+    </Grid>
   );
 };
 
