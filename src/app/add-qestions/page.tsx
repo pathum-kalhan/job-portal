@@ -163,7 +163,7 @@ function Page() {
             {/* Answer Fields Start */}
             <Stack
               direction="row"
-              gap={2}
+              gap={{lg:2, md:2, sm:1, xs:1}}
               alignItems="center"
               justifyContent="center"
             >
@@ -181,7 +181,7 @@ function Page() {
               />
 
               <Field component={RadioGroup} name={"ChoiceOneIsTrue"}>
-                <Stack direction="row" gap={2}>
+                <Stack direction="row" gap={{lg:2, md:2, sm:1, xs:1}}>
                   <FormControlLabel
                     value={true}
                     control={<Radio />}
@@ -198,7 +198,7 @@ function Page() {
 
             <Stack
               direction="row"
-              gap={2}
+              gap={{lg:2, md:2, sm:1, xs:1}}
               alignItems="center"
               justifyContent="center"
             >
@@ -216,7 +216,7 @@ function Page() {
               />
 
               <Field component={RadioGroup} name={"ChoiceTwoIsTrue"}>
-                <Stack direction="row" gap={2}>
+                <Stack direction="row" gap={{lg:2, md:2, sm:1, xs:1}}>
                   <FormControlLabel
                     value={true}
                     control={<Radio />}
@@ -233,7 +233,7 @@ function Page() {
 
             <Stack
               direction="row"
-              gap={2}
+              gap={{lg:2, md:2, sm:1, xs:1}}
               alignItems="center"
               justifyContent="center"
             >
@@ -253,7 +253,7 @@ function Page() {
               />
 
               <Field component={RadioGroup} name={"ChoiceThreeIsTrue"}>
-                <Stack direction="row" gap={2}>
+                <Stack direction="row" gap={{lg:2, md:2, sm:1, xs:1}}>
                   <FormControlLabel
                     value={true}
                     control={<Radio />}
@@ -270,7 +270,7 @@ function Page() {
 
             <Stack
               direction="row"
-              gap={2}
+              gap={{lg:2, md:2, sm:1, xs:1}}
               alignItems="center"
               justifyContent="center"
             >
@@ -290,7 +290,7 @@ function Page() {
               />
 
               <Field component={RadioGroup} name={"ChoiceFourIsTrue"}>
-                <Stack direction="row" gap={2}>
+                <Stack direction="row" gap={{lg:2, md:2, sm:1, xs:1}} >
                   <FormControlLabel
                     value={true}
                     control={<Radio />}
