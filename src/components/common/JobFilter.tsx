@@ -16,7 +16,7 @@ import React, {
 } from "react";
 import * as yup from "yup";
 import { CustomizedSelectForFormik } from "./CustomizedSelectForFormik";
-import { jobPostInfo } from "../../utils/types";
+import { jobPostInfo } from "../../utils/types/genaral-types";
 
 type props = {
   jobPostInfo: jobPostInfo[];

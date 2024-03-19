@@ -16,7 +16,7 @@ import { signOut, useSession } from "next-auth/react";
 import { LoadingButton } from "@mui/lab";
 import { useDropzone } from "react-dropzone";
 import SnackBarComponent from "../../../../components/common/SnackBarComponent";
-import { AlertType, profileData } from "../../../../utils/types";
+import { AlertType, profileData } from "../../../../utils/types/genaral-types";
 
 type props = {
   handleClickOpenUploadCv: () => void;

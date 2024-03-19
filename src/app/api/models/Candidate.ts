@@ -39,18 +39,19 @@ const CandidateSchema = new Schema(
           enum: ["received", "shortListed", "rejected"],
           default: "received",
         },
-        quiz: {
-        score: { type: Number, default: null },
-        status: { type: String, enum: ["completed", "incomplete"], default: "incomplete" },
-        quizId: { type: Schema.Types.ObjectId, ref: "Quiz" },
-        quizResult: { type: String, enum: ["pass", "fail"], default: "incomplete" },
-        quizAttemptedDate: {type:Date, default:null},
-        quizCompletedDate: {type:Date, default:null},
-        quizAttempted: { type: Boolean, default: false },
-        quizCompleted: { type: Boolean, default: false },
-      }
       },
     ],
+    quiz: {
+      latestScore: { type: String, default: "Not done yet" },
+      attempts: [
+        {
+            score: { type: String, default: null },
+            questionsIds: [{ type: Schema.Types.ObjectId, ref: "Question" }],
+            quizAttemptedDate: Date,
+          
+        },
+      ], 
+    },
     savedJobs: [{ type: Schema.Types.ObjectId, ref: "JobPost" }],
     experience: String,
     skills: Array,

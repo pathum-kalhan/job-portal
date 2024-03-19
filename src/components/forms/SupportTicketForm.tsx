@@ -20,7 +20,7 @@ import {
 import { LoadingButton } from "@mui/lab";
 import { useSession } from "next-auth/react";
 import SnackBarComponent from "../common/SnackBarComponent";
-import { AlertType } from "../../utils/types";
+import { AlertType } from "../../utils/types/genaral-types";
 
 const priorityLevels = [
   { value: "low", label: "Low" },
