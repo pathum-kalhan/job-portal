@@ -131,3 +131,14 @@ export type Messages = {
   displayName: string;
   avatarDisp: boolean;
 }[];
+
+export type Question = {
+  _id:string,
+  question: string,
+  answers: [
+    {
+      text: string,
+      isCorrect: boolean,
+    },
+  ],
+}

@@ -4,7 +4,6 @@ import { NextResponse } from "next/server";
 import EmployerModel from "../../../models/Employer";
 import JobPostModel from "../../../models/JobPost";
 import ApplicationModel from "../../../models/Application";
-import { Schema } from "mongoose";
 
 export async function POST() {
   try {
@@ -43,11 +42,6 @@ export async function POST() {
 
     const reMapApplications = applications.map((item) => {
 
-      const resultOfTheQuiz = item?.candidate?.appliedJobs?.find(
-        (jobItem: { job: Schema.Types.ObjectId }) =>
-          jobItem?.job.toString() === item?.job?._id.toString()
-      ).quiz.score;
-
       const jobSkills = item?.job?.requiredQualifications?.map(
         (itemSkill: string, i: number) =>
           i === item?.candidate?.skills?.length - 1
@@ -75,7 +69,7 @@ export async function POST() {
         industry: item?.job?.industry,
         jobSkills,
         candidateSkills,
-        resultOfTheQuiz:resultOfTheQuiz ?? "Not done yet",
+        resultOfTheQuiz:item?.candidate?.quiz.latestScore ?? "Not done yet",
       };
     });
 

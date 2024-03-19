@@ -2,13 +2,13 @@ import { selectProps } from "../../utils/types/genaral-types";
 import { Select } from "@mui/material";
 
  export const CustomizedSelectForFormik = (selectProps: selectProps) => {
-    const { children, form, field } = selectProps;
+    const { children, form, field} = selectProps;
     const { name, value } = field;
     const { setFieldValue } = form;
   
     return (
       <Select
-        label="Locations"
+        {...field}
         name={name}
         value={value}
         fullWidth
