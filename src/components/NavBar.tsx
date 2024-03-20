@@ -33,6 +33,7 @@ const logedInCandidate = [
   { link: "/contact-us", title: "Contact Us" },
   { link: "/privacy-policy", title: "Privacy & Policy" },
   { link: "/about", title: "About Us" },
+  { link: "/add-questions", title: "Add Question" },
 ];
 
 const logedInEmployer = [
