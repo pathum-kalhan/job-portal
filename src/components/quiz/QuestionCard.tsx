@@ -34,7 +34,6 @@ type Question = {
   codeBlock?: CodeBlock; // Optional CodeBlock type
 };
 
-
 type Props = {
   questions: Question[];
 };
@@ -74,46 +73,39 @@ const QuestionCard = ({ questions }: Props) => {
                       />
                     </Grid>
                   )}
-                  <Grid item xs={12}>
-                    <Field component={RadioGroup} name={item.question}>
-                      {item.answers.map((answer, answerIndex) => (
-                        <FormControlLabel
-                          key={answer.text}
-                          value={answer.text}
-                          control={<Radio />}
-                           label={
-                            answer.codeBlock ? (
-                              <Code
-                                text={
-                                  answer.codeBlock.code
+                        <Grid item xs={12}>
+                          <Field component={RadioGroup} name={item.question}>
+                            {item.answers.map((answer) => (
+                              <FormControlLabel
+                                key={answer.text}
+                                value={answer.text}
+                                control={<Radio />}
+                                label={
+                                  answer.codeBlock ? (
+                                    <Code
+                                      text={answer.codeBlock.code}
+                                      language={answer.codeBlock.language}
+                                      showLineNumbers
+                                    />
+                                  ) : answer.image ? (
+                                    <Stack>
+                                      <Typography> {answer.text}</Typography>
+                                      <Image
+                                        src={answer.image ?? ""}
+                                        alt={`${item?.question} image`}
+                                        height={100}
+                                        width={100}
+                                      />
+                                    </Stack>
+                                  ) : (
+                                    answer.text
+                                  )
                                 }
-                                language={
-                                  answer.codeBlock
-                                    .language
-                                }
-                                showLineNumbers
                               />
-                            ) : answer.image ? (
-                              <Stack>
-                                <Typography>
-                                  {" "}
-                                  {answer.text}
-                                </Typography>
-                                <Image
-                                  src={answer.image ?? ""}
-                                  alt={`${item?.question} image`}
-                                  height={100}
-                                  width={100}
-                                />
-                              </Stack>
-                            ) : (
-                              answer.text
-                            )
-                          }
-                        />
-                      ))}
-                    </Field>
-                  </Grid>
+                            ))}
+                          </Field>
+                        </Grid>
+                 
                 </Grid>
               </Grid>
             </CardContent>

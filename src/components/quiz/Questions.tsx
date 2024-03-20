@@ -4,6 +4,7 @@ import React from "react";
 import { Formik, Form } from "formik";
 import { QuestionCard } from "./QuestionCard";
 import { useRouter } from "next/navigation";
+import { LoadingButton } from "@mui/lab";
 type CodeBlock = {
   code: string;
   language: string;
@@ -17,6 +18,7 @@ type Answer = {
 };
 
 type Question = {
+  _id: string;
   question: string;
   answers: Answer[];
   image?: string; // Optional Image type
@@ -25,22 +27,24 @@ type Question = {
 
 type Props = {
   questions: Question[];
+  handleSubmit: (values: {}) => void;
+  formikRef: any;
+  getScoreBackendCall: boolean;
 };
 
-const Questions = ({ questions }: Props) => {
-
-  const router = useRouter();
-  const handleSubmit = (values: {}) => { 
-    router.push("/dashboard/candidate/quizzes/results");
-  };
-
+const Questions = ({ questions, handleSubmit, formikRef, getScoreBackendCall }: Props) => {
 
   return (
-    <Formik initialValues={{}} onSubmit={handleSubmit}>
-      {() => {
-        return (
-          <Form>
-            <Grid container>
+    <Grid container>
+      <Formik
+        innerRef={formikRef}
+        initialValues={{}}
+        onSubmit={handleSubmit}
+        enableReinitialize
+      >
+        {() => {
+          return (
+            <Form>
               <Grid
                 container
                 item
@@ -50,16 +54,16 @@ const Questions = ({ questions }: Props) => {
               >
                 <QuestionCard questions={questions} />
                 <Grid item xs={"auto"}>
-                  <Button type="submit" color="success" variant="contained">
+                  <LoadingButton loading={getScoreBackendCall} type="submit" color="success" variant="contained">
                     Finish
-                  </Button>
+                  </LoadingButton>
                 </Grid>
               </Grid>
-            </Grid>
-          </Form>
-        );
-      }}
-    </Formik>
+            </Form>
+          );
+        }}
+      </Formik>
+    </Grid>
   );
 };
 

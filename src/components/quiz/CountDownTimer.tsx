@@ -16,28 +16,29 @@ const CountDownTimer: React.FC<Props> = ({
     hours * 3600 + minutes * 60
   );
   const [progress, setProgress] = useState<number>(100);
+  
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setTotalSeconds((prevTotalSeconds) => {
-        if (prevTotalSeconds <= 0) {
+    
+    const interval = setInterval(() => { 
+      setTotalSeconds(() => {
+        if (totalSeconds === 0 ) {
           clearInterval(interval);
-            onTimeout();
           return 0;
         }
-        return prevTotalSeconds - 1;
+        return totalSeconds - 1;
       });
     }, 1000);
+ 
+    if (totalSeconds === 0) { 
+      onTimeout();
+    }
+
+    const remainingPercentage = (totalSeconds / (hours * 3600 + minutes * 60)) * 100;
+    setProgress(remainingPercentage);
 
     return () => clearInterval(interval);
-// eslint-disable-next-line
-  }, []);
-
-  useEffect(() => {
-    const remainingPercentage =
-      (totalSeconds / (hours * 3600 + minutes * 60)) * 100;
-    setProgress(remainingPercentage);
-  }, [totalSeconds, hours, minutes]);
+  }, [totalSeconds, hours, minutes, onTimeout]);
 
   const formatTime = (value: number) => {
     return value < 10 ? `0${value}` : value;

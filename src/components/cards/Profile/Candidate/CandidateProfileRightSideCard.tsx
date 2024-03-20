@@ -291,6 +291,7 @@ function CandidateProfileRightSideCard(props: props) {
 
               <Grid item>
                 <Button
+                  href="/dashboard/candidate/quizzes/start"
                   size="medium"
                   variant="contained"
                   sx={{
