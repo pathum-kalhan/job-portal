@@ -2,7 +2,7 @@ import { Card, Grid, Typography } from "@mui/material";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Quizzes",
+  title: "Add a question for the quiz",
 };
 
 export default function Layout({
@@ -22,7 +22,7 @@ export default function Layout({
               paddingTop: 1,
             }}
           >
-            <Typography fontWeight="bold">Quizzes</Typography>
+            <Typography fontWeight="bold">Add a question for the quiz</Typography>
           </Card>
         </Grid>
       </Grid>
