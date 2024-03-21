@@ -10,7 +10,7 @@ import { Formik, Form, Field } from "formik";
 import React, { useCallback, useEffect, useState } from "react";
 import * as yup from "yup";
 import SearchIcon from "@mui/icons-material/Search";
-import { applicationType } from "../../../../utils/types/genaral-types";
+import { applicationType } from "../../../../utils/types/general-types";
 import { CustomizedSelectForFormik } from "../../../../components/common/CustomizedSelectForFormik";
 
 type props = {

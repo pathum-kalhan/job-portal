@@ -17,7 +17,7 @@ import React, { useCallback, useState } from "react";
 import DownloadIcon from "@mui/icons-material/Download";
 import Link from "next/link";
 import SnackBarComponent from "../../../../components/common/SnackBarComponent";
-import { AlertType, applicationType } from "../../../../utils/types/genaral-types";
+import { AlertType, applicationType } from "../../../../utils/types/general-types";
 
 type props = {
   applicantInfo: applicationType;
@@ -140,10 +140,10 @@ function CandidatesApplicationCard(props: props) {
                   <b>Applicant Name :</b> {applicantInfo.name}
                 </Typography>
                 <Typography sx={{ textAlign: "left" }}>
-                  <b>Date of Birth :</b> {applicantInfo.email}
+                  <b>Date of Birth :</b> {applicantInfo.dateOfBirth}
                 </Typography>
                 <Typography sx={{ textAlign: "left" }}>
-                  <b>Email :</b> {applicantInfo.dateOfBirth}
+                  <b>Email :</b> {applicantInfo.email}
                 </Typography>
                 <Typography sx={{ textAlign: "left" }}>
                   <b>Job Role :</b> {applicantInfo.jobRole}

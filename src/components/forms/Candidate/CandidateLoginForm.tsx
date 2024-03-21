@@ -26,7 +26,7 @@ import Link from "next/link";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import SnackBarComponent from "../../../components/common/SnackBarComponent";
-import { AlertType } from "../../../utils/types/genaral-types";
+import { AlertType } from "../../../utils/types/general-types";
 
 type initialValues = {
   email: string;

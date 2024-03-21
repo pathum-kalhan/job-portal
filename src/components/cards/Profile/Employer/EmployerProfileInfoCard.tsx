@@ -12,7 +12,7 @@ import { ChangePassword } from "../../../../components/forms/ChangePassword";
 import { LoadingButton } from "@mui/lab";
 import { useSession } from "next-auth/react";
 import SnackBarComponent from "../../../../components/common/SnackBarComponent";
-import { AlertType, profileData } from "../../../../utils/types/genaral-types";
+import { AlertType, profileData } from "../../../../utils/types/general-types";
 import { splitString } from "../../../../utils/splitString";
 
 type props = {

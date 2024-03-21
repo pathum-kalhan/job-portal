@@ -20,7 +20,7 @@ import { EmployerProfileInfoCard } from "../../../components/cards/Profile/Emplo
 import { EmployerProfileRightSideCard } from "../../../components/cards/Profile/Employer/EmployerProfileRightSideCard";
 import { useRouter } from "next/navigation";
 import SnackBarComponent from "../../../components/common/SnackBarComponent";
-import { AlertType } from "../../../utils/types/genaral-types";
+import { AlertType } from "../../../utils/types/general-types";
  
 
 function Page() {

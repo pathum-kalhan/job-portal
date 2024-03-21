@@ -15,7 +15,7 @@ import { useState } from "react";
 import { LoadingButton } from "@mui/lab";
 import SnackBarComponent from "../../../components/common/SnackBarComponent";
 import { CustomizedSelectForFormik } from "../../../components/common/CustomizedSelectForFormik";
-import { AlertType, companyInfo } from "../../../utils/types/genaral-types";
+import { AlertType, companyInfo } from "../../../utils/types/general-types";
 
  
 

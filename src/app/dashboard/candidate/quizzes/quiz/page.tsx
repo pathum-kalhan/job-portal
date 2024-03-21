@@ -5,7 +5,7 @@ import { Questions } from "../../../../../components/quiz/Questions";
 
 import { CircularProgress, Grid } from "@mui/material";
 import { useRouter } from "next/navigation";
-import { AlertType, Question } from "../../../../../utils/types/genaral-types";
+import { AlertType, Question } from "../../../../../utils/types/general-types";
 import { useSession } from "next-auth/react";
 import SnackBarComponent from "../../../../../components/common/SnackBarComponent";
 import { Constant } from "../../../../../utils/Constents";

@@ -15,7 +15,7 @@ import { useState } from "react";
 import { LoadingButton } from "@mui/lab";
 import { useRouter } from "next/navigation";
 import SnackBarComponent from "../common/SnackBarComponent";
-import { AlertType } from "../../utils/types/genaral-types";
+import { AlertType } from "../../utils/types/general-types";
 
 type initialValues = {
   email: string;

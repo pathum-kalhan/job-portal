@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { jobPostInfo } from "../../../../utils/types/genaral-types";
+import { jobPostInfo } from "../../../../utils/types/general-types";
 
 
 

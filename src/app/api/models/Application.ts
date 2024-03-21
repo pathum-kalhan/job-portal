@@ -10,7 +10,17 @@ const ApplicationSchema = new Schema(
       enum: ["received", "shortListed", "rejected"],
       default: "received",
     },
-  
+    interview: {
+      scheduleDate: String,
+      status: {
+        type: String,
+        enum: ["not-scheduled", "scheduled", "done", "canceled"],
+        default: "not-scheduled",
+      },
+      notes: String,
+      interviewType: String,
+      meetingUrl: { type: String, default: null },
+    },
   },
   {
     timestamps: true,

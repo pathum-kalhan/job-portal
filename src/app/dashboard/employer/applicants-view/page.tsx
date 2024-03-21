@@ -12,7 +12,7 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import ApplicationsFilter from "../../../../components/cards/ApplicationAndNotificationCards/Employer/ApplicationsFilter";
-import { applicationType } from "../../../../utils/types/genaral-types";
+import { applicationType } from "../../../../utils/types/general-types";
 
 
 function Page() {
