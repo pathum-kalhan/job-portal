@@ -215,6 +215,11 @@ function JobListCard(props: props) {
           >
             <Grid item md={12}>
               <Stack direction="column">
+              <Typography sx={{ textAlign: "left" }}>
+                      <b>Position :</b>{" "}
+                      {!jobPostInfo ? "" : jobPostInfo?.position}
+                </Typography>
+                
                 <Typography sx={{ textAlign: "left" }}>
                   <b>Company Name :</b>{" "}
                   {!jobPostInfo ? "" : jobPostInfo?.companyName}
@@ -237,16 +242,13 @@ function JobListCard(props: props) {
                 <Typography sx={{ textAlign: "left" }}>
                   <b>Location :</b> {!jobPostInfo ? "" : jobPostInfo?.location}
                 </Typography>
-                <Typography sx={{ textAlign: "left" }}>
-                  <b>Industry :</b> {!jobPostInfo ? "" : jobPostInfo?.industry}
-                </Typography>
+               
 
                 {viewMoreJobInfo && (
                   <>
                     <Typography sx={{ textAlign: "left" }}>
-                      <b>Position :</b>{" "}
-                      {!jobPostInfo ? "" : jobPostInfo?.position}
-                    </Typography>
+                  <b>Industry :</b> {!jobPostInfo ? "" : jobPostInfo?.industry}
+                </Typography>
                     <Typography sx={{ textAlign: "left" }}>
                       <b>Job description :</b>{" "}
                       {!jobPostInfo ? "" : jobPostInfo?.jobDescription}

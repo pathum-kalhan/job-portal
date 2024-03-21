@@ -9,7 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import Image from "next/image";
-import React, { useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -49,8 +49,8 @@ function EmployerJobListCard(props: props) {
 
   const [openEditProfile, setOpenEditProfile] = useState(false);
 
-  const [bookMarkIcon, setBookMark] = React.useState(false);
-  const [viewMoreJobInfo, setViewMoreJobInfo] = React.useState(false);
+  const [bookMarkIcon, setBookMark] = useState(false);
+  const [viewMoreJobInfo, setViewMoreJobInfo] = useState(false);
   const [backendCall, setBackendCall] = useState(false);
   const [alert, setAlert] = useState<AlertType>({
     show: false,
@@ -58,14 +58,13 @@ function EmployerJobListCard(props: props) {
     severity: "success",
   });
 
+  const handleCloseEditProfile = () => {
+    setOpenEditProfile(false);
+  };
 
-  const handleCloseEditProfile = () => { 
-    setOpenEditProfile(false)
-  }
-  
-  const handleOpenEditProfile = () => { 
-    setOpenEditProfile(true)
-  }
+  const handleOpenEditProfile = () => {
+    setOpenEditProfile(true);
+  };
 
   const deleteJob = useCallback(async () => {
     try {
@@ -160,6 +159,10 @@ function EmployerJobListCard(props: props) {
             <Grid item md={12}>
               <Stack direction="column">
                 <Typography sx={{ textAlign: "left" }}>
+                  <b>Position :</b> {!companyInfo ? "" : companyInfo.position}
+                </Typography>
+
+                <Typography sx={{ textAlign: "left" }}>
                   <b>Company Name :</b>{" "}
                   {!companyInfo ? "" : companyInfo.companyName}
                 </Typography>
@@ -181,15 +184,12 @@ function EmployerJobListCard(props: props) {
                 <Typography sx={{ textAlign: "left" }}>
                   <b>Location :</b> {!companyInfo ? "" : companyInfo.location}
                 </Typography>
-                <Typography sx={{ textAlign: "left" }}>
-                  <b>Industry :</b> {!companyInfo ? "" : companyInfo.industry}
-                </Typography>
 
                 {viewMoreJobInfo && (
                   <>
                     <Typography sx={{ textAlign: "left" }}>
-                      <b>Position :</b>{" "}
-                      {!companyInfo ? "" : companyInfo.position}
+                      <b>Industry :</b>{" "}
+                      {!companyInfo ? "" : companyInfo.industry}
                     </Typography>
                     <Typography sx={{ textAlign: "left" }}>
                       <b>Job description :</b>{" "}
@@ -197,7 +197,13 @@ function EmployerJobListCard(props: props) {
                     </Typography>
                     <Typography sx={{ textAlign: "left" }}>
                       <b>Required Qualifications :</b>{" "}
-                      {!companyInfo ? "" : companyInfo.requiredQualifications.map((item, i)=> i=== companyInfo.requiredQualifications.length - 1 ? item : `${item}, `)}
+                      {!companyInfo
+                        ? ""
+                        : companyInfo.requiredQualifications.map((item, i) =>
+                            i === companyInfo.requiredQualifications.length - 1
+                              ? item
+                              : `${item}, `
+                          )}
                     </Typography>
                     <Typography sx={{ textAlign: "left" }}>
                       <b>Working Hours Per Day :</b>{" "}

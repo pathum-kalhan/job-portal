@@ -52,6 +52,9 @@ export async function POST(request: Request) {
         $match: { _id: { $nin: getAllAppliedJobs }},
       },
       {
+        $sort: { createdAt: -1 },
+      },
+      {
         $project: {
           companyName: 1,
           employer:1,
@@ -73,10 +76,7 @@ export async function POST(request: Request) {
             },
           },
         },
-      },
-      {
-        $sort: { createdAt: -1 },
-      },
+      }
     ]);
 
     return NextResponse.json(
