@@ -16,7 +16,7 @@ import { useRouter } from "next/navigation";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import SnackBarComponent from "../common/SnackBarComponent";
-import { AlertType } from "../../utils/types/genaral-types";
+import { AlertType } from "../../utils/types/general-types";
 
 // Define prop types for the ChangePassword component
 type ChangePasswordProps = {

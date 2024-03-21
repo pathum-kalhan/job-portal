@@ -57,6 +57,7 @@ function ApplyJobCvSubmitDoneDialogBox(props: props) {
             <Grid container item alignItems="center" justifyContent="center">
               <Grid item>
                 <Button
+                  href="/dashboard/candidate/quizzes/start"
                   variant="contained"
                   size="large"
                   color="success"

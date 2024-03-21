@@ -19,7 +19,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import SnackBarComponent from "../../../components/common/SnackBarComponent";
 import { LoadingButton } from "@mui/lab";
-import { AlertType, jobPostInfo } from "../../../utils/types/genaral-types";
+import { AlertType, jobPostInfo } from "../../../utils/types/general-types";
 import { useRouter } from "next/navigation";
 import { ApplyJobCvSubmitDoneDialogBox } from "../../dialogBoxes/CV/ApplyJobCvSubmitDoneDialogBox";
 

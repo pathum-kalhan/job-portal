@@ -64,7 +64,9 @@ function EmployerProfileRightSideCard(props: props) {
             justifyContent="space-between"
           >
             <Grid item lg="auto" md="auto" sm="auto" xs="auto">
+              <Link href={"/dashboard/employer/interview-schedule"}>
               <CalendarTodayIcon sx={{ fontSize: "4rem", cursor: "pointer" }} />
+              </Link>
             </Grid>
             <Grid item lg="auto" md="auto" sm="auto" xs="auto">
               <Link href="/dashboard/employer/post-a-job">

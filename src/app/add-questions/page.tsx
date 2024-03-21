@@ -5,7 +5,7 @@ import * as yup from "yup";
 import { TextField, Stack, Radio, FormControlLabel } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 
-import { AlertType } from "../../utils/types/genaral-types";
+import { AlertType } from "../../utils/types/general-types";
 import SnackBarComponent from "../../components/common/SnackBarComponent";
 import { RadioGroup } from "formik-mui";
 import { stringToBoolean } from "../../utils/convert/stringToBoolean";

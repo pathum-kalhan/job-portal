@@ -19,7 +19,7 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import SnackBarComponent from "../common/SnackBarComponent";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { AlertType } from "../../utils/types/genaral-types";
+import { AlertType } from "../../utils/types/general-types";
 
 type props = {
   backendCall: boolean;

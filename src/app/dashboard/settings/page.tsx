@@ -7,7 +7,7 @@ import SnackBarComponent from "../../../components/common/SnackBarComponent";
 import AccountSettings from "../../../components/Accordions/AccountSettings";
 import PrivacyPolicy from "../../../components/Accordions/PrivacyPolicy";
 import NotificationPreferences from "../../../components/Accordions/NotificationPreferences";
-import { AlertType } from "../../../utils/types/genaral-types";
+import { AlertType } from "../../../utils/types/general-types";
  
 
 function Page() {

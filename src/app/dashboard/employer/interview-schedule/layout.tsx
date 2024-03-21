@@ -21,7 +21,7 @@ export default function Layout({
               <IconButton>
               <KeyboardArrowLeftIcon/>
               </IconButton>
-              <Typography fontWeight="bold">Interview Schedule</Typography>
+              <Typography fontWeight="bold">Interview Schedule (Shortlisted Candidates)</Typography>
               </Stack>
           </Card>
         

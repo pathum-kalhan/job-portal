@@ -1,33 +1,104 @@
 "use client";
+import React, { useCallback, useState } from "react";
 import {
   Button,
   Card,
   Grid,
-  SelectChangeEvent,
   Stack,
   Typography,
 } from "@mui/material";
 import Image from "next/image";
-import React from "react";
-import Link from "next/link";
 import MessageIcon from "@mui/icons-material/Message";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import {
+  AlertType,
+  applicationType,
+} from "../../../../utils/types/general-types";
+import { ScheduleInterviewDialogBox } from "../../../dialogBoxes/ScheduleInterviewDialogBox";
+import { LoadingButton } from "@mui/lab";
+import SnackBarComponent from "../../../common/SnackBarComponent";
 
-function EmployerInterviewScheduleCard() {
-  const [applicationStatus, setApplicationStatus] = React.useState("");
-  const [applicantInfo, setApplicantInfo] = React.useState({
-    name: "John Doe",
-    email: "john@example.com",
-    dateOfBirth: "1990-01-01",
-    jobRole: "Software Engineer",
+type props = {
+  applicantInfo: applicationType;
+  loadApplications: () => void;
+};
+
+function EmployerInterviewScheduleCard(props: props) {
+  const { applicantInfo, loadApplications } = props;
+  const [sendReminderBackendCall, setSendReminderBackendCall] = useState(false);
+  const [openInterviewSchedule, setOpenInterviewSchedule] = useState(false);
+  const [alert, setAlert] = useState<AlertType>({
+    show: false,
+    message: "",
+    severity: "success",
   });
 
-  const handleChangeApplicationStatus = (event: SelectChangeEvent) => {
-    setApplicationStatus(event.target.value as string);
+  const handleCloseInterviewSchedule = () => {
+    setOpenInterviewSchedule(false);
   };
+
+  const handleSendReminder = useCallback(async () => {
+    try {
+      setSendReminderBackendCall(true);
+      const response = await fetch(
+        "/api/employer/applications/sendInterviewReminder",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            jobApplicationId: applicantInfo.interview.jobApplicationId,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response?.status !== 200) {
+        setSendReminderBackendCall(false);
+        const { message } = await response.json();
+        setAlert({
+          show: true,
+          message:
+            typeof message === "string"
+              ? message
+              : `Sending interview reminder failed due to server error, please try again!`,
+          severity: "error",
+        });
+      } else {
+        const { message } = await response.json();
+        setSendReminderBackendCall(false);
+        setAlert({
+          show: true,
+          message:
+            typeof message === "string"
+              ? message
+              : `Interview reminder sent successfully!`,
+          severity: "success",
+        });
+      }
+
+      setTimeout(() => {
+        loadApplications();
+      }, 2000);
+    } catch (error) {
+      setSendReminderBackendCall(false);
+      setAlert({
+        show: true,
+        message: "Server Error",
+        severity: "error",
+      });
+    }
+  }, [applicantInfo.interview.jobApplicationId, loadApplications]);
 
   return (
     <Card sx={{ backgroundColor: "" }}>
+      <SnackBarComponent alert={alert} setAlert={setAlert}/>
+      <ScheduleInterviewDialogBox
+        initialData={applicantInfo.interview}
+        getSchedule={loadApplications}
+        handleCloseInterviewSchedule={handleCloseInterviewSchedule}
+        openInterviewSchedule={openInterviewSchedule}
+      />
       <Grid
         container
         alignItems="center"
@@ -71,10 +142,10 @@ function EmployerInterviewScheduleCard() {
                   <b>Applicant Name :</b> {applicantInfo.name}
                 </Typography>
                 <Typography sx={{ textAlign: "left" }}>
-                  <b>Date of Birth :</b> {applicantInfo.email}
+                  <b>Date of Birth :</b> {applicantInfo.dateOfBirth}
                 </Typography>
                 <Typography sx={{ textAlign: "left" }}>
-                  <b>Email :</b> {applicantInfo.dateOfBirth}
+                  <b>Email :</b> {applicantInfo.email}
                 </Typography>
                 <Typography sx={{ textAlign: "left" }}>
                   <b>Job Role :</b> {applicantInfo.jobRole}
@@ -95,7 +166,7 @@ function EmployerInterviewScheduleCard() {
             container
             item
             alignItems="center"
-            justifyContent={{md:"flex-end", sm:"center", xs:"center"}}
+            justifyContent={{ md: "flex-end", sm: "center", xs: "center" }}
             gap={2}
           >
             <Grid item>
@@ -108,30 +179,35 @@ function EmployerInterviewScheduleCard() {
                 >
                   Message
                 </Button>
-
-                <Link href="/testPDF.pdf" target="_blank">
-                  <Button
-                    size="large"
-                    endIcon={<CalendarMonthIcon />}
-                    variant="contained"
-                    sx={{ borderRadius: 2 }}
-                  >
-                    Schedule
-                  </Button>
-                </Link>
+                <LoadingButton
+                  disabled={applicantInfo.interview.status === "scheduled"}
+                  onClick={() => setOpenInterviewSchedule(true)}
+                  size="large"
+                  endIcon={<CalendarMonthIcon />}
+                  variant="contained"
+                  sx={{ borderRadius: 2 }}
+                >
+                  Schedule
+                </LoadingButton>
               </Stack>
 
-              <Stack direction="row" mt={3} justifyContent={{md:"flex-end", sm:"center", xs:"center"}} alignItems="center">
-                <Link href="/testPDF.pdf" target="_blank">
-                  <Button
-                    size="large"
-                    endIcon={<CalendarMonthIcon />}
-                    variant="outlined"
-                    sx={{ borderRadius: 2, textTransform: "capitalize" }}
-                  >
-                    Send a Reminder
-                  </Button>
-                </Link>
+              <Stack
+                direction="row"
+                mt={3}
+                justifyContent={{ md: "flex-end", sm: "center", xs: "center" }}
+                alignItems="center"
+              >
+                <LoadingButton
+                  onClick={handleSendReminder}
+                  loading={sendReminderBackendCall}
+                  disabled={applicantInfo.interview.status === "not-scheduled"}
+                  size="large"
+                  endIcon={<CalendarMonthIcon />}
+                  variant="outlined"
+                  sx={{ borderRadius: 2, textTransform: "capitalize" }}
+                >
+                  Send a Reminder
+                </LoadingButton>
               </Stack>
             </Grid>
           </Grid>

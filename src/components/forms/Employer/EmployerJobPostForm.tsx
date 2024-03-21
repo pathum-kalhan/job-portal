@@ -1,7 +1,7 @@
 "use client";
 
 import SnackBarComponent from "../../../components/common/SnackBarComponent";
-import { AlertType, companyInfo } from "../../../utils/types/genaral-types";
+import { AlertType, companyInfo } from "../../../utils/types/general-types";
 import { LoadingButton } from "@mui/lab";
 import {
   Checkbox,

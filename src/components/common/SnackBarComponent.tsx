@@ -1,4 +1,4 @@
-import { AlertType, AnchorOriginType } from "../../utils/types/genaral-types";
+import { AlertType, AnchorOriginType } from "../../utils/types/general-types";
 import { Alert, Snackbar } from "@mui/material";
 
 type props = {

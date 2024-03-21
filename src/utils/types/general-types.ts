@@ -58,6 +58,18 @@ export type applicationType = {
   applicationStatus: string;
   industry: string;
   candidateCVUrl?: string;
+  interview?:{
+    jobApplicationId: string;
+    jobId: string;
+    candidateId: string;
+    applicationStatus: string;
+  
+    status: string;
+    scheduleDate: string;
+    interviewType: string;
+    meetingUrl: string;
+    notes: string;
+  };
 };
 
 export type jobPostInfo = {

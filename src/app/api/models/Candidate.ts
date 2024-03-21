@@ -39,18 +39,28 @@ const CandidateSchema = new Schema(
           enum: ["received", "shortListed", "rejected"],
           default: "received",
         },
+        interview: {
+          scheduleDate: String,
+          status: {
+            type: String,
+            enum: ["not-scheduled", "scheduled", "done", "canceled"],
+            default: "not-scheduled",
+          },
+          notes: String,
+          interviewType: String,
+          meetingUrl: { type: String, default: null },
+        },
       },
     ],
     quiz: {
       latestScore: { type: String, default: "Not done yet" },
       attempts: [
         {
-            score: { type: String, default: null },
-            questionsIds: [{ type: Schema.Types.ObjectId, ref: "Question" }],
-            quizAttemptedDate: Date,
-          
+          score: { type: String, default: null },
+          questionsIds: [{ type: Schema.Types.ObjectId, ref: "Question" }],
+          quizAttemptedDate: Date,
         },
-      ], 
+      ],
     },
     savedJobs: [{ type: Schema.Types.ObjectId, ref: "JobPost" }],
     experience: String,
