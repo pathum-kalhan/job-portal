@@ -41,7 +41,7 @@ export async function POST() {
       cvReviewStatus: "shortListed",
     })
       .populate({ path: "job", model: JobPostModel })
-      .populate("candidate");
+      .populate("candidate").sort({ createdAt: -1 })
 
     const reMapApplications = applications.map((item) => {
       const jobSkills = item?.job?.requiredQualifications?.map(
