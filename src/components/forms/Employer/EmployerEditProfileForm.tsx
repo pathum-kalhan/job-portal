@@ -245,7 +245,7 @@ const EmployerEditProfileForm = (props: props) => {
                       size="large"
                       type="submit"
                     >
-                      Create Account
+                      Update Account
                     </LoadingButton>
                   </Grid>
                 </Grid>
