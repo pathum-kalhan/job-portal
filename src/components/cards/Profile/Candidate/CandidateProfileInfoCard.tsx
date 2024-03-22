@@ -240,7 +240,7 @@ function CandidateProfileInfoCard(props: props) {
             {!backendCall && profileData ? (
               <>
                 <Tooltip
-                  title={profileData?.name.length > 14 && profileData?.name}
+                  title={profileData?.name?.length > 14 && profileData?.name}
                   placement="bottom-start"
                 >
                   <Typography variant="body2" color="text.secondary">
@@ -254,7 +254,7 @@ function CandidateProfileInfoCard(props: props) {
                 </Tooltip>
 
                 <Tooltip
-                  title={profileData?.email.length > 14 && profileData?.email}
+                  title={profileData?.email?.length > 14 && profileData?.email}
                   placement="bottom-start"
                 >
                   <Typography variant="body2" color="text.secondary">
@@ -263,24 +263,27 @@ function CandidateProfileInfoCard(props: props) {
                   </Typography>
                 </Tooltip>
 
-                  <Typography variant="body2" color="text.secondary">
-                    {" "}
-                    {/* @ts-ignore */}
-                    User Type: <b>{profileData?.userType ?? ""}</b>{" "}
-                  </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {" "}
+                  {/* @ts-ignore */}
+                  User Type: <b>{profileData?.userType ?? ""}</b>{" "}
+                </Typography>
 
-                  <Typography variant="body2" color="text.secondary">
-                    {" "}
-                    Contact No: <b>{profileData?.contactNo ?? ""}</b>{" "}
+                <Typography variant="body2" color="text.secondary">
+                  {" "}
+                  Contact No: <b>{profileData?.contactNo ?? ""}</b>{" "}
                 </Typography>
-                
-                  <Typography variant="body2" color="text.secondary">
-                    {" "}
-                    Date Of Birth: <b>{profileData?.dateOfBirth ?? ""}</b>{" "}
+
+                <Typography variant="body2" color="text.secondary">
+                  {" "}
+                  Date Of Birth: <b>{profileData?.dateOfBirth ?? ""}</b>{" "}
                 </Typography>
-                
+
                 <Tooltip
-                  title={profileData?.education.length > 14 && profileData?.education}
+                  title={
+                    profileData?.education?.length > 14 &&
+                    profileData?.education
+                  }
                   placement="bottom-start"
                 >
                   <Typography
@@ -295,7 +298,10 @@ function CandidateProfileInfoCard(props: props) {
                 </Tooltip>
 
                 <Tooltip
-                  title={profileData?.experience.length > 14 && profileData?.experience}
+                  title={
+                    profileData?.experience?.length > 14 &&
+                    profileData?.experience
+                  }
                   placement="bottom-start"
                 >
                   <Typography variant="body2" color="text.secondary">
@@ -305,9 +311,11 @@ function CandidateProfileInfoCard(props: props) {
                   </Typography>
                 </Tooltip>
 
-                
                 <Tooltip
-                  title={profileData?.skills.toString().length > 28 && `${profileData?.skills.toString()}`}
+                  title={
+                    profileData?.skills?.toString().length > 28 &&
+                    `${profileData?.skills.toString()}`
+                  }
                   placement="bottom-start"
                 >
                   <Typography variant="body2" color="text.secondary">
@@ -315,14 +323,19 @@ function CandidateProfileInfoCard(props: props) {
                     Skills:{" "}
                     <b>
                       {profileData?.skills && (
-                        <span>{splitString(profileData?.skills.toString(), 28)}</span>
+                        <span>
+                          {splitString(profileData?.skills.toString(), 28)}
+                        </span>
                       )}
                     </b>{" "}
                   </Typography>
                 </Tooltip>
 
                 <Tooltip
-                  title={profileData?.linkedInProfileUrl.length > 28 && profileData?.linkedInProfileUrl}
+                  title={
+                    profileData?.linkedInProfileUrl?.length > 28 &&
+                    profileData?.linkedInProfileUrl
+                  }
                   placement="bottom-start"
                 >
                   <Typography variant="body2" color="text.secondary">
