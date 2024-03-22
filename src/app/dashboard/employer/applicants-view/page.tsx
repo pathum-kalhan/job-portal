@@ -2,21 +2,15 @@
 
 import React, { useCallback, useEffect, useState } from "react";
 import { CandidatesApplicationCard } from "../../../../components/cards/ApplicationAndNotificationCards/Employer/CandidatesApplicationCard";
-import {
-  Button,
-  CircularProgress,
-  Grid,
-  Typography,
-} from "@mui/material";
+import { Button, CircularProgress, Grid, Typography } from "@mui/material";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import ApplicationsFilter from "../../../../components/cards/ApplicationAndNotificationCards/Employer/ApplicationsFilter";
 import { applicationType } from "../../../../utils/types/general-types";
 
-
 function Page() {
-    const router = useRouter();
+  const router = useRouter();
   const [backendCall, setBackendCall] = useState(true);
   const { data: session, status } = useSession();
   const [applicationsList, setApplicationsList] = useState<applicationType[]>(
@@ -92,6 +86,7 @@ function Page() {
               sx={{ borderRadius: 2 }}
               variant="contained"
               fullWidth
+              href="/dashboard/employer/interview-schedule"
             >
               Scheduled Interviews
             </Button>
