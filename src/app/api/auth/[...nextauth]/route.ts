@@ -86,6 +86,8 @@ const authOptions: NextAuthOptions = {
           role: user.role,
            // @ts-ignore
            websiteUrl: user.websiteUrl,
+           // @ts-ignore
+          profileImage: user.profileImage,
         };
       }
 

@@ -69,23 +69,23 @@ function Page() {
       formikHelpers: FormikHelpers<initialValuesType>
     ) => {
       const payLoad = {
-        question: values.title,
+        question: values?.title,
         answers: [
           {
-            text: values.ChoiceOne,
-            isCorrect: stringToBoolean(values.ChoiceOneIsTrue),
+            text: values?.ChoiceOne,
+            isCorrect: stringToBoolean(values?.ChoiceOneIsTrue),
           },
           {
-            text: values.ChoiceTwo,
-            isCorrect: stringToBoolean(values.ChoiceTwoIsTrue),
+            text: values?.ChoiceTwo,
+            isCorrect: stringToBoolean(values?.ChoiceTwoIsTrue),
           },
           {
-            text: values.ChoiceThree,
-            isCorrect: stringToBoolean(values.ChoiceThreeIsTrue),
+            text: values?.ChoiceThree,
+            isCorrect: stringToBoolean(values?.ChoiceThreeIsTrue),
           },
           {
-            text: values.ChoiceFour,
-            isCorrect: stringToBoolean(values.ChoiceFourIsTrue),
+            text: values?.ChoiceFour,
+            isCorrect: stringToBoolean(values?.ChoiceFourIsTrue),
           },
         ],
       };
@@ -155,8 +155,8 @@ function Page() {
               label="title"
               as={TextField}
               margin="normal"
-              error={errors.title && touched.title}
-              helperText={errors.title && touched.title ? errors.title : ""}
+              error={errors?.title && touched?.title}
+              helperText={errors?.title && touched?.title ? errors?.title : ""}
             />
             {/* Question Text end */}
 
@@ -174,9 +174,9 @@ function Page() {
                 label="Choice One"
                 as={TextField}
                 margin="normal"
-                error={errors.ChoiceOne && touched.ChoiceOne}
+                error={errors?.ChoiceOne && touched?.ChoiceOne}
                 helperText={
-                  errors.ChoiceOne && touched.ChoiceOne ? errors.ChoiceOne : ""
+                  errors?.ChoiceOne && touched?.ChoiceOne ? errors?.ChoiceOne : ""
                 }
               />
 
@@ -209,9 +209,9 @@ function Page() {
                 label="Choice Two"
                 as={TextField}
                 margin="normal"
-                error={errors.ChoiceTwo && touched.ChoiceTwo}
+                error={errors?.ChoiceTwo && touched?.ChoiceTwo}
                 helperText={
-                  errors.ChoiceTwo && touched.ChoiceTwo ? errors.ChoiceTwo : ""
+                  errors?.ChoiceTwo && touched?.ChoiceTwo ? errors?.ChoiceTwo : ""
                 }
               />
 
@@ -244,10 +244,10 @@ function Page() {
                 label="Choice Three"
                 as={TextField}
                 margin="normal"
-                error={errors.ChoiceThree && touched.ChoiceThree}
+                error={errors?.ChoiceThree && touched?.ChoiceThree}
                 helperText={
-                  errors.ChoiceThree && touched.ChoiceThree
-                    ? errors.ChoiceThree
+                  errors?.ChoiceThree && touched?.ChoiceThree
+                    ? errors?.ChoiceThree
                     : ""
                 }
               />
@@ -281,10 +281,10 @@ function Page() {
                 label="Choice Four"
                 as={TextField}
                 margin="normal"
-                error={errors.ChoiceFour && touched.ChoiceFour}
+                error={errors?.ChoiceFour && touched?.ChoiceFour}
                 helperText={
-                  errors.ChoiceFour && touched.ChoiceFour
-                    ? errors.ChoiceFour
+                  errors?.ChoiceFour && touched?.ChoiceFour
+                    ? errors?.ChoiceFour
                     : ""
                 }
               />
