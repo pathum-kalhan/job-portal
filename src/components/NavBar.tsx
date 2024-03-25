@@ -11,14 +11,15 @@ import Container from "@mui/material/Container";
 import Avatar from "@mui/material/Avatar";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
-import { Card, Grid, useMediaQuery } from "@mui/material";
+import { Card, CircularProgress, Grid, useMediaQuery } from "@mui/material";
 import Link from "next/link";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
-import Image from "next/image"; 
+import Image from "next/image";
 import { useSession } from "next-auth/react";
 
 const logedInCandidate = [
+  { link: "/", title: "Home" },
   { link: "/dashboard/candidate/find-jobs", title: "Find Job" },
   {
     title: "Job Listings",
@@ -26,17 +27,20 @@ const logedInCandidate = [
     dropdownItems: [
       { link: "/dashboard/candidate/saved-jobs", title: "Saved Jobs" },
       { link: "/dashboard/candidate/applied-jobs", title: "Applied Jobs" },
-      { link: "/dashboard/candidate/recommended-jobs", title: "Recommended Jobs" },
+      {
+        link: "/dashboard/candidate/recommended-jobs",
+        title: "Recommended Jobs",
+      },
     ],
   },
 
   { link: "/contact-us", title: "Contact Us" },
   { link: "/privacy-policy", title: "Privacy & Policy" },
   { link: "/about", title: "About Us" },
-  { link: "/add-questions", title: "Add Question" },
 ];
 
 const logedInEmployer = [
+  { link: "/", title: "Home" },
   { link: "/contact-us", title: "Contact Us" },
   { link: "/privacy-policy", title: "Privacy & Policy" },
   { link: "/about", title: "About Us" },
@@ -47,22 +51,28 @@ const logedInEmployer = [
     dropdownItems: [
       { link: "/dashboard/employer/post-a-job", title: "Post Job" },
       { link: "/dashboard/employer/manage-jobs", title: "Manage Jobs" },
-      { link: "/dashboard/employer/applicants-view", title: "Application View" },
-      { link: "/dashboard/employer/interview-schedule", title: "Interview Schedule" },
+      {
+        link: "/dashboard/employer/applicants-view",
+        title: "Application View",
+      },
+      {
+        link: "/dashboard/employer/interview-schedule",
+        title: "Interview Schedule",
+      },
     ],
   },
 ];
 
 const defaultPages = [
+  { link: "/", title: "Home" },
   { link: "/contact-us", title: "Contact Us" },
   { link: "/privacy-policy", title: "Privacy & Policy" },
   { link: "/about", title: "About Us" },
-  { link: "/add-questions", title: "Add Question" },
 ];
 
 function NavBar() {
   const [pages, setPages] = useState(defaultPages);
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const isMdScreen = useMediaQuery("(min-width:900px)");
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
@@ -103,8 +113,8 @@ function NavBar() {
       } else if (session?.user?.role === "employer") {
         setPages(logedInEmployer);
       }
-    } else { 
-      setPages(defaultPages)
+    } else {
+      setPages(defaultPages);
     }
   }, [session]);
 
@@ -126,7 +136,13 @@ function NavBar() {
                 display: { xs: "none", md: "flex" },
               }}
             >
-              <Image priority src="/CGPLogo.png" alt="CGPLogo" width={70} height={40} />
+              <Image
+                priority
+                src="/CGPLogo.png"
+                alt="CGPLogo"
+                width={70}
+                height={40}
+              />
             </Card>
           </Link>
           {/* Desktop desktop Logo end */}
@@ -180,7 +196,7 @@ function NavBar() {
                   >
                     {page.title}
                   </Typography>
-                    {/* @ts-ignore */}
+                  {/* @ts-ignore */}
                   {page?.dropdownItems &&
                     (page.title === subMenuAnchorElNav?.menuName ? (
                       <ExpandLessIcon />
@@ -248,7 +264,7 @@ function NavBar() {
                     fontWeight: "500",
                   }}
                   onClick={(e) => {
-                     // @ts-ignore
+                    // @ts-ignore
                     if (page.dropdownItems) {
                       handleOpenSubMenuNavMenu(e, page.title);
                     }
@@ -260,8 +276,7 @@ function NavBar() {
                       alignItems: "center",
                     }}
                   >
-                    {page.title}{" "}
-                    {/* @ts-ignore */}
+                    {page.title} {/* @ts-ignore */}
                     {page.dropdownItems &&
                       (page.title === subMenuAnchorElNav?.menuName ? (
                         <ExpandLessIcon />
@@ -275,23 +290,31 @@ function NavBar() {
           </Grid>
           {/* Desktop nav Menu end */}
 
-          {/* Nav bar Profile Icon start */} 
-          {session && <Box sx={{ flexGrow: 0 }}>
+          {/* Nav bar Profile Icon start */}
+          <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="View Profile">
-              <Link href="/dashboard/profile">
-                <IconButton sx={{ p: 0 }}>
-                  {/* @ts-ignore */} 
-                  <Avatar alt="Profile Icon" src={session?.user?.profileImage ?? ""} />
-                </IconButton>
+              <Link href="/dashboard/profile" style={{textDecoration:"none", color:"white"}}>
+                {/* @ts-ignore */}
+                {!session|| status === "loading" ? (
+                  <CircularProgress color="inherit" />
+                ) : (
+                  <IconButton sx={{ p: 0 }}>
+                    <Avatar
+                      alt="Profile Icon"
+                      // @ts-ignore
+                      src={session?.user?.profileImage ?? ""}
+                    />
+                  </IconButton>
+                )}
               </Link>
             </Tooltip>
-          </Box>}
+          </Box>
           {/* Nav bar Profile Icon end */}
 
           {/* Nav dropdown menu start */}
           {pages.map((pageItem) => {
             if (
-               // @ts-ignore
+              // @ts-ignore
               pageItem.dropdownItems &&
               pageItem.title === subMenuAnchorElNav?.menuName
             ) {

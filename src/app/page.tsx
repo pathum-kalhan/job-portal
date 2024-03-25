@@ -1,14 +1,19 @@
+"use client";
 import { Grid, Typography } from "@mui/material";
 import { Services } from "../components/cards/Services";
 import { serviceList } from "../utils/servicesList";
 import { LoginAndRegCard } from "../components/cards/LoginAndRegCard";
+import { useSession } from "next-auth/react";
 
 export default function Home() {
+  const { data: session, status } = useSession();
   return (
     <Grid container mt={10} alignContent="center" justifyContent="center">
-     <Grid container item lg={6} md={9} sm={10} xs={11}>
+      {/* @ts-ignore */}
+      {session?.user?.role !== "employer" && (
+        <Grid container item lg={6} md={9} sm={10} xs={11}>
         <LoginAndRegCard />
-        </Grid>
+        </Grid>)}
       <Grid
         container
         item
@@ -40,8 +45,8 @@ export default function Home() {
             unique ambitions and qualifications.
           </Typography>
         </Grid>
-
-        <Grid
+{/* @ts-ignore */}
+        {session?.user?.role !== "employer" && (<Grid
           item
           xs={12}
           alignItems="center"
@@ -50,7 +55,7 @@ export default function Home() {
           pr={{ lg: 15, md: 10, sm: 2, xs: 0 }}
         >
           <Services serviceSections={serviceList} />
-        </Grid>
+        </Grid>)}
       </Grid>
     </Grid>
   );

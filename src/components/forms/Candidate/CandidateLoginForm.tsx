@@ -172,52 +172,7 @@ const CandidateLoginForm = (props: props) => {
                     md={9}
                     sm={11}
                     xs={12}
-                  >
-                    <Grid
-                      container
-                      item
-                      lg={12}
-                      md={12}
-                      sm={12}
-                      xs={12}
-                      alignItems="center"
-                      justifyContent="center"
-                      gap={3}
-                    >
-                      <Grid
-                        item
-                        lg={"auto"}
-                        md={"auto"}
-                        sm={"auto"}
-                        xs={"auto"}
-                      >
-                        <Button
-                          variant="contained"
-                          startIcon={<GoogleIcon />}
-                          sx={{ fontWeight: "bold" }}
-                        >
-                          Google
-                        </Button>
-                      </Grid>
-                      <Grid
-                        item
-                        lg={"auto"}
-                        md={"auto"}
-                        sm={"auto"}
-                        xs={"auto"}
-                      >
-                        <Button
-                          variant="contained"
-                          startIcon={<LinkedInIcon />}
-                          sx={{ fontWeight: "bold" }}
-                        >
-                          LinkedIn
-                        </Button>
-                      </Grid>
-                    </Grid>
-                    <Grid item lg={12} md={12} sm={12} xs={12}>
-                      <Typography textAlign="center">OR</Typography>
-                    </Grid>
+                  > 
 
                     <Grid item lg={12} md={12} sm={12} xs={12}>
                       <Field
