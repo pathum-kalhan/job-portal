@@ -291,11 +291,11 @@ function NavBar() {
           {/* Desktop nav Menu end */}
 
           {/* Nav bar Profile Icon start */}
-          <Box sx={{ flexGrow: 0 }}>
+          {session && <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="View Profile">
               <Link href="/dashboard/profile" style={{textDecoration:"none", color:"white"}}>
                 {/* @ts-ignore */}
-                {!session|| status === "loading" ? (
+                {status === "loading" ? (
                   <CircularProgress color="inherit" />
                 ) : (
                   <IconButton sx={{ p: 0 }}>
@@ -308,7 +308,7 @@ function NavBar() {
                 )}
               </Link>
             </Tooltip>
-          </Box>
+          </Box>}
           {/* Nav bar Profile Icon end */}
 
           {/* Nav dropdown menu start */}
