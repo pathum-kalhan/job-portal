@@ -1,7 +1,8 @@
 "use client";
-import { Grid, Typography } from "@mui/material";
+import { Grid, Stack, Typography } from "@mui/material";
 import React from "react";
 import { ContactUsForm } from "../../components/forms/ContactUsForm";
+import Image from "next/image";
 
 function Page() {
   return (
@@ -26,6 +27,8 @@ function Page() {
         xs={12}
       >
         <Grid item xs={12}>
+          <Stack direction="column" spacing={1}> 
+     
           <Typography component="h2" fontWeight="bold" fontSize="2rem">
             Contact Us
           </Typography>
@@ -37,7 +40,18 @@ function Page() {
             </a>
             . Alternatively you can submit your query via this form and we will
             get back to you as soon as we can.
-          </Typography>
+            </Typography>
+
+            <Image
+            src={"/bg_images/contact_us.webp"}
+            alt="Welcome to Career Guide Pro"
+            width={1000}
+            height={500}
+             layout="responsive"
+              objectFit="contain"
+              objectPosition="center" 
+            />
+            </Stack>
         </Grid>
       </Grid>
 

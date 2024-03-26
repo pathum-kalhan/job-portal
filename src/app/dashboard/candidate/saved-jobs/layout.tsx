@@ -1,5 +1,6 @@
-import { Card, Grid, Typography } from "@mui/material";
+import { Card, Grid, Stack, Typography } from "@mui/material";
 import type { Metadata } from "next";
+import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "Saved jobs",
@@ -19,6 +20,21 @@ export default function Layout({
             <Typography fontWeight="bold">Saved Jobs</Typography>
           </Card>
         
+        </Grid>
+
+        <Grid item xs={11} mt={2}>
+        <Stack alignItems="center" justifyContent="center">
+          <Image
+            src={"/bg_images/saved_job.webp"}
+              alt="Welcome to Career Guide Pro"
+              priority={true}
+              layout="responsive"
+              objectFit="contain"
+              objectPosition="center" 
+            width={1520}
+            height={300}
+          />
+            </Stack>
         </Grid>
       </Grid>
 

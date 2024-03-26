@@ -1,5 +1,6 @@
-import { Card, Grid, Typography } from "@mui/material";
+import { Card, Grid, Stack, Typography } from "@mui/material";
 import type { Metadata } from "next";
+import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "Add a question for the quiz",
@@ -22,8 +23,25 @@ export default function Layout({
               paddingTop: 1,
             }}
           >
-            <Typography fontWeight="bold">Add a question for the quiz</Typography>
+            <Typography fontWeight="bold">
+              Add a question for the quiz
+            </Typography>
           </Card>
+        </Grid>
+
+        <Grid item xs={11} mt={2}>
+          <Stack alignItems="center" justifyContent="center">
+            <Image
+              src={"/bg_images/add_question.webp"}
+              alt="Welcome to Career Guide Pro"
+              priority={true}
+              layout="responsive"
+              objectFit="contain"
+              objectPosition="center"
+              width={1520}
+              height={300}
+            />
+          </Stack>
         </Grid>
       </Grid>
 

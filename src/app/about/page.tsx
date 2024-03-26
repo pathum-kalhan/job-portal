@@ -1,6 +1,8 @@
 import {
+  Stack,
   Typography,
 } from "@mui/material";
+import Image from "next/image";
 import React from "react"; 
 
 function Page() { 
@@ -26,6 +28,18 @@ function Page() {
         opportunities for professional growth and development. Sign up today and
         start your journey toward success!
       </Typography>
+
+      <Stack mt={4} direction="column" alignItems="center" justifyContent="center">
+      <Image
+              src={"/bg_images/about_us_body_image.webp"}
+              alt="Welcome to Career Guide Pro"
+              priority={true} 
+              objectFit="contain"
+              objectPosition="center"
+              width={1000}
+              height={550}
+            />
+            </Stack>
     </>
   );
 }
