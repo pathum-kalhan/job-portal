@@ -3,9 +3,8 @@ import TextField from "@mui/material/TextField";
 import { styled } from "@mui/material/styles";
 import SendIcon from "@mui/icons-material/Send";
 import Button from "@mui/material/Button";
-import { FormEvent, useState } from "react";
-
-const currentUser = "Sasiru";
+import { FormEvent, useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 
 const WrapForm = styled("form")({
   display: "flex",
@@ -19,29 +18,38 @@ const WrapText = styled("div")({
 });
 
 type Message = {
-  type: "left" | "right";
+  employeeId: string;
+  employerId: string;
+  role: "candidate" | "employer";
   message: string;
   timestamp: string;
   displayName: string;
-  avatarDisp: boolean;
+  photoURL: string;
 };
 
 type Props = {
+  employerId: string;
+  employeeId: string;
   addMessage: (message: Message) => void;
 };
 
-export const TextInput = ({ addMessage }: Props) => {
+export const TextInput = ({ employeeId, employerId, addMessage }: Props) => {
+  const { data: session } = useSession();
   const [textValue, setTextValue] = useState("");
 
   const sendMessage = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!textValue.trim()) return;
     const message: Message = {
-      type: "right",
+      employeeId,
+      employerId,
+      // @ts-ignore
+      role: session?.user?.role!,
       message: textValue,
       timestamp: new Date().toLocaleString(),
-      displayName: currentUser,
-      avatarDisp: true,
+      displayName: session?.user?.name!,
+      // @ts-ignore
+      photoURL: session?.user?.profileImage!,
     };
 
     addMessage(message);
@@ -54,7 +62,7 @@ export const TextInput = ({ addMessage }: Props) => {
         <WrapText>
           <TextField
             id="standard-text"
-            label="Test"
+            label="Send message"
             fullWidth
             value={textValue}
             onChange={(e) => setTextValue(e.target.value)}

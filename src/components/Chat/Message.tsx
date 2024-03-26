@@ -35,12 +35,7 @@ const DisplayName = styled("div")({
 });
 
 export const MessageLeft = (props: any) => {
-  const {
-    message = "no message",
-    timestamp = "",
-    photoURL = "https://www.w3schools.com/howto/img_avatar.png",
-    displayName = "Avatar",
-  } = props;
+  const { message, timestamp, photoURL, displayName } = props;
 
   return (
     <>

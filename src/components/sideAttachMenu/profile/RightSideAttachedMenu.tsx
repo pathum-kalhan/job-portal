@@ -1,20 +1,23 @@
 import { IconButton, Stack } from "@mui/material";
 import React from "react";
 import Link from "next/link";
-import ForwardToInboxIcon from '@mui/icons-material/ForwardToInbox';
-import TuneIcon from '@mui/icons-material/Tune';
-import HelpCenterOutlinedIcon from '@mui/icons-material/HelpCenterOutlined';
+import ForwardToInboxIcon from "@mui/icons-material/ForwardToInbox";
+import TuneIcon from "@mui/icons-material/Tune";
+import HelpCenterOutlinedIcon from "@mui/icons-material/HelpCenterOutlined";
 
 function RightSideAttachedMenu() {
   return (
-    <Stack direction={{
-      lg:"column",
-      md:"column",
-      sm:"column",
-      xs:"row",
-      }} gap={0} >
+    <Stack
+      direction={{
+        lg: "column",
+        md: "column",
+        sm: "column",
+        xs: "row",
+      }}
+      gap={0}
+    >
       <Link
-        href="/dashboard/notifications/job-seeker"
+        href="/dashboard/candidate/chat"
         style={{
           textDecoration: "none",
           color: "black",
