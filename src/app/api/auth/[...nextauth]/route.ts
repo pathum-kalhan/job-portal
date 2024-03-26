@@ -63,6 +63,7 @@ const authOptions: NextAuthOptions = {
 
           throw new Error("Invalid credentials");
         } catch (error) {
+          console.log(error)
           throw new Error("Server error");
         }
       },

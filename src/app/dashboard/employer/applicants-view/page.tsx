@@ -72,26 +72,7 @@ function Page() {
         xs={12}
         gap={3}
         mb={8}
-      >
-        <Grid
-          container
-          item
-          alignItems="center"
-          justifyContent="flex-end"
-          gap={3}
-        >
-          <Grid item md={"auto"} sm={12} xs={12}>
-            <Button
-              startIcon={<CalendarMonthIcon />}
-              sx={{ borderRadius: 2 }}
-              variant="contained"
-              fullWidth
-              href="/dashboard/employer/interview-schedule"
-            >
-              Scheduled Interviews
-            </Button>
-          </Grid>
-        </Grid>
+      > 
 
         <ApplicationsFilter
           applicationsList={applicationsList}
