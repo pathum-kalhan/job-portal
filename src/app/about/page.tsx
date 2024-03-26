@@ -1,12 +1,8 @@
-import {
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Stack, Typography } from "@mui/material";
 import Image from "next/image";
-import React from "react"; 
+import React from "react";
 
-function Page() { 
-
+function Page() {
   return (
     <>
       <Typography component={"h2"} variant={"h5"}>
@@ -29,17 +25,22 @@ function Page() {
         start your journey toward success!
       </Typography>
 
-      <Stack mt={4} direction="column" alignItems="center" justifyContent="center">
-      <Image
-              src={"/bg_images/about_us_body_image.webp"}
-              alt="Welcome to Career Guide Pro"
-              priority={true} 
-              objectFit="contain"
-              objectPosition="center"
-              width={1000}
-              height={550}
-            />
-            </Stack>
+      <Stack
+        direction="column"
+        alignItems="center"
+        justifyContent="center"
+        pl={{lg:28, md:5, sm:2, xs:0}}
+        pr={{ lg: 28, md: 5, sm: 2, xs: 0 }}
+        mt={4}
+      >
+        <Image
+          src={"/bg_images/about_us_body_image.webp"}
+          alt="Welcome to Career Guide Pro"
+          style={{ objectFit: "contain", width: "100%", height: "100%" }}
+          width={1000}
+          height={400}
+        />
+      </Stack>
     </>
   );
 }

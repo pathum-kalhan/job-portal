@@ -57,7 +57,10 @@ export default function Home() {
           pl={{ lg: 15, md: 10, sm: 5, xs: 1 }}
           pr={{ lg: 15, md: 10, sm: 5, xs: 1 }}
         >
-          <Stack alignItems="center" justifyContent="center">
+          <Stack alignItems="center" justifyContent="center"
+           pl={{lg:28, md:5, sm:2, xs:0}}
+           pr={{ lg: 28, md: 5, sm: 2, xs: 0 }}
+          >
             <Image
               src={
                  // @ts-ignore 
@@ -68,12 +71,10 @@ export default function Home() {
                   ? "/bg_images/welcome_to_career_guide_pro_login_candidate.webp"
                   : "/bg_images/welcome_to_career_guide_pro.webp"
               }
-              alt="Welcome to Career Guide Pro"
-              layout="responsive"
-              objectFit="contain"
-              objectPosition="center"
+              alt="Welcome to Career Guide Pro" 
+              style={{ objectFit: "contain", width:"100%", height:"100%" }}
               width={1000}
-              height={500}
+              height={400}
             />
           </Stack>
         </Grid>

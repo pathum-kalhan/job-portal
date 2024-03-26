@@ -33,9 +33,7 @@ export default function Layout({
               src={"/bg_images/about_us.webp"}
               alt="Welcome to Career Guide Pro"
               priority={true}
-              layout="responsive"
-              objectFit="contain"
-              objectPosition="center"
+              style={{ objectFit: "contain", width:"100%", height:"100%" }}
               width={1520}
               height={300}
             />
