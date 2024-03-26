@@ -1,9 +1,10 @@
 "use client";
-import { Grid, Typography } from "@mui/material";
+import { Box, Grid, Stack, Typography } from "@mui/material";
 import { Services } from "../components/cards/Services";
 import { serviceList } from "../utils/servicesList";
 import { LoginAndRegCard } from "../components/cards/LoginAndRegCard";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
 
 export default function Home() {
   const { data: session, status } = useSession();
@@ -12,8 +13,9 @@ export default function Home() {
       {/* @ts-ignore */}
       {session?.user?.role !== "employer" && (
         <Grid container item lg={6} md={9} sm={10} xs={11}>
-        <LoginAndRegCard />
-        </Grid>)}
+          <LoginAndRegCard />
+        </Grid>
+      )}
       <Grid
         container
         item
@@ -45,17 +47,50 @@ export default function Home() {
             unique ambitions and qualifications.
           </Typography>
         </Grid>
-{/* @ts-ignore */}
-        {session?.user?.role !== "employer" && (<Grid
+
+        <Grid
           item
           xs={12}
           alignItems="center"
           justifyContent="center"
-          pl={{ lg: 15, md: 10, sm: 2, xs: 0 }}
-          pr={{ lg: 15, md: 10, sm: 2, xs: 0 }}
+          pt={5}
+          pl={{ lg: 15, md: 10, sm: 5, xs: 1 }}
+          pr={{ lg: 15, md: 10, sm: 5, xs: 1 }}
         >
-          <Services serviceSections={serviceList} />
-        </Grid>)}
+          <Stack alignItems="center" justifyContent="center">
+            <Image
+              src={
+                 // @ts-ignore 
+                session?.user?.role === "employer"
+                  ? "/bg_images/employer_welcome_page.webp"
+                 // @ts-ignore 
+                  : session?.user?.role === "candidate"
+                  ? "/bg_images/welcome_to_career_guide_pro_login_candidate.webp"
+                  : "/bg_images/welcome_to_career_guide_pro.webp"
+              }
+              alt="Welcome to Career Guide Pro"
+              layout="responsive"
+              objectFit="contain"
+              objectPosition="center"
+              width={1000}
+              height={500}
+            />
+          </Stack>
+        </Grid>
+
+        {/* @ts-ignore */}
+        {session?.user?.role !== "employer" && (
+          <Grid
+            item
+            xs={12}
+            alignItems="center"
+            justifyContent="center"
+            pl={{ lg: 15, md: 10, sm: 2, xs: 0 }}
+            pr={{ lg: 15, md: 10, sm: 2, xs: 0 }}
+          >
+            <Services serviceSections={serviceList} />
+          </Grid>
+        )}
       </Grid>
     </Grid>
   );

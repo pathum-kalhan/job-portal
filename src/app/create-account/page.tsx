@@ -8,6 +8,13 @@ function Page() {
       height={"100vh"}
       alignContent="center"
       justifyContent="center"
+      sx={{
+        backgroundSize: "contain",
+        backgroundRepeat: "no-repeat",
+        backgroundPosition: "center",  
+        backgroundImage:
+          "url(/bg_images/welcome_to_career_guide_pro_create_account_type.webp)",
+      }}
     >
       <span
         style={{
@@ -41,36 +48,30 @@ function Page() {
           xs={12}
         >
           <Grid item lg={"auto"} md={"auto"} sm={"auto"} xs={"auto"}>
-          <Link
-            href="/create-account/create-candidate"
-            >
-            <Button
-              variant="contained"
-              sx={{
-                width: "auto",
-              }}
-              
-            >
-              {" "}
-              As a Job Seeker
+            <Link href="/create-account/create-candidate">
+              <Button
+                variant="contained"
+                sx={{
+                  width: "auto",
+                }}
+              >
+                {" "}
+                As a Job Seeker
               </Button>
-              </Link>
+            </Link>
           </Grid>
           <Grid item lg={"auto"} md={"auto"} sm={"auto"} xs={"auto"}>
-            <Link
-             href="/create-account/create-employer"
-            >
-            <Button
-              variant="contained"
-              sx={{
-                width: "10rem",
-              }}
-             
-            >
-              {" "}
-              As a Employer
+            <Link href="/create-account/create-employer">
+              <Button
+                variant="contained"
+                sx={{
+                  width: "10rem",
+                }}
+              >
+                {" "}
+                As a Employer
               </Button>
-              </Link>
+            </Link>
           </Grid>
         </Grid>
       </span>
