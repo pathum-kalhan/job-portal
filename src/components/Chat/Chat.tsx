@@ -5,6 +5,7 @@ import { MessageLeft, MessageRight } from "./Message";
 import { useEffect, useState } from "react";
 import { Card, CardContent, Grid } from "@mui/material";
 import { ChatMediator } from "../../app/api/chat/chatClass";
+import { useSession } from "next-auth/react";
 
 const paperStyles = {
   width: "100vw",
@@ -32,6 +33,7 @@ const messagesBodyStyles = {
 };
 
 type Messages = {
+  _id: string;
   employerId: string;
   employeeId: string;
   role: "candidate" | "employer";
@@ -49,6 +51,13 @@ type Props = {
 const mediator = new ChatMediator();
 
 export const Chat = ({ employeeId, employerId }: Props) => {
+  const { data: session } = useSession();
+  // @ts-ignore
+  const currentUserId = session?.user?.id;
+
+  // @ts-ignore
+  const currentUserRole = session?.user?.role;
+
   const [messages, setMessages] = useState<Messages>([]);
 
   useEffect(() => {
@@ -57,11 +66,29 @@ export const Chat = ({ employeeId, employerId }: Props) => {
         `/api/chat?employerId=${employerId}&employeeId=${employeeId}`
       );
       const data = await response.json();
-      console.log(data, "data");
+      data.message.map((message) => {
+        console.log(message.employeeId, message.employerId);
+      });
       setMessages(data.message);
     };
 
     getMessages();
+  }, [employeeId, employerId]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const getMessages = async () => {
+        const response = await fetch(
+          `/api/chat?employerId=${employerId}&employeeId=${employeeId}`
+        );
+        const data = await response.json();
+        setMessages(data.message);
+      };
+
+      getMessages();
+    }, 10000);
+
+    return () => clearInterval(interval);
   }, [employeeId, employerId]);
 
   const handleNewMessage = (message: Messages[0]) => {
@@ -84,12 +111,16 @@ export const Chat = ({ employeeId, employerId }: Props) => {
           {messages.length > 0 &&
             messages.map((message, index) => {
               if (
-                message.employeeId === employeeId ||
-                message.employerId === employerId
+                (currentUserRole === "candidate" &&
+                  message.role === "candidate" &&
+                  message.employeeId === currentUserId) ||
+                (currentUserRole === "employer" &&
+                  message.role === "employer" &&
+                  message.employerId === currentUserId)
               ) {
                 return (
                   <MessageRight
-                    key={index}
+                    key={message._id}
                     message={message.message}
                     timestamp={message.timestamp}
                     displayName={message.displayName}
@@ -98,7 +129,7 @@ export const Chat = ({ employeeId, employerId }: Props) => {
               } else {
                 return (
                   <MessageLeft
-                    key={index}
+                    key={message._id}
                     message={message.message}
                     timestamp={message.timestamp}
                     displayName={message.displayName}

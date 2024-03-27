@@ -47,7 +47,6 @@ const DisplayName = styled("div")({
 });
 
 export const MessageLeft = (props: any) => {
-  console.log(props, "props");
   const { message, timestamp, photoURL, displayName } = props;
 
   return (

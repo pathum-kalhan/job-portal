@@ -66,6 +66,13 @@ export const TextInput = ({ employeeId, employerId, addMessage }: Props) => {
             label="Send message"
             fullWidth
             value={textValue}
+            disabled={
+              employerId === ""
+                ? true
+                : false && employeeId === ""
+                ? true
+                : false
+            }
             onChange={(e) => setTextValue(e.target.value)}
           />
         </WrapText>

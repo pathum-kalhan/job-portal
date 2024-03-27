@@ -56,9 +56,11 @@ export const GET = async (req: NextRequest) => {
   const employeeId = searchParams.get("employeeId");
   await DbMongoose();
 
-  const senderMessage = await Message.find({});
+  const senderMessage = await Message.find({
+    employerId: employerId,
+    employeeId: employeeId,
+  });
 
-  console.log(senderMessage, employerId, employeeId, "message");
   return NextResponse.json(
     {
       message: senderMessage,

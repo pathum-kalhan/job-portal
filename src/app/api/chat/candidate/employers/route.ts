@@ -8,7 +8,9 @@ export const GET = async (req: NextRequest) => {
   const employeeId = searchParams.get("employeeId");
   await DbMongoose();
 
-  const messages = await Message.find({});
+  const messages = await Message.find({
+    employeeId: employeeId,
+  });
 
   const employerIds = messages.map((message) => message.employerId);
   const uniqueEmployers = Array.from(new Set(employerIds));

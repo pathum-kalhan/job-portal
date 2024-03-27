@@ -17,7 +17,7 @@ function RightSideAttachedMenu() {
       gap={0}
     >
       <Link
-        href="/dashboard/candidate/chat"
+        href="/dashboard/employer/chat"
         style={{
           textDecoration: "none",
           color: "black",

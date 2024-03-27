@@ -6,18 +6,16 @@ import { Avatar, Box, Button, Grid, Typography } from "@mui/material";
 export default function Page() {
   const { data: session } = useSession();
 
-  const [employers, setEmployers] = useState([]);
-  const [selectedEmployerId, setSelectedEmployerId] = useState("");
+  const [employees, setEmployees] = useState([]);
+  const [selectedEmployeeId, setSelectedEmployeeId] = useState("");
   // @ts-ignore
   const id = session?.user?.id;
 
   useEffect(() => {
     const fetchEmployers = async () => {
-      const res = await fetch(`/api/chat/candidate/employers?employeeId=${id}`);
+      const res = await fetch(`/api/chat/employer/candidates?employerId=${id}`);
       const data = await res.json();
-
-      console.log(data);
-      setEmployers(data.message);
+      setEmployees(data.message);
     };
     fetchEmployers();
   }, [id]);
@@ -26,16 +24,16 @@ export default function Page() {
     <Grid container spacing={2}>
       <Grid item xs={2}>
         <Box sx={{ display: "flex", flexDirection: "column" }}>
-          {employers.map((employer) => (
+          {employees.map((employee) => (
             <Button
-              key={employer._id}
+              key={employee._id}
               onClick={() => {
-                setSelectedEmployerId(employer._id);
+                setSelectedEmployeeId(employee._id);
               }}
             >
               <Grid container spacing={1}>
                 <Grid item xs={4}>
-                  <Avatar src={employer?.profilePic?.image} />
+                  <Avatar src={employee?.profilePic?.image} />
                 </Grid>
                 <Grid item>
                   <Typography
@@ -45,7 +43,7 @@ export default function Page() {
                       textAlign: "center",
                     }}
                   >
-                    {employer?.name}
+                    {employee?.name}
                   </Typography>
                 </Grid>
               </Grid>
@@ -55,7 +53,7 @@ export default function Page() {
       </Grid>
 
       <Grid item xs={10}>
-        <Chat employeeId={id} employerId={selectedEmployerId} />
+        <Chat employerId={id} employeeId={selectedEmployeeId} />
       </Grid>
     </Grid>
   );
