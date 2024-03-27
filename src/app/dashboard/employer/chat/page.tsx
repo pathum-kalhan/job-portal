@@ -42,41 +42,49 @@ export default function Page() {
           <CircularProgress />
         </Stack>
       ) : (
-        <Grid container spacing={2}>
-          <Grid item xs={2}>
-            <Box sx={{ display: "flex", flexDirection: "column" }}>
-              {employees.map((employee) => (
-                <Button
-                  key={employee._id}
-                  onClick={() => {
-                    setSelectedEmployeeId(employee._id);
-                  }}
-                >
-                  <Grid container spacing={1}>
-                    <Grid item xs={4}>
-                      <Avatar src={employee?.profilePic?.image} />
-                    </Grid>
-                    <Grid item>
-                      <Typography
-                        sx={{
-                          fontSize: "1.2rem",
-                          fontWeight: "bold",
-                          textAlign: "center",
-                        }}
-                      >
-                        {employee?.name}
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                </Button>
-              ))}
-            </Box>
-          </Grid>
+        <>
+          {employees.length ? (
+            <Grid container spacing={2}>
+              <Grid item xs={2}>
+                <Box sx={{ display: "flex", flexDirection: "column" }}>
+                  {employees.map((employee) => (
+                    <Button
+                      key={employee._id}
+                      onClick={() => {
+                        setSelectedEmployeeId(employee._id);
+                      }}
+                    >
+                      <Grid container spacing={1}>
+                        <Grid item xs={4}>
+                          <Avatar src={employee?.profilePic?.image} />
+                        </Grid>
+                        <Grid item>
+                          <Typography
+                            sx={{
+                              fontSize: "1.2rem",
+                              fontWeight: "bold",
+                              textAlign: "center",
+                            }}
+                          >
+                            {employee?.name}
+                          </Typography>
+                        </Grid>
+                      </Grid>
+                    </Button>
+                  ))}
+                </Box>
+              </Grid>
 
-          <Grid item xs={10}>
-            <Chat employerId={id} employeeId={selectedEmployeeId} />
-          </Grid>
-        </Grid>
+              <Grid item xs={10}>
+                <Chat employerId={id} employeeId={selectedEmployeeId} />
+              </Grid>
+            </Grid>
+            ) : (
+              <Stack alignItems="center" justifyContent="center">
+              <Typography variant="h5">Inbox is empty.</Typography>
+            </Stack>
+          )}
+        </>
       )}
     </>
   );

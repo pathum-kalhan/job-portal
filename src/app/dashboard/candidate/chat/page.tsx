@@ -44,7 +44,8 @@ export default function Page() {
           <CircularProgress />
         </Stack>
       ) : (
-        <Grid container spacing={2}>
+          <>
+        {employers.length ? (<Grid container spacing={2}>
           <Grid item xs={2}>
             <Box sx={{ display: "flex", flexDirection: "column" }}>
               {employers.map((employer) => (
@@ -78,7 +79,12 @@ export default function Page() {
           <Grid item xs={10}>
             <Chat employeeId={id} employerId={selectedEmployerId} />
           </Grid>
-        </Grid>
+            </Grid>):(
+             <Stack alignItems="center" justifyContent="center">
+             <Typography variant="h5">Inbox is empty.</Typography>
+           </Stack>
+            )}
+            </>
       )}
     </>
   );

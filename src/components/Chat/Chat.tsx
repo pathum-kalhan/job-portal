@@ -66,9 +66,6 @@ export const Chat = ({ employeeId, employerId }: Props) => {
         `/api/chat?employerId=${employerId}&employeeId=${employeeId}`
       );
       const data = await response.json();
-      data.message.map((message) => {
-        console.log(message.employeeId, message.employerId);
-      });
       setMessages(data.message);
     };
 

@@ -84,8 +84,6 @@ function EmployerInterviewScheduleCard(props: props) {
     }
   }, [applicantInfo.interview.jobApplicationId, loadApplications]);
 
-  console.log(applicantInfo, "status");
-
   return (
     <Card sx={{ backgroundColor: "" }}>
       <SnackBarComponent alert={alert} setAlert={setAlert} />
