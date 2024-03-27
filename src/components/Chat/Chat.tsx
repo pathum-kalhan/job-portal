@@ -2,14 +2,21 @@
 import Paper from "@mui/material/Paper";
 import { TextInput } from "./MessageInput";
 import { MessageLeft, MessageRight } from "./Message";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Card, CardContent, Grid } from "@mui/material";
+import { ChatMediator } from "../../app/api/chat/chatClass";
+import { useSession } from "next-auth/react";
 
 const paperStyles = {
+  width: "100vw",
+  height: "85vh",
+  maxWidth: "1000px",
+  maxHeight: "700px",
   display: "flex",
   alignItems: "center",
   flexDirection: "column",
   position: "relative",
+  padding: "10px",
 };
 
 const containerStyles = {
@@ -19,87 +26,126 @@ const containerStyles = {
 };
 
 const messagesBodyStyles = {
+  width: "calc(100% - 20px)",
   margin: 10,
   overflowY: "scroll",
   height: "calc(100% - 80px)",
 };
 
 type Messages = {
-  type: "left" | "right";
+  _id: string;
+  employerId: string;
+  employeeId: string;
+  role: "candidate" | "employer";
   message: string;
   timestamp: string;
   displayName: string;
-  avatarDisp: boolean;
+  photoURL: string;
 }[];
 
-const chatMessages: Messages = [
-  {
-    type: "left",
-    message: "Hi",
-    timestamp: "MM/DD 00:00",
-    displayName: "new",
-    avatarDisp: true,
-  },
-  {
-    type: "right",
-    message: "Hidasdada ad ad ada d adad d ada d a Hidasdada ad ad ada d adad d ada d a Hidasdada ad ad ada d adad d ada d a Hidasdada ad ad ada d adad d ada d a",
-    timestamp: "MM/DD 00:00",
-    displayName: "Sasiru",
-    avatarDisp: true,
-  },
-  
-];
+type Props = {
+  employeeId: string;
+  employerId: string;
+};
 
-export const Chat = () => {
-  const [messages, setMessages] = useState<Messages>(chatMessages);
+const mediator = new ChatMediator();
 
-  const addMessage = (message: Messages[0]) => {
-    setMessages([...messages, message]);
+export const Chat = ({ employeeId, employerId }: Props) => {
+  const { data: session } = useSession();
+  // @ts-ignore
+  const currentUserId = session?.user?.id;
+
+  // @ts-ignore
+  const currentUserRole = session?.user?.role;
+
+  const [messages, setMessages] = useState<Messages>([]);
+
+  useEffect(() => {
+    const getMessages = async () => {
+      const response = await fetch(
+        `/api/chat?employerId=${employerId}&employeeId=${employeeId}`
+      );
+      const data = await response.json();
+      data.message.map((message) => {
+        console.log(message.employeeId, message.employerId);
+      });
+      setMessages(data.message);
+    };
+
+    getMessages();
+  }, [employeeId, employerId]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const getMessages = async () => {
+        const response = await fetch(
+          `/api/chat?employerId=${employerId}&employeeId=${employeeId}`
+        );
+        const data = await response.json();
+        setMessages(data.message);
+      };
+
+      getMessages();
+    }, 10000);
+
+    return () => clearInterval(interval);
+  }, [employeeId, employerId]);
+
+  const handleNewMessage = (message: Messages[0]) => {
+    setMessages((prevMessages) => [...prevMessages, message]);
+  };
+
+  useEffect(() => {
+    mediator.subscribe(handleNewMessage);
+    return () => mediator.unsubscribe(handleNewMessage);
+  }, []);
+
+  const addMessage = (message: Messages[0]): void => {
+    mediator.sendMessage(message);
   };
 
   return (
-    <Card>
-      <CardContent>
-        <Grid container >
-          
-            {messages.map((message, index) => {
-              if (message.type === "left") {
+    <div style={containerStyles}>
+      <Paper sx={paperStyles} elevation={2}>
+        <Paper sx={messagesBodyStyles}>
+          {messages.length > 0 &&
+            messages.map((message, index) => {
+              if (
+                (currentUserRole === "candidate" &&
+                  message.role === "candidate" &&
+                  message.employeeId === currentUserId) ||
+                (currentUserRole === "employer" &&
+                  message.role === "employer" &&
+                  message.employerId === currentUserId)
+              ) {
                 return (
-                  <Grid container item alignItems="center" justifyContent="flex-start"  key={index} mt={4} mb={1}>
-                  <Grid item>
-                    <Paper sx={{ width: "15rem" }} elevation={2}>
-                      <MessageLeft
-                        message={message.message}
-                        timestamp={message.timestamp}
-                        displayName={message.displayName}
-                        avatarDisp={message.avatarDisp}
-                      />
-                    </Paper>
-                  </Grid>
-                  </Grid>
+                  <MessageRight
+                    key={message._id}
+                    message={message.message}
+                    timestamp={message.timestamp}
+                    displayName={message.displayName}
+                  />
                 );
               } else {
                 return (
-                  <Grid container item alignItems="center" justifyContent="flex-end"  key={index} mt={1} mb={4}>
-                  <Grid item>
-                    <Paper sx={{ width: "15rem" }} elevation={2} key={index}>
-                      <MessageRight
-                        key={index}
-                        message={message.message}
-                        timestamp={message.timestamp}
-                        displayName={message.displayName}
-                        avatarDisp={message.avatarDisp}
-                      />
-                    </Paper>
-                  </Grid>
-                  </Grid>
+                  <MessageLeft
+                    key={message._id}
+                    message={message.message}
+                    timestamp={message.timestamp}
+                    displayName={message.displayName}
+                    photoURL={message.photoURL}
+                  />
                 );
               }
             })}
+        </Paper>
 
-            <TextInput addMessage={addMessage} />
-          </Grid>
-      </CardContent>
-    </Card>
+        <TextInput
+          addMessage={addMessage}
+          employeeId={employeeId}
+          employerId={employerId}
+        />
+      </Paper>
+    </div>
   );
 };

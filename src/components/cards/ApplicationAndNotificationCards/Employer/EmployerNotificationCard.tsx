@@ -13,7 +13,6 @@ import Image from "next/image";
 import React from "react";
 import Link from "next/link";
 import MessageIcon from "@mui/icons-material/Message";
-import { Chat } from "../../../Chat/Chat";
 
 function EmployerNotificationCard() {
   const [applicationStatus, setApplicationStatus] = React.useState("");
@@ -29,9 +28,7 @@ function EmployerNotificationCard() {
     setApplicationStatus(event.target.value as string);
   };
 
-  const handleClickCloseChat = () => { 
-
-  }
+  const handleClickCloseChat = () => {};
 
   return (
     <>
@@ -41,9 +38,7 @@ function EmployerNotificationCard() {
         open={openChat}
         onClose={handleClickCloseChat}
       >
-        <DialogContent sx={{width:"100vw"}}>
-        <Chat />
-        </DialogContent>
+        <DialogContent sx={{ width: "100vw" }}></DialogContent>
       </Dialog>
 
       <Card sx={{ backgroundColor: "" }}>

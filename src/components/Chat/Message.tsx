@@ -3,7 +3,7 @@
 import React from "react";
 import { styled } from "@mui/material/styles";
 import Avatar from "@mui/material/Avatar";
-import { deepOrange } from "@mui/material/colors";
+import { deepOrange, blue, green } from "@mui/material/colors";
 
 const MessageRow = styled("div")({
   display: "flex",
@@ -13,7 +13,7 @@ const MessageRowRight = styled(MessageRow)({
   justifyContent: "flex-end",
 });
 
-const MessageBubble = styled("div")(({ theme }) => ({
+const MessageBubbleRight = styled("div")(({ theme }) => ({
   position: "relative",
   marginBottom: "10px",
   padding: "10px",
@@ -21,6 +21,18 @@ const MessageBubble = styled("div")(({ theme }) => ({
   textAlign: "left",
   font: '400 .9em "Open Sans", sans-serif',
   borderRadius: "10px",
+  backgroundColor: blue[300],
+}));
+
+const MessageBubbleLeft = styled("div")(({ theme }) => ({
+  position: "relative",
+  marginBottom: "10px",
+  padding: "10px",
+  width: "60%",
+  textAlign: "left",
+  font: '400 .9em "Open Sans", sans-serif',
+  borderRadius: "10px",
+  backgroundColor: green[300],
 }));
 
 const OrangeAvatar = styled(Avatar)(({ theme }) => ({
@@ -35,12 +47,7 @@ const DisplayName = styled("div")({
 });
 
 export const MessageLeft = (props: any) => {
-  const {
-    message = "no message",
-    timestamp = "",
-    photoURL = "https://www.w3schools.com/howto/img_avatar.png",
-    displayName = "Avatar",
-  } = props;
+  const { message, timestamp, photoURL, displayName } = props;
 
   return (
     <>
@@ -48,10 +55,10 @@ export const MessageLeft = (props: any) => {
         <OrangeAvatar alt={displayName} src={photoURL}></OrangeAvatar>
         <div>
           <DisplayName>{displayName}</DisplayName>
-          <MessageBubble>
+          <MessageBubbleLeft>
             <p>{message}</p>
             <div>{timestamp}</div>
-          </MessageBubble>
+          </MessageBubbleLeft>
         </div>
       </MessageRow>
     </>
@@ -63,10 +70,10 @@ export const MessageRight = (props: any) => {
 
   return (
     <MessageRowRight>
-      <MessageBubble>
+      <MessageBubbleRight>
         <p>{message}</p>
         <div>{timestamp}</div>
-      </MessageBubble>
+      </MessageBubbleRight>
     </MessageRowRight>
   );
 };

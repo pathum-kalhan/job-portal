@@ -63,7 +63,7 @@ const authOptions: NextAuthOptions = {
 
           throw new Error("Invalid credentials");
         } catch (error) {
-          console.log(error)
+          console.log(error);
           throw new Error("Server error");
         }
       },
@@ -85,9 +85,9 @@ const authOptions: NextAuthOptions = {
           id: user.id,
           // @ts-ignore
           role: user.role,
-           // @ts-ignore
-           websiteUrl: user.websiteUrl,
-           // @ts-ignore
+          // @ts-ignore
+          websiteUrl: user.websiteUrl,
+          // @ts-ignore
           profileImage: user.profileImage,
         };
       }
