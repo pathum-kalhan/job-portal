@@ -23,8 +23,8 @@ export default function Page() {
   }, [id]);
 
   return (
-    <Grid>
-      <Grid item>
+    <Grid container spacing={2}>
+      <Grid item xs={1}>
         {employers.map((employer) => (
           <Button
             key={employer._id}
@@ -36,7 +36,7 @@ export default function Page() {
           </Button>
         ))}
       </Grid>
-      <Grid item>
+      <Grid item xs={11}>
         <Chat employeeId={id} employerId={selectedEmployerId} />
       </Grid>
     </Grid>

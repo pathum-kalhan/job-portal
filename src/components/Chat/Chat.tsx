@@ -7,10 +7,15 @@ import { Card, CardContent, Grid } from "@mui/material";
 import { ChatMediator } from "../../app/api/chat/chatClass";
 
 const paperStyles = {
+  width: "100vw",
+  height: "85vh",
+  maxWidth: "1000px",
+  maxHeight: "700px",
   display: "flex",
   alignItems: "center",
   flexDirection: "column",
   position: "relative",
+  padding: "10px",
 };
 
 const containerStyles = {
@@ -20,6 +25,7 @@ const containerStyles = {
 };
 
 const messagesBodyStyles = {
+  width: "calc(100% - 20px)",
   margin: 10,
   overflowY: "scroll",
   height: "calc(100% - 80px)",
@@ -72,69 +78,43 @@ export const Chat = ({ employeeId, employerId }: Props) => {
   };
 
   return (
-    <Card>
-      <CardContent>
-        <Grid container>
+    <div style={containerStyles}>
+      <Paper sx={paperStyles} elevation={2}>
+        <Paper sx={messagesBodyStyles}>
           {messages.length > 0 &&
             messages.map((message, index) => {
               if (
-                message.employeeId != employeeId ||
-                message.employerId != employerId
+                message.employeeId === employeeId ||
+                message.employerId === employerId
               ) {
                 return (
-                  <Grid
-                    container
-                    item
-                    alignItems="center"
-                    justifyContent="flex-start"
+                  <MessageRight
                     key={index}
-                    mt={4}
-                    mb={1}
-                  >
-                    <Grid item>
-                      <Paper sx={{ width: "15rem" }} elevation={2}>
-                        <MessageRight
-                          key={index}
-                          message={message.message}
-                          timestamp={message.timestamp}
-                          displayName={message.displayName}
-                        />
-                      </Paper>
-                    </Grid>
-                  </Grid>
+                    message={message.message}
+                    timestamp={message.timestamp}
+                    displayName={message.displayName}
+                  />
                 );
               } else {
                 return (
-                  <Grid
-                    container
-                    item
-                    alignItems="center"
-                    justifyContent="flex-end"
+                  <MessageLeft
                     key={index}
-                    mt={1}
-                    mb={4}
-                  >
-                    <Grid item>
-                      <Paper sx={{ width: "15rem" }} elevation={2} key={index}>
-                        <MessageLeft
-                          message={message.message}
-                          timestamp={message.timestamp}
-                          displayName={message.displayName}
-                        />
-                      </Paper>
-                    </Grid>
-                  </Grid>
+                    message={message.message}
+                    timestamp={message.timestamp}
+                    displayName={message.displayName}
+                    photoURL={message.photoURL}
+                  />
                 );
               }
             })}
+        </Paper>
 
-          <TextInput
-            addMessage={addMessage}
-            employeeId={employeeId}
-            employerId={employerId}
-          />
-        </Grid>
-      </CardContent>
-    </Card>
+        <TextInput
+          addMessage={addMessage}
+          employeeId={employeeId}
+          employerId={employerId}
+        />
+      </Paper>
+    </div>
   );
 };

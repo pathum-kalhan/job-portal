@@ -11,6 +11,7 @@ const WrapForm = styled("form")({
   justifyContent: "center",
   width: "95%",
   margin: "0 auto",
+  padding: "10px",
 });
 
 const WrapText = styled("div")({
