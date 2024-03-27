@@ -4,5 +4,7 @@ import { Chat } from "../../../../../../components/Chat/Chat";
 
 export default function Page({ params }: { params: { id: string } }) {
   const { data: session } = useSession();
-  return <Chat employeeId={params.id} employerId={session?.user?.id!} />;
+  // @ts-ignore
+  const id = session?.user?.id;
+  return <Chat employeeId={params.id} employerId={id} />;
 }

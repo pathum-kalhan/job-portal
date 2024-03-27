@@ -4,8 +4,12 @@ import Link from "next/link";
 import ForwardToInboxIcon from "@mui/icons-material/ForwardToInbox";
 import TuneIcon from "@mui/icons-material/Tune";
 import HelpCenterOutlinedIcon from "@mui/icons-material/HelpCenterOutlined";
+import { useSession } from "next-auth/react";
 
 function RightSideAttachedMenu() {
+  const { data: session } = useSession();
+  // @ts-ignore
+  const role = session?.user?.role;
   return (
     <Stack
       direction={{
@@ -17,7 +21,7 @@ function RightSideAttachedMenu() {
       gap={0}
     >
       <Link
-        href="/dashboard/employer/chat"
+        href={`/dashboard/${role}/chat`}
         style={{
           textDecoration: "none",
           color: "black",
