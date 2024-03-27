@@ -27,8 +27,6 @@ export const POST = async (req: NextRequest) => {
       photoURL,
     });
 
-    console.log("Message saved to database:", newMessage);
-
     return NextResponse.json(
       {
         message: "Message sent",

@@ -26,7 +26,6 @@ export class ChatMediator implements Mediator {
     if (!send.ok) {
       throw new Error("Failed to send message");
     }
-    console.log("response", send);
 
     this.subscribers.forEach((callback) => {
       callback(message);
