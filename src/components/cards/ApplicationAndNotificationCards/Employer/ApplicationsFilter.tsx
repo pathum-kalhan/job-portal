@@ -26,9 +26,7 @@ type initialValuesProps = {
   jobRole: "";
 };
 
-
 function ApplicationsFilter(props: props) {
-
   const { applicationsList, setApplicationsListFilter, backendCall } = props;
 
   const [industrySelectionArray, setIndustrySelectionArray] = useState<
@@ -56,8 +54,8 @@ function ApplicationsFilter(props: props) {
     async (values: initialValuesProps) => {
       const filteredApplications = applicationsList.filter((item) => {
         if (
-          (values.industry !== "" ? item.industry === values.industry : true) &&
-          (values.jobRole !== "" ? item.jobRole === values.jobRole : true)
+          (values?.industry !== "" ? item?.industry?.toLowerCase() === (`${values?.industry}`).toLowerCase() : true) &&
+          (values?.jobRole !== "" ? item?.jobRole?.toLowerCase() === (`${values?.jobRole}`)?.toLowerCase() : true)
         ) {
           return item;
         }
@@ -71,16 +69,15 @@ function ApplicationsFilter(props: props) {
   useEffect(() => {
     if (!backendCall && applicationsList) {
       const extractIndustries = Array.from(
-        new Set(applicationsList.map((item) => item.industry))
+        new Set(applicationsList.map((item) => item.industry.toLowerCase()))
       );
       const extractJobRoles = Array.from(
-        new Set(applicationsList.map((item) => item.jobRole))
+        new Set(applicationsList.map((item) => item.jobRole.toLowerCase()))
       );
 
       setJobRoleSelectionArray(extractJobRoles);
       setIndustrySelectionArray(extractIndustries);
     }
-
   }, [backendCall, applicationsList]);
 
   return (
@@ -103,7 +100,7 @@ function ApplicationsFilter(props: props) {
               gap={3}
             >
               <Grid item lg={3} md={3} sm={12} xs={12}>
-                <FormControl error={!!errors.industry} fullWidth>
+                <FormControl error={!!errors.industry} fullWidth sx={{ textTransform: "capitalize" }}>
                   <InputLabel id="demo-simple-select-label">
                     Industry Selection
                   </InputLabel>
@@ -114,7 +111,7 @@ function ApplicationsFilter(props: props) {
                     component={CustomizedSelectForFormik}
                   >
                     {industrySelectionArray.map((item: string) => (
-                      <MenuItem key={item} value={item}>
+                      <MenuItem key={item} value={item} sx={{ textTransform: "capitalize" }}>
                         {item}
                       </MenuItem>
                     ))}
@@ -127,7 +124,7 @@ function ApplicationsFilter(props: props) {
               </Grid>
 
               <Grid item lg={3} md={3} sm={12} xs={12}>
-                <FormControl error={!!errors.jobRole} fullWidth>
+                <FormControl error={!!errors.jobRole} fullWidth sx={{ textTransform: "capitalize" }}>
                   <InputLabel id="demo-simple-select-label">
                     Job Role
                   </InputLabel>
@@ -138,7 +135,7 @@ function ApplicationsFilter(props: props) {
                     component={CustomizedSelectForFormik}
                   >
                     {jobRoleSelectionArray.map((item: string) => (
-                      <MenuItem key={item} value={item}>
+                      <MenuItem key={item} value={item} sx={{ textTransform: "capitalize" }}>
                         {item}
                       </MenuItem>
                     ))}

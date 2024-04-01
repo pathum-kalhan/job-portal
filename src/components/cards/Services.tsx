@@ -20,7 +20,7 @@ function Services(props: props) {
   const { serviceSections } = props;
 
   return (
-    <Card sx={{ marginTop: 10, paddingTop:5, paddingBottom:10, paddingLeft:1, paddingRight:1 }}>
+    <Card sx={{ marginTop: 5, paddingTop:5, paddingBottom:10, paddingLeft:1, paddingRight:1 }}>
       <CardHeader
         title="Accelerate Your Career with Career Guide Pro"
         sx={{ textAlign: "center" }}

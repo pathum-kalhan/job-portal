@@ -56,10 +56,10 @@ function JobFilter(props: props) {
     (values: initialValues) => {
       const filterJobArray = jobPostInfo.filter((item) => {
         if (
-          (values.location !== "" ? item.location === values.location : true) &&
-          (values.jobRole !== "" ? item.position === values.jobRole : true) &&
-          (values.industrySelection !== ""
-            ? item.industry === values.industrySelection
+          (values?.location !== "" ? item?.location?.toLowerCase() === values?.location?.toLowerCase() : true) &&
+          (values?.jobRole !== "" ? item?.position?.toLowerCase() === values?.jobRole?.toLowerCase() : true) &&
+          (values?.industrySelection !== ""
+            ? item?.industry?.toLowerCase() === values?.industrySelection?.toLowerCase()
             : true)
         ) {
           return item;
@@ -77,9 +77,15 @@ function JobFilter(props: props) {
 
   useEffect(() => {
     if (!backendCall && jobPostInfo) {
-      const extractIndustries = jobPostInfo.map((item) => item.industry);
-      const extractLocations = jobPostInfo.map((item) => item.location);
-      const extractJobRoles = jobPostInfo.map((item) => item.position);
+      const extractIndustries = Array.from(
+        new Set(jobPostInfo.map((item) => item.industry.toLowerCase()))
+      );
+      const extractLocations = Array.from(
+        new Set(jobPostInfo.map((item) => item.location.toLowerCase()))
+      );
+      const extractJobRoles = Array.from(
+        new Set(jobPostInfo.map((item) => item.position.toLowerCase()))
+      );
 
       setIndustrySelectionArray(extractIndustries);
       setLocationsArray(extractLocations);
@@ -107,7 +113,7 @@ function JobFilter(props: props) {
                 gap={2}
               >
                 <Grid item lg={3} md={3} sm={3} xs={12}>
-                  <FormControl error={!!errors.location} fullWidth>
+                  <FormControl error={!!errors.location} fullWidth sx={{ textTransform: "capitalize" }}>
                     <InputLabel id="demo-simple-select-label">
                       Industry Selection
                     </InputLabel>
@@ -117,7 +123,7 @@ function JobFilter(props: props) {
                       name="industrySelection"
                       component={CustomizedSelectForFormik}
                     >
-                      {industrySelectionArray.map((item) => (
+                      {industrySelectionArray.map((item: string) => (
                         <MenuItem
                           sx={{ textTransform: "capitalize" }}
                           key={item}
@@ -135,7 +141,7 @@ function JobFilter(props: props) {
                 </Grid>
 
                 <Grid item lg={3} md={3} sm={3} xs={12}>
-                  <FormControl error={!!errors.location} fullWidth>
+                  <FormControl error={!!errors.location} fullWidth sx={{ textTransform: "capitalize" }}>
                     <InputLabel id="demo-simple-select-label">
                       Locations
                     </InputLabel>
@@ -145,7 +151,7 @@ function JobFilter(props: props) {
                       name="location"
                       component={CustomizedSelectForFormik}
                     >
-                      {locationsArray.map((item) => (
+                      {locationsArray.map((item: string) => (
                         <MenuItem
                           sx={{ textTransform: "capitalize" }}
                           key={item}
@@ -163,7 +169,7 @@ function JobFilter(props: props) {
                 </Grid>
 
                 <Grid item lg={3} md={3} sm={3} xs={12}>
-                  <FormControl error={!!errors.location} fullWidth>
+                  <FormControl error={!!errors.location} fullWidth sx={{ textTransform: "capitalize" }}>
                     <InputLabel id="demo-simple-select-label">
                       Job Role
                     </InputLabel>
@@ -173,7 +179,7 @@ function JobFilter(props: props) {
                       name="jobRole"
                       component={CustomizedSelectForFormik}
                     >
-                      {jobRoleArray.map((item) => (
+                      {jobRoleArray.map((item: string) => (
                         <MenuItem
                           sx={{ textTransform: "capitalize" }}
                           key={item}
