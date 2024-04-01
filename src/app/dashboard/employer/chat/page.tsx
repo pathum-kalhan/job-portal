@@ -66,7 +66,7 @@ export default function Page() {
                               textAlign: "center",
                             }}
                           >
-                            {employee?.name}
+                            {employee?.name.split(" ")[0]}
                           </Typography>
                         </Grid>
                       </Grid>
@@ -79,8 +79,8 @@ export default function Page() {
                 <Chat employerId={id} employeeId={selectedEmployeeId} />
               </Grid>
             </Grid>
-            ) : (
-              <Stack alignItems="center" justifyContent="center">
+          ) : (
+            <Stack alignItems="center" justifyContent="center">
               <Typography variant="h5">Inbox is empty.</Typography>
             </Stack>
           )}

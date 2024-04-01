@@ -7,7 +7,6 @@ export const GET = async (req: NextRequest) => {
   const { searchParams } = new URL(req.url, process.env.NEXTAUTH_URL as string);
   const employerId = searchParams.get("employerId");
   await DbMongoose();
-  console.log(employerId);
   const messages = await Message.find({
     employerId: employerId,
   });
