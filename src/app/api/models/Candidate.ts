@@ -1,4 +1,5 @@
 import { models, model, Schema } from "mongoose";
+import JobPost from "./JobPost";
 
 const CandidateSchema = new Schema(
   {
@@ -32,7 +33,7 @@ const CandidateSchema = new Schema(
     },
     appliedJobs: [
       {
-        job: { type: Schema.Types.ObjectId, ref: "JobPost" },
+        job: { type: Schema.Types.ObjectId, ref: JobPost },
         appliedDate: Date,
         cvReviewStatus: {
           type: String,
@@ -62,7 +63,7 @@ const CandidateSchema = new Schema(
         },
       ],
     },
-    savedJobs: [{ type: Schema.Types.ObjectId, ref: "JobPost" }],
+    savedJobs: [{ type: Schema.Types.ObjectId, ref: JobPost }],
     experience: String,
     skills: Array,
     education: String,

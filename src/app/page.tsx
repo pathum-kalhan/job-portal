@@ -1,5 +1,5 @@
 "use client";
-import { Box, Grid, Stack, Typography } from "@mui/material";
+import { Grid, Stack, Typography } from "@mui/material";
 import { Services } from "../components/cards/Services";
 import { serviceList } from "../utils/servicesList";
 import { LoginAndRegCard } from "../components/cards/LoginAndRegCard";
@@ -9,18 +9,39 @@ import Image from "next/image";
 export default function Home() {
   const { data: session, status } = useSession();
   return (
-    <Grid container mt={10} alignContent="center" justifyContent="center">
+    <Grid container alignContent="center" justifyContent="center">
       {/* @ts-ignore */}
-      {session?.user?.role !== "employer" && (
-        <Grid container item lg={6} md={9} sm={10} xs={11}>
-          <LoginAndRegCard />
+      {session?.user?.role === "candidate" && (
+        <Grid
+          container
+          item
+          mt={5}
+          lg={6}
+          md={9}
+          sm={10}
+          xs={11}
+          alignSelf="center"
+          alignItems="center"
+          justifyContent="center"
+        >
+          <h1
+            style={{
+              textAlign: "center",
+              fontFamily: "sans-serif",
+              fontWeight: "600",
+            }}
+          >
+            Get matched with a job you love. ❤️
+          </h1>
         </Grid>
       )}
       <Grid
         container
         item
+        alignContent="center"
+        justifyContent="center"
         style={{
-          padding: "5rem 2rem 8rem 2rem",
+          padding: "3rem 2rem 3rem 2rem",
           borderRadius: "1rem",
         }}
       >
@@ -48,31 +69,41 @@ export default function Home() {
           </Typography>
         </Grid>
 
+        {/* @ts-ignore */}
+        {!session?.user && (
+          <Grid container item lg={5.1} md={8} sm={10} xs={11} mt={5}>
+            <LoginAndRegCard />
+          </Grid>
+        )}
+      </Grid>
+
+   
         <Grid
           item
           xs={12}
           alignItems="center"
           justifyContent="center"
-          pt={5}
           pl={{ lg: 15, md: 10, sm: 5, xs: 1 }}
           pr={{ lg: 15, md: 10, sm: 5, xs: 1 }}
         >
-          <Stack alignItems="center" justifyContent="center"
-           pl={{lg:28, md:5, sm:2, xs:0}}
-           pr={{ lg: 28, md: 5, sm: 2, xs: 0 }}
+          <Stack
+            alignItems="center"
+            justifyContent="center"
+            pl={{ lg: 28, md: 5, sm: 2, xs: 0 }}
+            pr={{ lg: 28, md: 5, sm: 2, xs: 0 }}
           >
             <Image
               src={
-                 // @ts-ignore 
+                // @ts-ignore
                 session?.user?.role === "employer"
                   ? "/bg_images/employer_welcome_page.webp"
-                 // @ts-ignore 
-                  : session?.user?.role === "candidate"
+                  : // @ts-ignore
+                  session?.user?.role === "candidate"
                   ? "/bg_images/welcome_to_career_guide_pro_login_candidate.webp"
                   : "/bg_images/welcome_to_career_guide_pro.webp"
               }
-              alt="Welcome to Career Guide Pro" 
-              style={{ objectFit: "contain", width:"100%", height:"100%" }}
+              alt="Welcome to Career Guide Pro"
+              style={{ objectFit: "contain", width: "100%", height: "100%" }}
               width={1000}
               height={400}
             />
@@ -92,7 +123,6 @@ export default function Home() {
             <Services serviceSections={serviceList} />
           </Grid>
         )}
-      </Grid>
     </Grid>
   );
 }
