@@ -18,7 +18,6 @@ function Page() {
     >
       <span
         style={{
-          backgroundColor: "#fff",
           padding: "10rem 6rem 10rem 6rem",
           borderRadius: "1rem",
         }}
@@ -30,6 +29,7 @@ function Page() {
               fontFamily: "sans-serif",
               fontWeight: "600",
               color: "black",
+              textShadow: "2px 2px #ffffff",
             }}
           >
             Select the Preferred User Type

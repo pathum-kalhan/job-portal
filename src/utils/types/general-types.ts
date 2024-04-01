@@ -119,6 +119,9 @@ export type profileData = {
   education: string;
   experience: string;
   skills: string[];
+  quiz: {
+    latestScore:string
+  }
   profilePic: {
     image: string;
     status: {

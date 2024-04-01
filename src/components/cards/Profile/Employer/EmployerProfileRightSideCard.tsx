@@ -40,6 +40,11 @@ function EmployerProfileRightSideCard(props: props) {
           xs: 350,
         },
         pb: 1,
+        backgroundImage: `url("/bg_images/profileBg.jpg")`,
+        backgroundPosition: "center",
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
+        boxShadow: "inset white 0px 0px 500px 110px",
       }}
     >
       <CardContent
