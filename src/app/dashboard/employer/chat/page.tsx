@@ -53,6 +53,11 @@ export default function Page() {
                       onClick={() => {
                         setSelectedEmployeeId(employee._id);
                       }}
+                      variant={
+                        selectedEmployeeId === employee._id
+                          ? "contained"
+                          : "outlined"
+                      }
                     >
                       <Grid container spacing={1}>
                         <Grid item xs={4}>
