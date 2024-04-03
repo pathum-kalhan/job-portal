@@ -69,7 +69,7 @@ export default function Page() {
                         </Grid>
                         <Grid item>
                           <Tooltip
-                            title={employer?.name.length > 14 && employer?.name}
+                            title={employer?.name.length > 7 && employer?.name}
                             placement="bottom-start"
                           >
                             <Typography
