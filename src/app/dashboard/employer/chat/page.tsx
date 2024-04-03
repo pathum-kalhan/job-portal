@@ -10,7 +10,9 @@ import {
   Typography,
   CircularProgress,
   Stack,
+  Tooltip,
 } from "@mui/material";
+import { splitString } from "../../../../utils/splitString";
 export default function Page() {
   const { data: session } = useSession();
 
@@ -64,15 +66,20 @@ export default function Page() {
                           <Avatar src={employee?.profilePic?.image} />
                         </Grid>
                         <Grid item>
-                          <Typography
-                            sx={{
-                              fontSize: "1.2rem",
-                              fontWeight: "bold",
-                              textAlign: "center",
-                            }}
+                          <Tooltip
+                            title={employee?.name.length > 14 && employee?.name}
+                            placement="bottom-start"
                           >
-                            {employee?.name.split(" ")[0]}
-                          </Typography>
+                            <Typography
+                              sx={{
+                                fontSize: "1.2rem",
+                                fontWeight: "bold",
+                                textAlign: "center",
+                              }}
+                            >
+                              {splitString(employee?.name, 7)}
+                            </Typography>
+                          </Tooltip>
                         </Grid>
                       </Grid>
                     </Button>
