@@ -10,7 +10,7 @@ function LoginAndRegCard() {
         <Card
           style={{
             backgroundColor: "#fff",
-            padding: "8rem 2rem 8rem 2rem",
+            padding: "6rem 2rem 6rem 2rem",
             borderRadius: "1rem",
             width: "100%",
           }}

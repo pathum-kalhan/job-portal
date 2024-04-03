@@ -71,7 +71,7 @@ export default function Home() {
 
         {/* @ts-ignore */}
         {!session?.user && (
-          <Grid container item lg={5.1} md={8} sm={10} xs={11} mt={5}>
+          <Grid container item lg={6} md={9} sm={10} xs={11} mt={5}>
             <LoginAndRegCard />
           </Grid>
         )}

@@ -17,7 +17,7 @@ export default function Layout({
         <Grid item xs={11} >
 
           <Card sx={{ backgroundColor: "#79D7FF", height: "2rem", paddingLeft:3, paddingTop:1 }}>
-            <Typography fontWeight="bold">Applicants View</Typography>
+            <Typography fontWeight="bold">Application View</Typography>
           </Card>
         
         </Grid>
