@@ -7,7 +7,6 @@ import {
   Grid,
   Card,
   CardHeader,
-  Typography,
   Stack,
   CircularProgress,
   InputAdornment,
@@ -23,9 +22,8 @@ import { LoadingButton } from "@mui/lab";
 import Link from "next/link";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import SnackBarComponent from "../../../components/common/SnackBarComponent";
+import SnackBarComponent from "../../common/SnackBarComponent";
 import { AlertType } from "../../../utils/types/general-types";
-import { Constant } from "../../../utils/Constents";
 
 type initialValues = {
   email: string;
@@ -33,14 +31,8 @@ type initialValues = {
   rememberMe: boolean;
 };
 
-type props = {
-  handleLoginMethod: (val: string) => void;
-};
- 
-
-const CandidateLoginForm = (props: props) => {
+const AdminLoginForm = () => {
   const { data: session } = useSession();
-  const { handleLoginMethod } = props;
   const router = useRouter();
   const [backendCall, setBackendCall] = useState(false);
 
@@ -83,22 +75,21 @@ const CandidateLoginForm = (props: props) => {
         redirect: false,
         email: values.email,
         password: values.password,
-        role: "candidate",
+        role: "admin",
       });
 
       if (response?.status !== 200) {
         setBackendCall(false);
         setAlert({
           show: true,
-          message: `Please check your email and password are correct. If so, this user may be blocked feel free to reach tech support via Email
-          ${Constant?.companyEmail}`,
+          message: "Please check your email and password are correct!",
           severity: "error",
         });
       } else {
         setBackendCall(false);
         setAlert({
           show: true,
-          message: "Candidate Loged-in successfully!",
+          message: "Admin Loged-in successfully!",
           severity: "success",
         });
       }
@@ -139,7 +130,7 @@ const CandidateLoginForm = (props: props) => {
       <CardHeader
         title={
           !session?.user?.email && !backendCall
-            ? "Login to career guide pro"
+            ? "Admin Login"
             : "Please wait. Login in to the dashboard..."
         }
         align="center"
@@ -172,8 +163,7 @@ const CandidateLoginForm = (props: props) => {
                     md={9}
                     sm={11}
                     xs={12}
-                  > 
-
+                  >
                     <Grid item lg={12} md={12} sm={12} xs={12}>
                       <Field
                         disabled={backendCall}
@@ -253,7 +243,7 @@ const CandidateLoginForm = (props: props) => {
                         sm={"auto"}
                         xs={"auto"}
                       >
-                        <Link href="/candidate/forgot-password">
+                        <Link href="/admin/forgot-password">
                           <Button
                             disabled={backendCall}
                             sx={{ textTransform: "capitalize" }}
@@ -277,19 +267,6 @@ const CandidateLoginForm = (props: props) => {
                         >
                           Login
                         </LoadingButton>
-
-                        <Button
-                          disabled={backendCall}
-                          color="primary"
-                          variant="text"
-                          type="submit"
-                          sx={{
-                            textTransform: "none",
-                          }}
-                          onClick={() => handleLoginMethod("employer")}
-                        >
-                          Login as a Employer
-                        </Button>
                       </Stack>
                     </Grid>
                   </Grid>
@@ -307,4 +284,4 @@ const CandidateLoginForm = (props: props) => {
   );
 };
 
-export { CandidateLoginForm };
+export { AdminLoginForm };

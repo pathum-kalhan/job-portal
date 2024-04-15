@@ -4,10 +4,10 @@ import { NextResponse } from "next/server";
 import CandidateModel from "../models/Candidate";
 import EmployerModel from "../models/Employer";
 import bcrypt from "bcryptjs";
+import AdminModel from "../models/Admin";
 
 export async function POST(request: Request) {
   try {
-
     const sessionData = await getServerSession();
     if (!sessionData) {
       return NextResponse.json(
@@ -19,20 +19,25 @@ export async function POST(request: Request) {
         }
       );
     }
-    
-    await DbMongoose(); 
+
+    await DbMongoose();
     const { oldPassword, newPassword, userType } = await request.json();
-  
 
     // check old password is correct
     const user =
       userType === "candidate"
         ? await CandidateModel.findOne({ email: sessionData?.user?.email })
-        : await EmployerModel.findOne({
+        : userType === "candidate"
+        ? await EmployerModel.findOne({
             email: sessionData?.user?.email,
-          });
+          })
+        : userType === "admin"
+        ? await AdminModel.findOne({
+            email: sessionData?.user?.email,
+          })
+        : null;
 
-    if (!user) { 
+    if (!user) {
       return NextResponse.json(
         {
           message: "Unauthorized",
@@ -40,9 +45,9 @@ export async function POST(request: Request) {
         {
           status: 401,
         }
-      )
+      );
     }
-    
+
     const isOldPasswordCorrect = await bcrypt.compare(
       oldPassword,
       user?.password
@@ -63,17 +68,28 @@ export async function POST(request: Request) {
     const newEncryptedPassword = await bcrypt.hash(newPassword, salt);
 
     if (userType === "candidate") {
-  await CandidateModel.findOneAndUpdate(
+      await CandidateModel.findOneAndUpdate(
         { email: sessionData?.user?.email },
         { password: newEncryptedPassword },
         { new: true }
       );
-    } else {
+    } else if (userType === "employer") {
       await EmployerModel.findOneAndUpdate(
         { email: sessionData?.user?.email },
         { password: newEncryptedPassword },
         { new: true }
       );
+    } else if (userType === "admin") {
+      await AdminModel.findOneAndUpdate(
+        { email: sessionData?.user?.email },
+        { password: newEncryptedPassword },
+        { new: true }
+      );
+    } else {
+      return NextResponse.json({
+        message: "Invalid user type",
+        status: 400,
+      });
     }
 
     return NextResponse.json(
@@ -85,7 +101,6 @@ export async function POST(request: Request) {
       }
     );
   } catch (error) {
-
     return NextResponse.json(
       {
         message: error,

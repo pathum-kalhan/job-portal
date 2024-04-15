@@ -15,13 +15,14 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { UploadCvDialogBox } from "../../../components/dialogBoxes/CV/UploadCvDialogBox";
 import { UploadCvDoneDialogBox } from "../../../components/dialogBoxes/CV/UploadCvDoneDialogBox";
 import { EditProfileDialogBox } from "../../../components/dialogBoxes/Profile/EditProfileDialogBox";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { EmployerProfileInfoCard } from "../../../components/cards/Profile/Employer/EmployerProfileInfoCard";
 import { EmployerProfileRightSideCard } from "../../../components/cards/Profile/Employer/EmployerProfileRightSideCard";
 import { useRouter } from "next/navigation";
 import SnackBarComponent from "../../../components/common/SnackBarComponent";
 import { AlertType } from "../../../utils/types/general-types";
- 
+import { AdminProfileInfoCard } from "../../../components/cards/Profile/Admin/AdminProfileInfoCard";
+import { AdminProfileRightSideCard } from "../../../components/cards/Profile/Admin/AdminProfileRightSideCard";
 
 function Page() {
   const router = useRouter();
@@ -87,6 +88,18 @@ function Page() {
 
       if (response?.status !== 200) {
         setBackendCall(false);
+
+        const { message } = await response.json();
+
+        if (response?.status === 403 && message === "User is Blocked") {
+          setAlert({
+            show: true,
+            message: `${message}`,
+            severity: "error",
+          });
+          router.push("/login");
+          await signOut({ redirect: false, callbackUrl: "/" });
+        }
       } else {
         const data = await response.json();
         setProfileData(data.data);
@@ -103,7 +116,8 @@ function Page() {
         severity: "error",
       });
     }
-  }, [session, update]);
+    // @ts-ignore
+  }, [router, session?.user?.email, session?.user?.role, update]);
 
   useEffect(() => {
     if (status === "authenticated" && !profileData) {
@@ -148,7 +162,8 @@ function Page() {
           xs: "center",
         }}
       >
-        {marginSm && (
+        {/* @ts-ignore */}
+        {marginSm && !session?.user?.role === "admin" && (
           <Grid
             container
             item
@@ -193,6 +208,14 @@ function Page() {
                 ) : // @ts-ignore
                 session?.user?.role === "employer" ? (
                   <EmployerProfileInfoCard
+                    handleClickOpenEditProfile={handleClickOpenEditProfile}
+                    profileData={profileData}
+                    backendCall={backendCall}
+                    getProfileData={getProfileData}
+                  />
+                ) : // @ts-ignore
+                session?.user?.role === "admin" ? (
+                  <AdminProfileInfoCard
                     handleClickOpenEditProfile={handleClickOpenEditProfile}
                     profileData={profileData}
                     backendCall={backendCall}
@@ -268,13 +291,16 @@ function Page() {
             ) : // @ts-ignore
             session && session?.user?.role === "employer" ? (
               <EmployerProfileRightSideCard />
+            ) : // @ts-ignore
+            session && session?.user?.role === "admin" ? (
+              <AdminProfileRightSideCard />
             ) : (
               <></>
             )}
           </Grid>
         </Grid>
-
-        {!marginSm && (
+        {/* @ts-ignore */}
+        {!marginSm && !session?.user?.role === "admin" && (
           <Grid
             container
             item

@@ -5,8 +5,9 @@ import { Constant } from "../../../utils/Constents";
 import { randomString } from "../../../lib/auth";
 import mail from "@sendgrid/mail";
 import EmployerModel from "../models/Employer";
+import AdminModel from "../models/Admin";
 
-const apiKey: string = `${process.env.SENDGRID_API_KEY}`
+const apiKey: string = `${process.env.SENDGRID_API_KEY}`;
 
 export async function POST(request: Request) {
   try {
@@ -17,7 +18,11 @@ export async function POST(request: Request) {
     const user =
       userType === "candidate"
         ? await CandidateModel.findOne({ email: normalizedEmail })
-        : await EmployerModel.findOne({ email: normalizedEmail });
+        : userType === "employer"
+        ? await EmployerModel.findOne({ email: normalizedEmail })
+        : userType === "admin"
+        ? await AdminModel.findOne({ email: normalizedEmail })
+        : null;
 
     if (!user && !user?.name) {
       return NextResponse.json(
@@ -37,11 +42,21 @@ export async function POST(request: Request) {
         { email: normalizedEmail },
         { resetToken }
       );
-    } else {
+    } else if (userType === "employer") {
       await EmployerModel.findOneAndUpdate(
         { email: normalizedEmail },
         { resetToken }
       );
+    } else if (userType === "admin") {
+      await AdminModel.findOneAndUpdate(
+        { email: normalizedEmail },
+        { resetToken }
+      );
+    } else {
+      return NextResponse.json({
+        message: "Invalid User Type",
+        status: 400,
+      });
     }
 
     const encodeEmail = encodeURIComponent(email);
@@ -49,7 +64,7 @@ export async function POST(request: Request) {
     //  Send the verification email
     const resetLink = `${process.env.NEXTAUTH_URL}/${userType}/new-password?token=${resetToken}&email=${encodeEmail}`;
     const templateData = { resetLink, name: user.name };
-    
+
     mail.setApiKey(apiKey);
 
     await mail.send({

@@ -4,6 +4,7 @@ import * as Yup from "yup";
 import CandidateModel from "../../models/Candidate";
 import EmployerModel from "../../models/Employer";
 import bcrypt from "bcryptjs";
+import AdminModel from "../../models/Admin";
 
 export async function POST(request: Request) {
   try {
@@ -34,44 +35,42 @@ export async function POST(request: Request) {
     const salt = await bcrypt.genSalt(10);
     const encryptedPassword = await bcrypt.hash(newPassword, salt);
 
-    if (userType === "candidate") {
-      const getCandidate = await CandidateModel.findOneAndUpdate(
-        { resetToken: token },
-        { password: encryptedPassword, resetToken: null },
+    const user =
+      userType === "candidate"
+        ? await CandidateModel.findOneAndUpdate(
+            { resetToken: token },
+            { password: encryptedPassword, resetToken: null },
+            {
+              new: true,
+            }
+          )
+        : userType === "employer"
+        ? await EmployerModel.findOneAndUpdate(
+            { resetToken: token },
+            { password: encryptedPassword, resetToken: null },
+            {
+              new: true,
+            }
+          )
+        : userType === "admin"
+        ? await AdminModel.findOneAndUpdate(
+            { resetToken: token },
+            { password: encryptedPassword, resetToken: null },
+            {
+              new: true,
+            }
+          )
+        : null;
+
+    if (!user) {
+      return NextResponse.json(
         {
-          new: true,
+          message: "Invalid Token",
+        },
+        {
+          status: 401,
         }
       );
-
-      if (!getCandidate) {
-        return NextResponse.json(
-          {
-            message: "Invalid Token",
-          },
-          {
-            status: 401,
-          }
-        );
-      }
-    } else {
-      const getEmployer = await EmployerModel.findOneAndUpdate(
-        { resetToken: token },
-        { password: encryptedPassword, resetToken: null },
-        {
-          new: true,
-        }
-      );
-
-      if (!getEmployer) {
-        return NextResponse.json(
-          {
-            message: "Invalid Token",
-          },
-          {
-            status: 401,
-          }
-        );
-      }
     }
 
     return NextResponse.json(

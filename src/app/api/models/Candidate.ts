@@ -23,6 +23,11 @@ const CandidateSchema = new Schema(
         default: false,
       },
     },
+    profileStatus: {
+      type: String,
+      enum: ["active", "blocked"],
+      default: "active",
+    },
     userType: {
       type: String,
       default: "candidate",

@@ -111,6 +111,16 @@ export type companyInfo = {
   reenterPassword?: string;
 };
 
+export type adminInfo = {
+  _id?: string;
+  email?: string;
+  adminName?: string;
+  acceptTerms?: boolean;
+  verificationCode?: string;
+  password?: string;
+  reenterPassword?: string;
+};
+
 export type profileData = {
   name: string;
   email: string;
