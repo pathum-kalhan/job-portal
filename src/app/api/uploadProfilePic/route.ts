@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import CandidateModel from "../models/Candidate";
 import { storage } from "../.../../../../utils/firebase";
 import EmployerModel from "../models/Employer";
+import AdminModel from "../models/Admin";
 
 export async function POST(request: Request) {
   try {
@@ -32,6 +33,8 @@ export async function POST(request: Request) {
       ? await CandidateModel.findOne({ email: sessionData?.user?.email })
       : userRole === "employer"
       ? await EmployerModel.findOne({ email: sessionData?.user?.email })
+      : userRole === "admin"
+      ? await AdminModel.findOne({ email: sessionData?.user?.email })
       : null;
 
     if (!user) {
@@ -80,6 +83,17 @@ export async function POST(request: Request) {
         );
       } else if (userRole === "employer") {
         await EmployerModel.findOneAndUpdate(
+          { email: sessionData?.user?.email },
+          {
+            profilePic: {
+              image: imageUrl,
+              status: true,
+            },
+          },
+          { new: true }
+        );
+      } else if (userRole === "admin") {
+        await AdminModel.findOneAndUpdate(
           { email: sessionData?.user?.email },
           {
             profilePic: {

@@ -5,6 +5,7 @@ import DbMongoose from "../../../../lib/db_mongoose";
 import { verifyPassword } from "../../../../lib/auth";
 import { NextAuthOptions } from "next-auth";
 import EmployerModel from "../../models/Employer";
+import AdminModel from "../../models/Admin";
 
 type credentials = {
   email: string;
@@ -39,10 +40,18 @@ const authOptions: NextAuthOptions = {
                 ? await EmployerModel.findOne({
                     email: email?.toLowerCase()?.trim(),
                   })
+                : role === "admin"
+                ? await AdminModel.findOne({
+                    email: email?.toLowerCase()?.trim(),
+                  })
                 : null;
 
             if (!user) {
               throw new Error("No user found");
+            }
+
+            if (user.profileStatus==="blocked") {
+              throw new Error("User is blocked");
             }
 
             const isValid = await verifyPassword(password, user.password);
@@ -63,7 +72,6 @@ const authOptions: NextAuthOptions = {
 
           throw new Error("Invalid credentials");
         } catch (error) {
-          console.log(error);
           throw new Error("Server error");
         }
       },

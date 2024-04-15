@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import CandidateModel from "../models/Candidate";
 import EmployerModel from "../models/Employer";
+import AdminModel from "../models/Admin";
 
 export async function POST(request: Request) {
   try {
@@ -36,9 +37,13 @@ export async function POST(request: Request) {
     const user =
       userType === "candidate"
         ? await CandidateModel.findOne({ email: sessionData?.user?.email })
-        : await EmployerModel.findOne({
+        : userType === "employer"
+        ? await EmployerModel.findOne({
             email: sessionData?.user?.email,
-          });
+          })
+        : userType === "admin"
+        ? await AdminModel.findOne({ email: sessionData?.user?.email })
+        : null;
 
     if (!user) {
       return NextResponse.json(
@@ -63,7 +68,7 @@ export async function POST(request: Request) {
           skills,
         }
       );
-    } else {
+    } else if (userType === "employer") {
       await EmployerModel.findOneAndUpdate(
         { email: sessionData?.user?.email },
         {
@@ -71,7 +76,23 @@ export async function POST(request: Request) {
           contactNo,
           companyDetails,
           location,
-          websiteUrl
+          websiteUrl,
+        }
+      );
+    } else if (userType === "admin") {
+      await AdminModel.findOneAndUpdate(
+        { email: sessionData?.user?.email },
+        {
+          name,
+        }
+      );
+    } else {
+      return NextResponse.json(
+        {
+          message: "Unauthorized",
+        },
+        {
+          status: 401,
         }
       );
     }
@@ -85,7 +106,6 @@ export async function POST(request: Request) {
       }
     );
   } catch (error) {
-    
     return NextResponse.json(
       {
         message: error,

@@ -1,9 +1,8 @@
-import DbMongoose from "../../../lib/db_mongoose";
-import Candidates from "../models/Candidate";
+import DbMongoose from "../../../../lib/db_mongoose";
 import { NextResponse } from "next/server";
-import Employer from "../models/Employer";
 import { getServerSession } from "next-auth";
-import Admin from "../models/Admin";
+import CandidateModel from "../../models/Candidate";
+import EmployerModel from "../../models/Employer";
 
 export async function POST(request: Request) {
   try {
@@ -22,16 +21,26 @@ export async function POST(request: Request) {
     await DbMongoose();
     const data = await request.json();
 
-    const normalizedEmail = data?.email?.toLowerCase().trim();
 
     const user =
       data?.userRole === "candidate"
-        ? await Candidates.findOne({ email: normalizedEmail })
+        ? await CandidateModel.findOneAndUpdate(
+            { _id: data?.userId },
+            { profileStatus: data?.profileStatus },
+            {
+              new: true,
+            }
+          )
         : data?.userRole === "employer"
-        ? await Employer.findOne({ email: normalizedEmail })
-        : data?.userRole === "admin"
-        ? await Admin.findOne({ email: normalizedEmail })
-        : null;
+        ? await EmployerModel.findOneAndUpdate(
+            { _id: data?.userId },
+            { profileStatus: data?.profileStatus },
+            {
+              new: true,
+            }
+          )
+          : null;
+    
 
     if (!user) {
       return NextResponse.json(
@@ -44,21 +53,9 @@ export async function POST(request: Request) {
       );
     }
 
-    if (user.profileStatus==="blocked") {
-      return NextResponse.json(
-        {
-          message: "User is Blocked",
-        },
-        {
-          status: 403,
-        }
-      );
-    }
-
     return NextResponse.json(
       {
-        message: "Success",
-        data: user,
+        message: `Successfully change user status to ${data?.profileStatus}`,
       },
       {
         status: 200,

@@ -29,7 +29,6 @@ type initialValues = {
   newPassword: string;
   confirmPassword: string;
 };
- 
 
 const ChangePassword: React.FC<ChangePasswordProps> = ({ open, onClose }) => {
   const { data: session } = useSession();
@@ -44,7 +43,8 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ open, onClose }) => {
 
   const [oldPasswordVisibility, setOldPasswordVisibility] = useState(false);
   const [newPasswordVisibility, setNewPasswordVisibility] = useState(false);
-  const [newConfirmPasswordVisibility, setNewConfirmPasswordVisibility] = useState(false);
+  const [newConfirmPasswordVisibility, setNewConfirmPasswordVisibility] =
+    useState(false);
 
   const [alert, setAlert] = useState<AlertType>({
     show: false,
@@ -111,7 +111,19 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ open, onClose }) => {
         });
         formikHelpers.resetForm();
         signOut({ redirect: false, callbackUrl: "/" });
-        router.push("/login");
+
+        const redirectRoute =
+          // @ts-ignore
+          session?.user?.role === "candidate" ||
+          // @ts-ignore
+          session?.user?.role === "employer"
+            ? "/login"
+          // @ts-ignore
+            : session?.user?.role === "admin"
+            ? "/login/admin"
+            : "/";
+
+        router.push(redirectRoute);
         handleClose();
       }
     } catch (error) {
@@ -199,7 +211,9 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ open, onClose }) => {
                       position="end"
                       style={{ outline: "none", cursor: "pointer" }}
                       onClick={() =>
-                        setNewConfirmPasswordVisibility(!newConfirmPasswordVisibility)
+                        setNewConfirmPasswordVisibility(
+                          !newConfirmPasswordVisibility
+                        )
                       }
                     >
                       {newConfirmPasswordVisibility ? (
@@ -217,7 +231,11 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ open, onClose }) => {
               <ErrorMessage name="confirmPassword" component="div" />
             </DialogContent>
 
-            <SnackBarComponent autoHideDuration={null} alert={alert} setAlert={setAlert} />
+            <SnackBarComponent
+              autoHideDuration={null}
+              alert={alert}
+              setAlert={setAlert}
+            />
 
             <DialogActions>
               <Button onClick={handleClose} color="primary">

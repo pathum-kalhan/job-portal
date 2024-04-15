@@ -18,6 +18,11 @@ const EmployerSchema = new Schema(
     contactNo: String,
     location: String,
     resetToken: String,
+    profileStatus: {
+      type: String,
+      enum: ["active", "blocked"],
+      default: "active",
+    },
     promoAndNewsLetterOptIn: {
       type: Boolean,
       default: false,
