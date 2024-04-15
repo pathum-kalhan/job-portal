@@ -87,7 +87,7 @@ const EmployerLoginForm = (props: props) => {
         setBackendCall(false);
         setAlert({
           show: true,
-          message: "Please check your email and password are correct!",
+          message:  `Please check your email and password are correct. If so, this user may be blocked feel free to reach tech support via Email`,
           severity: "error",
         });
       } else {
