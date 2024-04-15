@@ -290,7 +290,7 @@ function CandidateProfileRightSideCard(props: props) {
                     fontWeight: "bold",
                   }}
                 >
-                 {profileData?.quiz?.latestScore ?? "N/A"}
+                 {profileData?.quiz?.latestScore==="Not done yet" ? "-" : profileData?.quiz?.latestScore}
                 </Avatar>
               </Grid>
 
