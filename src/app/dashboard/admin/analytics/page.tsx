@@ -1,7 +1,5 @@
 "use client";
-import {
-  Grid,
-} from "@mui/material";
+import { Grid } from "@mui/material";
 import { useSession } from "next-auth/react";
 import { useCallback, useEffect, useState } from "react";
 import FilterComponent from "../../../../components/analytics/FilterComponent";
@@ -83,12 +81,36 @@ function Page() {
   useEffect(() => {
     if (startDate === "" && endDate === "" && !resetBackendCall) {
       loadData();
-    } 
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadData]);
 
   return (
     <Grid container gap={3}>
+      <Grid
+        container
+        item
+        lg={12}
+        md={12}
+        sm={12}
+        xs={12}
+        gap={3}
+        mb={10}
+        alignItems="center"
+        justifyContent="center"
+      >
+        <Grid item xs={"auto"}>
+          <SimpleValueCard
+            title={"Active Employer Accounts"}
+            count={analyticsData?.activeTotalEmployerCount}
+            backendCall={backendCall}
+            curveEdge
+            bgColor={"black"}
+            textColor={"white"}
+          />
+        </Grid>
+      </Grid>
+
       <FilterComponent
         loadData={loadData}
         resetData={resetData}
@@ -117,6 +139,7 @@ function Page() {
             backendCall={backendCall}
             endDate={endDate}
             startDate={startDate}
+            curveEdge
           />
         </Grid>
 
@@ -127,14 +150,7 @@ function Page() {
             backendCall={backendCall}
             endDate={endDate}
             startDate={startDate}
-          />
-        </Grid>
-
-        <Grid item xs={"auto"}>
-          <SimpleValueCard
-            title={"Active Employer Accounts"}
-            count={analyticsData?.activeTotalEmployerCount}
-            backendCall={backendCall}
+            curveEdge
           />
         </Grid>
       </Grid>

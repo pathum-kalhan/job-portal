@@ -1,5 +1,5 @@
 import { LoadingButton } from "@mui/lab";
-import { Grid } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 
 type props = {
   loadData: () => void;
@@ -34,6 +34,9 @@ function FilterComponent(props: props) {
       alignItems="center"
       justifyContent="center"
     >
+      <Grid item xs={12}>
+      <Typography textAlign={"center"} fontSize={40} textTransform={"uppercase"}>Date Range</Typography>
+      </Grid>
       <Grid item xs={"auto"}>
         <input
           value={startDate}
