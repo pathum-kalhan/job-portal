@@ -9,6 +9,7 @@ export default withAuth(
       const { pathname } = req.nextUrl;
       const employerMatch = pathname.match(/^\/dashboard\/employer\/?(.*)/);
       const candidateMatch = pathname.match(/^\/dashboard\/candidate\/?(.*)/); 
+      const adminMatch = pathname.match(/^\/dashboard\/admin\/?(.*)/); 
 
       if (Boolean(token)) {
 
@@ -16,6 +17,8 @@ export default withAuth(
           return token?.role === "employer";
         } else if (candidateMatch) {
           return token?.role === "candidate";
+        } else if (adminMatch) {
+          return token?.role === "admin";
         }
       } 
 
