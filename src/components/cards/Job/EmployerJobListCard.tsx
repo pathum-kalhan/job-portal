@@ -306,7 +306,7 @@ function EmployerJobListCard(props: props) {
         </Grid>
       </Grid>
 
-      {(companyInfo?.jobExpirationDate && !dateExpired) && viewMoreJobInfo && (
+      {viewMoreJobInfo && (
         <Grid container pb={3}>
           <Grid
             container
@@ -328,7 +328,7 @@ function EmployerJobListCard(props: props) {
               </Button>
             </Grid>
 
-            <Grid item>
+           {(companyInfo?.jobExpirationDate && !dateExpired) && <Grid item>
               <LoadingButton
                 loading={backendCall}
                 onClick={deleteJob}
@@ -340,7 +340,7 @@ function EmployerJobListCard(props: props) {
               >
                 Delete Job
               </LoadingButton>
-            </Grid>
+            </Grid>}
           </Grid>
         </Grid>
       )}
