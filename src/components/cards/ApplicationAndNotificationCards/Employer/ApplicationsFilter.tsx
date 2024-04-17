@@ -52,7 +52,7 @@ function ApplicationsFilter(props: props) {
 
   const filterApplications = useCallback(
     async (values: initialValuesProps) => {
-      const filteredApplications = applicationsList.filter((item) => {
+      const filteredApplications = applicationsList?.filter((item) => {
         if (
           (values?.industry !== "" ? item?.industry?.toLowerCase() === (`${values?.industry}`).toLowerCase() : true) &&
           (values?.jobRole !== "" ? item?.jobRole?.toLowerCase() === (`${values?.jobRole}`)?.toLowerCase() : true)
@@ -69,10 +69,10 @@ function ApplicationsFilter(props: props) {
   useEffect(() => {
     if (!backendCall && applicationsList) {
       const extractIndustries = Array.from(
-        new Set(applicationsList.map((item) => item.industry.toLowerCase()))
+        new Set(applicationsList?.map((item) => item?.industry?.toLowerCase()))
       );
       const extractJobRoles = Array.from(
-        new Set(applicationsList.map((item) => item.jobRole.toLowerCase()))
+        new Set(applicationsList?.map((item) => item?.jobRole?.toLowerCase()))
       );
 
       setJobRoleSelectionArray(extractJobRoles);
