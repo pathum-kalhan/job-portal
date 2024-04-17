@@ -63,6 +63,8 @@ export async function POST(request: Request) {
           requiredQualifications: item.requiredQualifications,
           workingHoursPerDay: item.workingHoursPerDay,
           alreadyApplied: true,
+          jobExpirationDate: item.jobExpirationDate,
+          jobType: item.jobType,
         };
       }
       return {
@@ -78,6 +80,8 @@ export async function POST(request: Request) {
         requiredQualifications: item.requiredQualifications,
         workingHoursPerDay: item.workingHoursPerDay,
         alreadyApplied: false,
+        jobExpirationDate: item.jobExpirationDate,
+        jobType: item.jobType,
       };
     });
 

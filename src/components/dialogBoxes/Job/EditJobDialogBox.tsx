@@ -12,6 +12,8 @@ import {
   Chip,
   IconButton,
   CardContent,
+  FormHelperText,
+  InputLabel,
 } from "@mui/material";
 import { Formik, Form, Field } from "formik";
 import { TextField } from "formik-mui";
@@ -33,6 +35,8 @@ type initialValues = {
   requiredQualifications: string[];
   workingHoursPerDay: number;
   jobRole: string;
+  jobType?: string;
+  jobExpirationDate?:string;
 };
 
 type props = {
@@ -56,8 +60,10 @@ function EditJobDialogBox(props: props) {
     loadCreatedJobs,
   } = props;
 
+  const remapInitialValues = {...initialValues, jobExpirationDate: initialValues?.jobExpirationDate?.split("T")[0] ?? ""}
   const industryArray = ["Industry1", "Industry2"];
   const skillsArray = ["Option 1", "Option 2", "Option 3", "Option 4"];
+  const jobTypeArray = ["hybrid", "remote", "dynamic", "flexible"];
 
   const [backendCall, setBackendCall] = useState(false);
   const [alert, setAlert] = useState<AlertType>({
@@ -87,6 +93,8 @@ function EditJobDialogBox(props: props) {
       .required(
         "Industry is required (Hit Enter key on the keyboard if you already typed)"
       ),
+    jobExpirationDate: yup.string().required("Job expiration date is required"),
+    jobType: yup.string().required("Job type is required"),
     position: yup.string().required("Position is required"),
     jobDescription: yup.string().required("Job Description is required"),
     requiredQualifications: yup
@@ -113,6 +121,8 @@ function EditJobDialogBox(props: props) {
         requiredQualifications: values?.requiredQualifications,
         workingHoursPerDay: values?.workingHoursPerDay,
         jobId: initialValues?._id,
+        jobType: values.jobType,
+        jobExpirationDate: "2024-04-30",
       };
 
       try {
@@ -181,7 +191,11 @@ function EditJobDialogBox(props: props) {
         }}
         elevation={3}
       >
-        <SnackBarComponent autoHideDuration={2000} alert={alert} setAlert={setAlert} />
+        <SnackBarComponent
+          autoHideDuration={2000}
+          alert={alert}
+          setAlert={setAlert}
+        />
 
         <CardHeader
           action={
@@ -190,12 +204,12 @@ function EditJobDialogBox(props: props) {
             </IconButton>
           }
           sx={{ textAlign: "center" }}
-          title="Post a job"
+          title="Edit job"
           align="center"
         />
         <CardContent sx={{ maxHeight: "20rem", overflowY: "auto" }}>
           <Formik
-            initialValues={initialValues}
+            initialValues={remapInitialValues}
             onSubmit={handleSubmit}
             validationSchema={jobValidationSchemaWithEmailField}
             enableReinitialize
@@ -286,6 +300,52 @@ function EditJobDialogBox(props: props) {
                               name="industry"
                               error={!!errors.industry}
                               helperText={errors.industry}
+                            />
+                          )}
+                        />
+                      </Grid>
+                      <Grid item lg={12} md={12} sm={12} xs={12}>
+                        <InputLabel id="jobExpirationDateLabel">
+                          Job Expiration Date
+                        </InputLabel>
+                        <Field
+                          disabled={backendCall}
+                          id="jobExpirationDate"
+                          name="jobExpirationDate"
+                          type="date"
+                        />
+                        <FormHelperText style={{ color: "red" }}>
+                          {errors.jobExpirationDate}
+                        </FormHelperText>
+                      </Grid>
+                      <Grid item lg={12} md={12} sm={12} xs={12}>
+                        <Autocomplete
+                          disabled={backendCall}
+                          options={jobTypeArray}
+                          value={values.jobType}
+                          onChange={(event, value) => {
+                            setFieldValue("jobType", value);
+                          }}
+                          renderTags={(value, getTagProps) =>
+                            value.map((option, index) => (
+                              <Chip
+                                label={option}
+                                {...getTagProps({ index })}
+                                key={option}
+                              />
+                            ))
+                          }
+                          renderInput={(params) => (
+                            <Field
+                              {...params}
+                              variant="outlined"
+                              value={values.jobType}
+                              label="Job Type"
+                              placeholder="Job Type"
+                              component={MUITextField}
+                              name="jobType"
+                              error={!!errors.jobType}
+                              helperText={errors.jobType}
                             />
                           )}
                         />

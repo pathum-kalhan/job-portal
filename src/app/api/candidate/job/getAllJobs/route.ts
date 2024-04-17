@@ -4,6 +4,7 @@ import { getServerSession } from "next-auth";
 import JobPosteModel from "../../../models/JobPost";
 import CandidateModel from "../../../models/Candidate";
 import mongoose from "mongoose";
+import moment from "moment";
 
 export async function POST(request: Request) {
   try {
@@ -43,13 +44,20 @@ export async function POST(request: Request) {
         appliedDate: Date;
         cvReviewStatus: String;
       }) => {
-        return new mongoose.Types.ObjectId(item.job.id)
+        return new mongoose.Types.ObjectId(item.job.id);
       }
     );
 
+    const currentDate = moment().toDate();
+
     const jobsData = await JobPosteModel.aggregate([
       {
-        $match: { _id: { $nin: getAllAppliedJobs }},
+        $match: {
+          $and: [
+            { _id: { $nin: getAllAppliedJobs } },
+            { jobExpirationDate: { $gt: currentDate } } 
+          ]
+        },
       },
       {
         $sort: { createdAt: -1 },
@@ -57,7 +65,7 @@ export async function POST(request: Request) {
       {
         $project: {
           companyName: 1,
-          employer:1,
+          employer: 1,
           companyDetails: 1,
           companyWebsite: 1,
           location: 1,
@@ -65,6 +73,8 @@ export async function POST(request: Request) {
           position: 1,
           jobDescription: 1,
           requiredQualifications: 1,
+          jobExpirationDate: 1,
+          jobType: 1,
           workingHoursPerDay: 1,
           jobRole: 1,
           websiteUrl: 1,
@@ -76,7 +86,7 @@ export async function POST(request: Request) {
             },
           },
         },
-      }
+      },
     ]);
 
     return NextResponse.json(

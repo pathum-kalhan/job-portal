@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import EmployerModel from "../../../models/Employer";
 import JobPostModel from "../../../models/JobPost";
 import ApplicationModel from "../../../models/Application";
+import { IsDateExpiredMoment } from "../../../../../utils/IsDateExpired";
 
 export async function POST() {
   try {
@@ -83,7 +84,11 @@ export async function POST() {
               interviewType: "",
               meetingUrl: "",
               notes: "",
-            };
+          };
+      
+          const isJobExpired = item?.job?.jobExpirationDate
+          ? IsDateExpiredMoment(item?.job?.jobExpirationDate)
+          : true;
 
       return {
         _id: item?._id,
@@ -100,6 +105,8 @@ export async function POST() {
         candidateSkills,
         resultOfTheQuiz: item?.candidate?.quiz.latestScore ?? "Not done yet",
         interview,
+        isJobExpired,
+        expiredDate: item?.job?.jobExpirationDate ?? "",
       };
     });
 

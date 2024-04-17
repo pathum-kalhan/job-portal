@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import EmployerModel from "../../../models/Employer";
 import { getServerSession } from "next-auth";
 import JobPosteModel from "../../../models/JobPost";
+import { Constant } from "../../../../../utils/Constents";
 
 export async function POST(request: Request) {
   try {
@@ -53,8 +54,16 @@ export async function POST(request: Request) {
       jobDescription,
       requiredQualifications,
       workingHoursPerDay,
+      jobExpirationDate,
+      jobType
     } = isValid;
-      
+
+    const today = new Date();
+    const jobExpirationDateAdd14Days =
+      jobExpirationDate && jobExpirationDate !== ""
+        ? new Date(new Date(new Date(jobExpirationDate)).setUTCHours(0, 0, 0, 0))
+        : new Date(new Date(today.setDate(today.getDate() + Constant?.jobExpiredIn)).setUTCHours(0, 0, 0, 0));
+
     await JobPosteModel.create({
       companyName: user.name,
       companyDetails,
@@ -63,9 +72,11 @@ export async function POST(request: Request) {
       industry,
       position,
       jobDescription,
+      jobExpirationDate:jobExpirationDateAdd14Days,
       requiredQualifications,
       workingHoursPerDay,
-      employer:user._id
+      employer: user._id,
+      jobType
     });
 
     return NextResponse.json(

@@ -4,6 +4,7 @@ import { getServerSession } from "next-auth";
 import JobPosteModel from "../../../models/JobPost";
 import CandidateModel from "../../../models/Candidate";
 import mongoose from "mongoose";
+import moment from "moment";
 
 export async function POST(request: Request) {
   try {
@@ -48,13 +49,15 @@ export async function POST(request: Request) {
         return new mongoose.Types.ObjectId(item.job);
       }
     );
-
+    
+    const currentDate = moment().toDate();
 
     const jobsData = await JobPosteModel.aggregate([
       {
         $match: { $and: [
           { requiredQualifications: { $in: user.skills } },
           { _id: { $nin: getAllAppliedJobs } },
+          { jobExpirationDate: { $gt: currentDate } }
         ]},
       },
       {
@@ -68,6 +71,8 @@ export async function POST(request: Request) {
           position: 1,
           jobDescription: 1,
           requiredQualifications: 1,
+          jobExpirationDate: 1,
+          jobType: 1,
           workingHoursPerDay: 1,
           jobRole: 1,
           websiteUrl: 1,

@@ -23,7 +23,7 @@ export async function POST(request: Request) {
 
     const normalizedEmail = data?.email?.toLowerCase().trim();
 
-    const user = await Employer.findOne({ email: normalizedEmail })
+    const user = await Employer.findOne({ email: normalizedEmail });
 
     if (!user) {
       return NextResponse.json(
@@ -36,7 +36,11 @@ export async function POST(request: Request) {
       );
     }
 
-    const createdJobs = await JobPosteModel.find({employer: user._id}).select("companyName companyDetails companyWebsite location industry position jobDescription requiredQualifications workingHoursPerDay jobRole websiteUrl")
+    const createdJobs = await JobPosteModel.find({
+      employer: user._id,
+    }).select(
+      "jobType jobExpirationDate companyName companyDetails companyWebsite location industry position jobDescription requiredQualifications workingHoursPerDay jobRole websiteUrl"
+    ).sort({ createdAt: -1 })
 
     return NextResponse.json(
       {

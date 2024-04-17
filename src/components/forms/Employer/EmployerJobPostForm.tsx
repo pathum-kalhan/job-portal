@@ -15,15 +15,16 @@ import {
   Chip,
   CircularProgress,
   Stack,
+  InputLabel,
 } from "@mui/material";
 import { Formik, Form, Field, FormikHelpers } from "formik";
 import { TextField } from "formik-mui";
 import { useSession } from "next-auth/react";
 import { useCallback, useEffect, useState } from "react";
 import * as yup from "yup";
- 
 const EmployerJobPostForm = () => {
   const industryArray = ["IT", "Health", "Education"];
+  const jobTypeArray = ["hybrid", "remote", "dynamic", "flexible"];
   const [skillsArray, setSkillsArray] = useState([]);
   const { data: session, status } = useSession();
 
@@ -55,6 +56,8 @@ const EmployerJobPostForm = () => {
       .required(
         "Industry is required (Hit Enter key on the keyboard if you already typed)"
       ),
+    jobExpirationDate: yup.string().required("Job expiration date is required"),
+    jobType: yup.string().required("Job type is required"),
     position: yup.string().required("Position is required"),
     jobDescription: yup.string().required("Job Description is required"),
     requiredQualifications: yup
@@ -76,18 +79,17 @@ const EmployerJobPostForm = () => {
     websiteUrl: session?.user?.webUrl ?? "",
     location: "",
     industry: "",
+    jobType: "",
     position: "",
     jobDescription: "",
     requiredQualifications: [],
     workingHoursPerDay: 8,
     acceptTerms: false,
+    jobExpirationDate: "",
   };
 
   const handleSubmit = useCallback(
-    async (
-      values: companyInfo,
-      formikHelpers: FormikHelpers<companyInfo>
-    ) => {
+    async (values: companyInfo, formikHelpers: FormikHelpers<companyInfo>) => {
       setBackendCall(true);
       const payLoad = {
         companyDetails: values.companyDetails,
@@ -98,6 +100,8 @@ const EmployerJobPostForm = () => {
         jobDescription: values.jobDescription,
         requiredQualifications: values.requiredQualifications,
         workingHoursPerDay: values.workingHoursPerDay,
+        jobExpirationDate: values.jobExpirationDate,
+        jobType: values.jobType,
       };
 
       try {
@@ -156,9 +160,7 @@ const EmployerJobPostForm = () => {
       });
       const data = await response.json();
       setSkillsArray(data.data);
-    } catch (error) {
- 
-    }
+    } catch (error) {}
     // @ts-ignore
   }, [session?.user?.role]);
 
@@ -285,6 +287,39 @@ const EmployerJobPostForm = () => {
                     </Grid>
 
                     <Grid item lg={12} md={12} sm={12} xs={12}>
+                      <Autocomplete
+                        disabled={backendCall}
+                        options={jobTypeArray}
+                        value={values.jobType}
+                        onChange={(event, value) => {
+                          setFieldValue("jobType", value);
+                        }}
+                        renderTags={(value, getTagProps) =>
+                          value.map((option, index) => (
+                            <Chip
+                              label={option}
+                              {...getTagProps({ index })}
+                              key={option}
+                            />
+                          ))
+                        }
+                        renderInput={(params) => (
+                          <Field
+                            {...params}
+                            variant="outlined"
+                            value={values.jobType}
+                            label="Job Type"
+                            placeholder="Job Type"
+                            component={MUITextField}
+                            name="jobType"
+                            error={!!errors.jobType}
+                            helperText={errors.jobType}
+                          />
+                        )}
+                      />
+                    </Grid>
+
+                    <Grid item lg={12} md={12} sm={12} xs={12}>
                       <Field
                         disabled={backendCall}
                         fullWidth
@@ -294,7 +329,20 @@ const EmployerJobPostForm = () => {
                         component={TextField}
                       />
                     </Grid>
-
+                    <Grid item lg={12} md={12} sm={12} xs={12}>
+                      <InputLabel id="jobExpirationDateLabel">
+                        Job Expiration Date
+                      </InputLabel>
+                      <Field
+                        disabled={backendCall}
+                        id="jobExpirationDate"
+                        name="jobExpirationDate"
+                        type="date"
+                      />
+                      <FormHelperText style={{ color: "red" }}>
+                        {errors.jobExpirationDate}
+                      </FormHelperText>
+                    </Grid>
                     <Grid item lg={12} md={12} sm={12} xs={12}>
                       <Field
                         disabled={backendCall}
