@@ -20,7 +20,7 @@ export async function POST(request: Request) {
     await DbMongoose();
     const data = await request.json();
     const normalizedEmail = data?.email?.toLowerCase().trim();
-    const user = await CandidateModel.findOne({ email: normalizedEmail }).populate("appliedJobs.job");
+    const user = await CandidateModel.findOne({ email: normalizedEmail }).populate("appliedJobs.job")
 
     if (!user) {
       return NextResponse.json(
@@ -48,6 +48,8 @@ export async function POST(request: Request) {
         employer: item?.job?.employer,
         cvReviewStatus: item?.cvReviewStatus,
         appliedDate: item?.appliedDate,
+        jobExpirationDate: item?.job?.jobExpirationDate,
+        jobType: item?.job?.jobType,
       }
     })
 

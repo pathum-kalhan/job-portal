@@ -58,12 +58,14 @@ export type applicationType = {
   applicationStatus: string;
   industry: string;
   candidateCVUrl?: string;
+  isJobExpired?; boolean;
+
   interview?:{
     jobApplicationId: string;
     jobId: string;
     candidateId: string;
     applicationStatus: string;
-  
+  expiredDate: string;
     status: string;
     scheduleDate: string;
     interviewType: string;
@@ -89,6 +91,8 @@ export type jobPostInfo = {
   cvReviewStatus?: string;
   appliedDate?: string;
   alreadyApplied?: boolean;
+  jobType?: string;
+  jobExpirationDate?: string;
 };
 
 export type companyInfo = {
@@ -109,6 +113,8 @@ export type companyInfo = {
   verificationCode?: string;
   password?: string;
   reenterPassword?: string;
+  jobType?: string;
+  jobExpirationDate?:string;
 };
 
 export type adminInfo = {

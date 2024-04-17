@@ -4,6 +4,9 @@ import { NextResponse } from "next/server";
 import EmployerModel from "../../../models/Employer";
 import JobPostModel from "../../../models/JobPost";
 import ApplicationModel from "../../../models/Application";
+import {
+  IsDateExpiredMoment,
+} from "../../../../../utils/IsDateExpired";
 
 export async function POST() {
   try {
@@ -38,23 +41,28 @@ export async function POST() {
 
     const applications = await ApplicationModel.find({
       company: user._id,
-    }).populate({path:"job", model:JobPostModel}).populate("candidate").sort({createdAt:-1})
+    })
+      .populate({ path: "job", model: JobPostModel })
+      .populate("candidate")
+      .sort({ createdAt: -1 });
 
     const reMapApplications = applications.map((item) => {
-
       const jobSkills = item?.job?.requiredQualifications?.map(
         (itemSkill: string, i: number) =>
           i === item?.candidate?.skills?.length - 1
             ? `${itemSkill}`
             : `${itemSkill}, `
       );
-      
       const candidateSkills = item?.candidate?.skills?.map(
         (itemSkill: string, i: number) =>
           i === item?.candidate?.skills?.length - 1
             ? `${itemSkill}`
             : `${itemSkill}, `
       );
+
+      const isJobExpired = item?.job?.jobExpirationDate
+        ? IsDateExpiredMoment(item?.job?.jobExpirationDate)
+        : true;
 
       return {
         _id: item?._id,
@@ -69,7 +77,9 @@ export async function POST() {
         industry: item?.job?.industry,
         jobSkills,
         candidateSkills,
-        resultOfTheQuiz:item?.candidate?.quiz.latestScore ?? "Not done yet",
+        resultOfTheQuiz: item?.candidate?.quiz.latestScore ?? "Not done yet",
+        isJobExpired,
+        expiredDate: item?.job?.jobExpirationDate ?? "",
       };
     });
 

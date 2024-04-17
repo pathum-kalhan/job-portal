@@ -1,7 +1,9 @@
 "use client";
 import {
+  Avatar,
   Button,
   Card,
+  CardHeader,
   CircularProgress,
   FormControl,
   Grid,
@@ -17,7 +19,11 @@ import React, { useCallback, useState } from "react";
 import DownloadIcon from "@mui/icons-material/Download";
 import Link from "next/link";
 import SnackBarComponent from "../../../../components/common/SnackBarComponent";
-import { AlertType, applicationType } from "../../../../utils/types/general-types";
+import {
+  AlertType,
+  applicationType,
+} from "../../../../utils/types/general-types";
+import { red } from "@mui/material/colors";
 
 type props = {
   applicantInfo: applicationType;
@@ -97,6 +103,17 @@ function CandidatesApplicationCard(props: props) {
   return (
     <Card sx={{ backgroundColor: "" }}>
       <SnackBarComponent alert={alert} setAlert={setAlert} />
+
+      {applicantInfo?.isJobExpired && (
+        <CardHeader
+          avatar={
+            <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
+              Exp
+            </Avatar>
+          }
+          title="Job expired."
+        />
+      )}
       <Grid
         container
         alignItems="center"
@@ -211,7 +228,11 @@ function CandidatesApplicationCard(props: props) {
               </Grid>
             </Grid>
             <Grid item>
-              <Link href={applicantInfo.candidateCVUrl ?? ""} target="_blank" style={{cursor:"pointer"}}>
+              <Link
+                href={applicantInfo.candidateCVUrl ?? ""}
+                target="_blank"
+                style={{ cursor: "pointer" }}
+              >
                 <Button
                   disabled={!applicantInfo.candidateCVUrl}
                   size="large"

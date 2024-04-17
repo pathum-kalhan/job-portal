@@ -1,6 +1,14 @@
 "use client";
 import React, { useCallback, useState } from "react";
-import { Button, Card, Grid, Stack, Typography } from "@mui/material";
+import {
+  Avatar,
+  Button,
+  Card,
+  CardHeader,
+  Grid,
+  Stack,
+  Typography,
+} from "@mui/material";
 import Image from "next/image";
 import MessageIcon from "@mui/icons-material/Message";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
@@ -11,6 +19,7 @@ import {
 import { ScheduleInterviewDialogBox } from "../../../dialogBoxes/ScheduleInterviewDialogBox";
 import { LoadingButton } from "@mui/lab";
 import SnackBarComponent from "../../../common/SnackBarComponent";
+import { red } from "@mui/material/colors";
 
 type props = {
   applicantInfo: applicationType;
@@ -87,6 +96,17 @@ function EmployerInterviewScheduleCard(props: props) {
   return (
     <Card sx={{ backgroundColor: "" }}>
       <SnackBarComponent alert={alert} setAlert={setAlert} />
+      {applicantInfo?.isJobExpired && (
+        <CardHeader
+          avatar={
+            <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
+              Exp
+            </Avatar>
+          }
+          title="Job expired."
+        />
+      )}
+
       <ScheduleInterviewDialogBox
         initialData={applicantInfo.interview}
         getSchedule={loadApplications}

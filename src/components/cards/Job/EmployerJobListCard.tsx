@@ -1,7 +1,9 @@
 "use client";
 import {
+  Avatar,
   Button,
   Card,
+  CardHeader,
   Grid,
   IconButton,
   Stack,
@@ -19,6 +21,8 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { LoadingButton } from "@mui/lab";
 import SnackBarComponent from "../../../components/common/SnackBarComponent";
 import { EditJobDialogBox } from "../../../components/dialogBoxes/Job/EditJobDialogBox";
+import { IsDateExpired } from "../../../utils/IsDateExpired";
+import { red } from "@mui/material/colors";
 
 type props = {
   saveJobOption?: boolean;
@@ -35,6 +39,8 @@ type props = {
     requiredQualifications: string[];
     workingHoursPerDay: number;
     jobRole: string;
+    jobType: string;
+    jobExpirationDate: string;
   };
 };
 
@@ -48,6 +54,14 @@ function EmployerJobListCard(props: props) {
   const { saveJobOption = false, companyInfo, loadCreatedJobs } = props;
 
   const [openEditProfile, setOpenEditProfile] = useState(false);
+
+  const dateExpired = IsDateExpired(
+    `${
+      companyInfo.jobExpirationDate
+        ? companyInfo?.jobExpirationDate?.split("T")[0]
+        : ""
+    }`
+  );
 
   const [bookMarkIcon, setBookMark] = useState(false);
   const [viewMoreJobInfo, setViewMoreJobInfo] = useState(false);
@@ -112,6 +126,17 @@ function EmployerJobListCard(props: props) {
 
   return (
     <Card sx={{ backgroundColor: "" }}>
+      {(dateExpired || !companyInfo?.jobExpirationDate) && (
+        <CardHeader
+          avatar={
+            <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
+              Exp
+            </Avatar>
+          }
+          title="Job expired."
+        />
+      )}
+
       <EditJobDialogBox
         initialValues={companyInfo}
         loadCreatedJobs={loadCreatedJobs}
@@ -190,6 +215,16 @@ function EmployerJobListCard(props: props) {
                     <Typography sx={{ textAlign: "left" }}>
                       <b>Industry :</b>{" "}
                       {!companyInfo ? "" : companyInfo.industry}
+                    </Typography>
+                    <Typography sx={{ textAlign: "left" }}>
+                      <b>Job Type :</b>{" "}
+                      {!companyInfo ? "" : companyInfo.jobType}
+                    </Typography>
+                    <Typography sx={{ textAlign: "left" }}>
+                      <b>Job Expiration Date :</b>{" "}
+                      {!companyInfo?.jobExpirationDate
+                        ? ""
+                        : companyInfo?.jobExpirationDate?.split("T")[0]}
                     </Typography>
                     <Typography sx={{ textAlign: "left" }}>
                       <b>Job description :</b>{" "}
@@ -271,8 +306,8 @@ function EmployerJobListCard(props: props) {
         </Grid>
       </Grid>
 
-      {viewMoreJobInfo && (
-        <Grid container pb={3} xs={12}>
+      {(companyInfo?.jobExpirationDate && !dateExpired) && viewMoreJobInfo && (
+        <Grid container pb={3}>
           <Grid
             container
             item

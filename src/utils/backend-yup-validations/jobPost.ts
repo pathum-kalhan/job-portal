@@ -13,6 +13,12 @@ const validationSchema = {
   industry: Yup.string().required(
     "Industry is required"
   ),
+  jobType: Yup.string().required(
+    "Job type is required"
+  ),
+  jobExpirationDate: Yup.string().required(
+    "Job Expiration Date is required"
+  ),
   position: Yup.string().required("Position is required"),
   jobDescription: Yup.string().required("Job Description is required"),
   requiredQualifications: Yup.array().min(

@@ -18,6 +18,8 @@ type companyInfo = {
   requiredQualifications: string[];
   workingHoursPerDay: number;
   jobRole: string;
+  jobType: string;
+  jobExpirationDate:string;
 };
 
 function Page() {

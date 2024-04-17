@@ -1,7 +1,9 @@
 "use client";
 import {
+  Avatar,
   Button,
   Card,
+  CardHeader,
   CircularProgress,
   Grid,
   IconButton,
@@ -22,6 +24,8 @@ import { LoadingButton } from "@mui/lab";
 import { AlertType, jobPostInfo } from "../../../utils/types/general-types";
 import { useRouter } from "next/navigation";
 import { ApplyJobCvSubmitDoneDialogBox } from "../../dialogBoxes/CV/ApplyJobCvSubmitDoneDialogBox";
+import { IsDateExpired } from "../../../utils/IsDateExpired";
+import { red } from "@mui/material/colors";
 
 type props = {
   saveJobOption?: boolean;
@@ -29,13 +33,11 @@ type props = {
   allAreSavedJobs?: boolean;
   alreadyApplied?: boolean;
   showJobApplicationStatus?: boolean;
-  jobPostInfo:jobPostInfo
+  jobPostInfo: jobPostInfo;
 };
- 
 
 function JobListCard(props: props) {
   const router = useRouter();
-  
   const {
     saveJobOption = false,
     allAreSavedJobs = false,
@@ -52,6 +54,14 @@ function JobListCard(props: props) {
   const [backendCall, setBackendCall] = useState(false);
   const [backendCallJobApply, setBackendCallJobApply] = useState(false);
   const [participateTheQuiz, setParticipateTheQuiz] = useState(false);
+
+  const dateExpired = IsDateExpired(
+    `${
+      jobPostInfo.jobExpirationDate
+        ? jobPostInfo?.jobExpirationDate?.split("T")[0]
+        : ""
+    }`
+  );
 
   const [applicationStatus, setApplicationStatus] = useState("");
   const [alert, setAlert] = useState<AlertType>({
@@ -141,12 +151,11 @@ function JobListCard(props: props) {
           severity: "error",
         });
 
-        if(cvMissing){
-        setTimeout(() => {
-          router.push("/dashboard/profile");
-        }, 3000);
+        if (cvMissing) {
+          setTimeout(() => {
+            router.push("/dashboard/profile");
+          }, 3000);
         }
-        
       } else {
         setBackendCallJobApply(false);
         const { message } = await response.json();
@@ -157,10 +166,10 @@ function JobListCard(props: props) {
               ? message
               : `You applied for the job successfully!`,
           severity: "success",
-        }); 
+        });
 
         setParticipateTheQuiz(true);
-        jobPostInfo.alreadyApplied=true
+        jobPostInfo.alreadyApplied = true;
       }
     } catch (error) {
       setBackendCallJobApply(false);
@@ -175,7 +184,21 @@ function JobListCard(props: props) {
   return (
     <Card sx={{ backgroundColor: "" }}>
       <SnackBarComponent alert={alert} setAlert={setAlert} />
-      <ApplyJobCvSubmitDoneDialogBox setParticipateTheQuiz={setParticipateTheQuiz} openUploadCv={participateTheQuiz}/>
+
+      {(dateExpired || !jobPostInfo?.jobExpirationDate) && (
+        <CardHeader
+          avatar={
+            <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
+              Exp
+            </Avatar>
+          }
+          title="Job expired."
+        />
+      )}
+      <ApplyJobCvSubmitDoneDialogBox
+        setParticipateTheQuiz={setParticipateTheQuiz}
+        openUploadCv={participateTheQuiz}
+      />
       <Grid
         container
         alignItems="center"
@@ -215,11 +238,10 @@ function JobListCard(props: props) {
           >
             <Grid item md={12}>
               <Stack direction="column">
-              <Typography sx={{ textAlign: "left" }}>
-                      <b>Position :</b>{" "}
-                      {!jobPostInfo ? "" : jobPostInfo?.position}
+                <Typography sx={{ textAlign: "left" }}>
+                  <b>Position :</b> {!jobPostInfo ? "" : jobPostInfo?.position}
                 </Typography>
-                
+
                 <Typography sx={{ textAlign: "left" }}>
                   <b>Company Name :</b>{" "}
                   {!jobPostInfo ? "" : jobPostInfo?.companyName}
@@ -242,20 +264,37 @@ function JobListCard(props: props) {
                 <Typography sx={{ textAlign: "left" }}>
                   <b>Location :</b> {!jobPostInfo ? "" : jobPostInfo?.location}
                 </Typography>
-               
 
                 {viewMoreJobInfo && (
                   <>
                     <Typography sx={{ textAlign: "left" }}>
-                  <b>Industry :</b> {!jobPostInfo ? "" : jobPostInfo?.industry}
-                </Typography>
+                      <b>Industry :</b>{" "}
+                      {!jobPostInfo ? "" : jobPostInfo?.industry}
+                    </Typography>
+                    <Typography sx={{ textAlign: "left" }}>
+                      <b>Job Type :</b>{" "}
+                      {!jobPostInfo ? "" : jobPostInfo.jobType}
+                    </Typography>
+                    <Typography sx={{ textAlign: "left" }}>
+                      <b>Job Expiration Date :</b>{" "}
+                      {!jobPostInfo?.jobExpirationDate
+                        ? ""
+                        : jobPostInfo?.jobExpirationDate?.split("T")[0]}
+                    </Typography>
                     <Typography sx={{ textAlign: "left" }}>
                       <b>Job description :</b>{" "}
                       {!jobPostInfo ? "" : jobPostInfo?.jobDescription}
                     </Typography>
                     <Typography sx={{ textAlign: "left" }}>
                       <b>Required Qualifications :</b>{" "}
-                      {!jobPostInfo ? "" : jobPostInfo?.requiredQualifications?.map((item, i)=> i=== jobPostInfo?.requiredQualifications?.length - 1 ? item : `${item}, `)}
+                      {!jobPostInfo
+                        ? ""
+                        : jobPostInfo?.requiredQualifications?.map((item, i) =>
+                            i ===
+                            jobPostInfo?.requiredQualifications?.length - 1
+                              ? item
+                              : `${item}, `
+                          )}
                     </Typography>
                     <Typography sx={{ textAlign: "left" }}>
                       <b>Working Hours Per Day :</b>{" "}
@@ -297,49 +336,56 @@ function JobListCard(props: props) {
               </Button>
             </Grid>
 
-            {showJobApplicationStatus && <Grid item xs={"auto"}>
-              <Typography>
-                <b>Status:</b>
-                {jobPostInfo?.cvReviewStatus === "received"
-                  ? " Application sent"
-                  : jobPostInfo?.cvReviewStatus === "shortListed"
-                  ? " Application short listed"
-                  : jobPostInfo?.cvReviewStatus === "rejected"
-                  ? " Application rejected"
-                  : " Not applied"}
-              </Typography>
-            </Grid>}
-
-            {saveJobOption && (
-              <Grid
-                item
-                xs={"auto"}
-                alignItems="flex-end"
-                justifyContent="flex-end"
-                textAlign="end"
-              >
-                <Tooltip
-                  title={
-                    bookMarkIcon ? "Remove the job from save" : "Save the job"
-                  }
-                >
-                  <IconButton disabled={backendCallJobApply} onClick={saveJob}>
-                    {backendCall ? (
-                      <CircularProgress size={20} sx={{ color: "black" }} />
-                    ) : bookMarkIcon ? (
-                      <BookmarkIcon sx={{ color: "black" }} />
-                    ) : (
-                      <BookmarkBorderIcon sx={{ color: "black" }} />
-                    )}
-                  </IconButton>
-                </Tooltip>
+            {showJobApplicationStatus && (
+              <Grid item xs={"auto"}>
+                <Typography>
+                  <b>Status:</b>
+                  {jobPostInfo?.cvReviewStatus === "received"
+                    ? " Application sent"
+                    : jobPostInfo?.cvReviewStatus === "shortListed"
+                    ? " Application short listed"
+                    : jobPostInfo?.cvReviewStatus === "rejected"
+                    ? " Application rejected"
+                    : " Not applied"}
+                </Typography>
               </Grid>
             )}
+
+            {jobPostInfo?.jobExpirationDate &&
+              !dateExpired &&
+              saveJobOption && (
+                <Grid
+                  item
+                  xs={"auto"}
+                  alignItems="flex-end"
+                  justifyContent="flex-end"
+                  textAlign="end"
+                >
+                  <Tooltip
+                    title={
+                      bookMarkIcon ? "Remove the job from save" : "Save the job"
+                    }
+                  >
+                    <IconButton
+                      disabled={backendCallJobApply}
+                      onClick={saveJob}
+                    >
+                      {backendCall ? (
+                        <CircularProgress size={20} sx={{ color: "black" }} />
+                      ) : bookMarkIcon ? (
+                        <BookmarkIcon sx={{ color: "black" }} />
+                      ) : (
+                        <BookmarkBorderIcon sx={{ color: "black" }} />
+                      )}
+                    </IconButton>
+                  </Tooltip>
+                </Grid>
+              )}
           </Grid>
         </Grid>
       </Grid>
 
-      {viewMoreJobInfo && (
+      {jobPostInfo?.jobExpirationDate && !dateExpired && viewMoreJobInfo && (
         <Grid container pb={3} xs={12}>
           <Grid
             container
