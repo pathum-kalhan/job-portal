@@ -122,7 +122,7 @@ function EditJobDialogBox(props: props) {
         workingHoursPerDay: values?.workingHoursPerDay,
         jobId: initialValues?._id,
         jobType: values.jobType,
-        jobExpirationDate: "2024-04-30",
+        jobExpirationDate: values.jobExpirationDate,
       };
 
       try {
