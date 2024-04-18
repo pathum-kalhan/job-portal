@@ -17,6 +17,7 @@ function Page() {
     employersRegistrationCount: 0,
     candidatesRegistrationCount: 0,
     activeTotalEmployerCount: 0,
+    activeJobs: 0,
   });
 
   const loadData = useCallback(async () => {
@@ -103,6 +104,16 @@ function Page() {
           <SimpleValueCard
             title={"Active Employer Accounts"}
             count={analyticsData?.activeTotalEmployerCount}
+            backendCall={backendCall}
+            curveEdge
+            bgColor={"black"}
+            textColor={"white"}
+          />
+        </Grid>
+        <Grid item xs={"auto"}>
+          <SimpleValueCard
+            title={"Actively Runing Jobs"}
+            count={analyticsData?.activeJobs}
             backendCall={backendCall}
             curveEdge
             bgColor={"black"}

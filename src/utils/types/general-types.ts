@@ -134,6 +134,7 @@ export type profileData = {
   dateOfBirth: string;
   education: string;
   experience: string;
+  industry?: string[];
   skills: string[];
   quiz: {
     latestScore:string

@@ -4,6 +4,7 @@ import { getServerSession } from "next-auth";
 import AdminModel from "../../models/Admin";
 import CandidateModel from "../../models/Candidate";
 import EmployerModel from "../../models/Employer";
+import JobPostModel from "../../models/JobPost";
 
 export async function POST(request: Request) {
   try {
@@ -51,17 +52,28 @@ export async function POST(request: Request) {
       }
     }
 
-    const employersRegistrationCount = await EmployerModel.countDocuments(query);
-    const candidatesRegistrationCount = await CandidateModel.countDocuments(query);
-      const activeTotalEmployerCount = await EmployerModel.countDocuments({
-         profileStatus: "active" 
+    const employersRegistrationCount = await EmployerModel.countDocuments(
+      query
+    );
+    const candidatesRegistrationCount = await CandidateModel.countDocuments(
+      query
+    );
+    const activeTotalEmployerCount = await EmployerModel.countDocuments({
+      profileStatus: "active",
     });
-      
-      const responseData = {
-          employersRegistrationCount,
-          candidatesRegistrationCount,
-          activeTotalEmployerCount,
-      }
+
+    const activeJobs = await JobPostModel.countDocuments({
+      jobExpirationDate: {
+        $gt: new Date(),
+      },
+    });
+
+    const responseData = {
+      employersRegistrationCount,
+      candidatesRegistrationCount,
+      activeTotalEmployerCount,
+      activeJobs,
+    };
 
     return NextResponse.json(
       {

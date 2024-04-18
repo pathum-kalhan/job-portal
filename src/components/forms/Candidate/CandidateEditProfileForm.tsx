@@ -22,6 +22,7 @@ type initialValues = {
   educationalBackground: string;
   workExperience: string;
   skillsAndCertifications: string[];
+  industry: string[];
 };
 
 type initialData = {
@@ -32,6 +33,7 @@ type initialData = {
   education?: string;
   experience?: string;
   skills?: string[];
+  industry?: string[];
 };
 
 type AlertType = {
@@ -50,6 +52,7 @@ const CandidateEditProfileForm = (props: props) => {
   const { getProfileData, initialData, handleCloseEditProfile } = props;
 
   const [skillsArray, setSkillsArray] = useState([]);
+  const [industryArray, setIndustryArray] = useState([]);
   const phoneNumberRegex = /^07\d{8}$/;
   const { data: session } = useSession();
 
@@ -69,6 +72,9 @@ const CandidateEditProfileForm = (props: props) => {
       .matches(phoneNumberRegex, "Please enter a valid mobile number"),
     educationalBackground: yup.string(),
     workExperience: yup.string(),
+    industry: yup
+    .array()
+    .min(1, "Please select at least one industry"),
     skillsAndCertifications: yup
       .array()
       .min(1, "Please select at least one skill"),
@@ -82,6 +88,7 @@ const CandidateEditProfileForm = (props: props) => {
     educationalBackground: initialData?.education ?? "",
     workExperience: initialData?.experience ?? "",
     skillsAndCertifications: initialData?.skills ?? [],
+    industry: initialData?.industry ?? [],
   };
 
   const handleSubmit = async (values: initialValues) => {
@@ -94,7 +101,7 @@ const CandidateEditProfileForm = (props: props) => {
         education: values.educationalBackground,
         experience: values.workExperience,
         skills: values.skillsAndCertifications,
-
+        industry: values.industry,
         // @ts-ignore
         userType: session?.user?.role,
       };
@@ -112,7 +119,10 @@ const CandidateEditProfileForm = (props: props) => {
         setBackendCall(false);
         setAlert({
           show: true,
-          message: (typeof errorMessage?.message === "string" && errorMessage?.message) ?? "Something went wrong!",
+          message:
+            (typeof errorMessage?.message === "string" &&
+              errorMessage?.message) ??
+            "Something went wrong!",
           severity: "error",
         });
       } else {
@@ -136,9 +146,9 @@ const CandidateEditProfileForm = (props: props) => {
     }
   };
 
-  const getSkills = useCallback(async () => {
+  const getAllSkillsAndIndustries = useCallback(async () => {
     try {
-      const response = await fetch("/api/candidate/getAllSkills", {
+      const response = await fetch("/api/candidate/getAllSkillsAndIndustries", {
         method: "POST",
         body: JSON.stringify({
           // @ts-ignore
@@ -149,20 +159,25 @@ const CandidateEditProfileForm = (props: props) => {
         },
       });
       const data = await response.json();
-      setSkillsArray(data.data);
+      setSkillsArray(data?.data?.skills);
+      setIndustryArray(data?.data?.industries);
     } catch (error) {
       console.log("error", error);
     }
-          // @ts-ignore
+    // @ts-ignore
   }, [session?.user?.role]);
 
   useEffect(() => {
-    getSkills();
-  }, [getSkills]);
+    getAllSkillsAndIndustries();
+  }, [getAllSkillsAndIndustries]);
 
   return (
     <>
-      <SnackBarComponent autoHideDuration={null} alert={alert} setAlert={setAlert} />
+      <SnackBarComponent
+        autoHideDuration={null}
+        alert={alert}
+        setAlert={setAlert}
+      />
       <Formik
         initialValues={initialValues}
         onSubmit={handleSubmit}
@@ -245,6 +260,41 @@ const CandidateEditProfileForm = (props: props) => {
                       placeholder="Work Experience"
                       multiline
                       component={TextField}
+                    />
+                  </Grid>
+
+                  <Grid item lg={12} md={12} sm={12} xs={12}>
+                    <Autocomplete
+                      multiple
+                      freeSolo
+                      disabled={backendCall}
+                      options={industryArray}
+                      value={values.industry}
+                      onChange={(event, value) => {
+                        setFieldValue("industry", value);
+                      }}
+                      renderTags={(value, getTagProps) =>
+                        value.map((option, index) => (
+                          <Chip
+                            label={option}
+                            {...getTagProps({ index })}
+                            key={option}
+                          />
+                        ))
+                      }
+                      renderInput={(params) => (
+                        <Field
+                          {...params}
+                          variant="outlined"
+                          value={values.industry}
+                          label="Industry (You need to hit ENTER key if you are adding a custom  industry)"
+                          placeholder="+ Add Industry"
+                          component={MUITextField}
+                          name="industry"
+                          error={!!errors.industry}
+                          helperText={errors.industry}
+                        />
+                      )}
                     />
                   </Grid>
 

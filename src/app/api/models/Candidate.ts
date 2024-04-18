@@ -16,6 +16,7 @@ const CandidateSchema = new Schema(
     },
     password: String,
     contactNo: String,
+    industry: Array,
     emailVerification: {
       otpCode: String,
       status: {
