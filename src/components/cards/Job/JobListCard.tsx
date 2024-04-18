@@ -386,7 +386,7 @@ function JobListCard(props: props) {
       </Grid>
 
       {jobPostInfo?.jobExpirationDate && !dateExpired && viewMoreJobInfo && (
-        <Grid container pb={3} xs={12}>
+        <Grid container pb={3}>
           <Grid
             container
             item
@@ -401,7 +401,6 @@ function JobListCard(props: props) {
                   endIcon={<OpenInNewIcon />}
                   variant={"contained"}
                   sx={{ borderRadius: 2, textTransform: "capitalize" }}
-                  onClick={() => console.log("test")}
                 >
                   Company Url
                 </Button>

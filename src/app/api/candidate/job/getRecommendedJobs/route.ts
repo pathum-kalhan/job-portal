@@ -56,6 +56,7 @@ export async function POST(request: Request) {
       {
         $match: { $and: [
           { requiredQualifications: { $in: user.skills } },
+          { industry: { $in: user.industry } },
           { _id: { $nin: getAllAppliedJobs } },
           { jobExpirationDate: { $gt: currentDate } }
         ]},

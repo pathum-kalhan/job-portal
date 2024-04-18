@@ -32,6 +32,7 @@ export async function POST(request: Request) {
       experience,
       skills,
       websiteUrl,
+      industry
     } = await request.json();
 
     const user =
@@ -66,6 +67,7 @@ export async function POST(request: Request) {
           education,
           experience,
           skills,
+          industry
         }
       );
     } else if (userType === "employer") {

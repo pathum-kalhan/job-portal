@@ -23,9 +23,10 @@ import { useSession } from "next-auth/react";
 import { useCallback, useEffect, useState } from "react";
 import * as yup from "yup";
 const EmployerJobPostForm = () => {
-  const industryArray = ["IT", "Health", "Education"];
   const jobTypeArray = ["hybrid", "remote", "dynamic", "flexible"];
   const [skillsArray, setSkillsArray] = useState([]);
+  const [industryArray, setIndustryArray] = useState([]);
+
   const { data: session, status } = useSession();
 
   const [backendCall, setBackendCall] = useState(false);
@@ -88,6 +89,27 @@ const EmployerJobPostForm = () => {
     jobExpirationDate: "",
   };
 
+  const getAllSkillsAndIndustries = useCallback(async () => {
+    try {
+      const response = await fetch("/api/candidate/getAllSkillsAndIndustries", {
+        method: "POST",
+        body: JSON.stringify({
+          // @ts-ignore
+          userRole: session?.user?.role,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+      setSkillsArray(data?.data?.skills);
+      setIndustryArray(data?.data?.industries);
+    } catch (error) {
+      console.log("error", error);
+    }
+    // @ts-ignore
+  }, [session?.user?.role]);
+
   const handleSubmit = useCallback(
     async (values: companyInfo, formikHelpers: FormikHelpers<companyInfo>) => {
       setBackendCall(true);
@@ -132,6 +154,7 @@ const EmployerJobPostForm = () => {
             message: "Job Created successfully!!",
             severity: "success",
           });
+          await getAllSkillsAndIndustries();
         }
       } catch (e: any) {
         setBackendCall(false);
@@ -143,30 +166,12 @@ const EmployerJobPostForm = () => {
       }
     },
 
-    []
+    [getAllSkillsAndIndustries]
   );
 
-  const getSkills = useCallback(async () => {
-    try {
-      const response = await fetch("/api/candidate/getAllSkills", {
-        method: "POST",
-        body: JSON.stringify({
-          // @ts-ignore
-          userRole: session?.user?.role,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      const data = await response.json();
-      setSkillsArray(data.data);
-    } catch (error) {}
-    // @ts-ignore
-  }, [session?.user?.role]);
-
   useEffect(() => {
-    getSkills();
-  }, [getSkills]);
+    getAllSkillsAndIndustries();
+  }, [getAllSkillsAndIndustries]);
 
   return (
     <Card
@@ -254,8 +259,8 @@ const EmployerJobPostForm = () => {
 
                     <Grid item lg={12} md={12} sm={12} xs={12}>
                       <Autocomplete
-                        disabled={backendCall}
                         freeSolo
+                        disabled={backendCall}
                         options={industryArray}
                         value={values.industry}
                         onChange={(event, value) => {
@@ -281,6 +286,21 @@ const EmployerJobPostForm = () => {
                             name="industry"
                             error={!!errors.industry}
                             helperText={errors.industry}
+                            onKeyDown={(event) => {
+                              // Handle pressing Enter key
+                              if (
+                                event.key === "Enter" &&
+                                event.target.value.trim() !== ""
+                              ) {
+                                // Prevent the default behavior of the Enter key
+                                event.preventDefault();
+                                // Add the custom value as an option
+                                const newValue = event.target.value.trim();
+                                if (!industryArray.includes(newValue)) {
+                                  setFieldValue("industry", newValue);
+                                }
+                              }
+                            }}
                           />
                         )}
                       />

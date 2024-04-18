@@ -17,13 +17,13 @@ import { LoadingButton } from "@mui/lab";
 import { useDropzone } from "react-dropzone";
 import SnackBarComponent from "../../../../components/common/SnackBarComponent";
 import { AlertType, profileData } from "../../../../utils/types/general-types";
+import ManageSearchIcon from "@mui/icons-material/ManageSearch";
 
 type props = {
   handleClickOpenUploadCv: () => void;
   profileData: profileData | null;
   getProfileData: () => void;
 };
- 
 
 function CandidateProfileRightSideCard(props: props) {
   const { getProfileData, profileData } = props;
@@ -115,7 +115,7 @@ function CandidateProfileRightSideCard(props: props) {
 
   const deleteCv = useCallback(async () => {
     try {
-      setCvDelBackendCall(true); 
+      setCvDelBackendCall(true);
 
       const response = await fetch("/api/candidate/deleteCv", {
         method: "DELETE",
@@ -155,7 +155,6 @@ function CandidateProfileRightSideCard(props: props) {
         severity: "error",
       });
     }
- 
   }, [getProfileData]);
 
   const { getRootProps, getInputProps } = useDropzone({
@@ -278,6 +277,36 @@ function CandidateProfileRightSideCard(props: props) {
                 backgroundColor: "#c9c9c9",
                 padding: "1rem",
               }}
+              alignItems="center"
+              justifyContent="center"
+            >
+              <Grid item xs={"auto"}>
+                <Link href={"/dashboard/candidate/find-jobs"}>
+                  <LoadingButton
+                    disabled={cvDelBackendCall || cvBackendCall}
+                    color="warning"
+                    size="large"
+                    variant="contained"
+                    sx={{ textTransform: "capitalize", height: "2.5rem" }}
+                    endIcon={<ManageSearchIcon />}
+                  >
+                    Search Jobs
+                  </LoadingButton>
+                </Link>
+              </Grid>
+            </Grid>
+
+            <Grid
+              container
+              item
+              lg={12}
+              md={12}
+              sm={12}
+              xs={12}
+              sx={{
+                backgroundColor: "#c9c9c9",
+                padding: "1rem",
+              }}
               justifyContent="space-between"
               alignItems="center"
             >
@@ -290,7 +319,9 @@ function CandidateProfileRightSideCard(props: props) {
                     fontWeight: "bold",
                   }}
                 >
-                 {profileData?.quiz?.latestScore==="Not done yet" ? "-" : profileData?.quiz?.latestScore}
+                  {profileData?.quiz?.latestScore === "Not done yet"
+                    ? "-"
+                    : profileData?.quiz?.latestScore}
                 </Avatar>
               </Grid>
 

@@ -163,7 +163,7 @@ function Page() {
         }}
       >
         {/* @ts-ignore */}
-        {marginSm && !session?.user?.role === "admin" && (
+        {marginSm && session?.user?.role !== "admin" && (
           <Grid
             container
             item
@@ -300,7 +300,7 @@ function Page() {
           </Grid>
         </Grid>
         {/* @ts-ignore */}
-        {!marginSm && !session?.user?.role === "admin" && (
+        {!marginSm && session?.user?.role !== "admin" && (
           <Grid
             container
             item
