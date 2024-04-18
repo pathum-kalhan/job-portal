@@ -6,13 +6,15 @@ export async function POST(request: Request) {
   const apiKey: string = `${process.env.SENDGRID_API_KEY}`;
 
   try {
-    const { message, senderEmail, SenderName } = await request.json();
+    const { message, senderEmail, senderName, senderMobile, inquiryType} = await request.json();
 
     // send mail
     const templateData = {
-      name: SenderName,
+      name: senderName,
       message,
       email: senderEmail,
+      mobile: senderMobile,
+      inquiryType,
     };
 
     mail.setApiKey(apiKey);

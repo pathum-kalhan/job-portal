@@ -6,20 +6,33 @@ import {
   Card,
   CardContent,
   CardHeader,
+  Autocomplete,
+  Chip,
+  TextField as MUITextField,
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import SnackBarComponent from "../common/SnackBarComponent";
 import { AlertType } from "../../utils/types/general-types";
 
-
 type initialValuesType = {
   name: string;
   email: string;
+  mobile: string;
   message: string;
+  inquiryType: string;
 };
 
 const ContactUsForm: React.FC = () => {
+  const phoneNumberRegex = /^07\d{8}$/;
   const [backendCall, setBackendCall] = useState(false);
+  const inquiryTypeArray = [
+    "compliments",
+    "technical",
+    "difficulty",
+    "misuse",
+    "behavior",
+    "complaint",
+  ];
   const [alert, setAlert] = useState<AlertType>({
     show: false,
     message: "",
@@ -30,15 +43,21 @@ const ContactUsForm: React.FC = () => {
     name: "",
     email: "",
     message: "",
+    mobile: "",
+    inquiryType: "",
   };
 
   const contactUsValidationSchema = yup.object({
-    name: yup.string().required("Required"),
+    name: yup.string().required("Name is required"),
+    inquiryType: yup.string().required("Inquiry type is required"),
+    mobile: yup
+      .string()
+      .matches(phoneNumberRegex, "Please enter a valid mobile number"),
     email: yup
       .string()
       .email("Invalid email format")
       .required("Email is required"),
-    message: yup.string().required("Required"),
+    message: yup.string().required("Message is required"),
   });
 
   const handleSubmit = useCallback(
@@ -52,7 +71,9 @@ const ContactUsForm: React.FC = () => {
         const payLoad = {
           message: values.message,
           senderEmail: values.email,
-          SenderName: values.name,
+          senderName: values.name,
+          senderMobile: values.mobile,
+          inquiryType: values.inquiryType,
         };
 
         const response = await fetch("/api/contactUsForm", {
@@ -98,7 +119,7 @@ const ContactUsForm: React.FC = () => {
 
   return (
     <Card>
-       <SnackBarComponent alert={alert} setAlert={setAlert} />
+      <SnackBarComponent alert={alert} setAlert={setAlert} />
       <CardHeader
         title="Send us a message"
         sx={{ textTransform: "uppercase", textAlign: "center" }}
@@ -111,7 +132,7 @@ const ContactUsForm: React.FC = () => {
           enableReinitialize
         >
           {(formik) => {
-            const { isValid, dirty, errors, touched } = formik;
+            const { isValid, dirty, errors, touched, setFieldValue, values } = formik;
             return (
               <Form>
                 <Field
@@ -133,6 +154,48 @@ const ContactUsForm: React.FC = () => {
                   margin="normal"
                   error={errors.email && touched.email}
                   helperText={errors.email && touched.email ? errors.email : ""}
+                />
+                <Field
+                  disabled={backendCall}
+                  fullWidth
+                  name="mobile"
+                  label="Mobile Number"
+                  as={TextField}
+                  margin="normal"
+                  error={errors.mobile && touched.mobile}
+                  helperText={
+                    errors.mobile && touched.mobile ? errors.mobile : ""
+                  }
+                />
+                <Autocomplete
+                  disabled={backendCall}
+                  options={inquiryTypeArray}
+                  value={values.inquiryType}
+                  onChange={(event, value) => {
+                    setFieldValue("inquiryType", value);
+                  }}
+                  renderTags={(value, getTagProps) =>
+                    value.map((option, index) => (
+                      <Chip
+                        label={option}
+                        {...getTagProps({ index })}
+                        key={option}
+                      />
+                    ))
+                  }
+                  renderInput={(params) => (
+                    <Field
+                      {...params}
+                      variant="outlined"
+                      value={values.inquiryType}
+                      label="Inquiry Type"
+                      placeholder="Inquiry Type"
+                      component={MUITextField}
+                      name="inquiryType"
+                      error={!!errors.inquiryType}
+                      helperText={errors.inquiryType}
+                    />
+                  )}
                 />
                 <Field
                   disabled={backendCall}
