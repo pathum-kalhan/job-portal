@@ -217,10 +217,10 @@ function AccountSettings(props: props) {
                 <Typography>
                   <Link href="/dashboard/help">
                     <Button color="success" startIcon={<ReviewsIcon />}>
-                      Provide feedback
+                      FAQ 
                     </Button>
                   </Link>{" "}
-                  to help us improve your experience on Career Guide Pro.
+                  (frequently asked questions.)
                 </Typography>
 
                 <Typography>
