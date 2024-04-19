@@ -15,6 +15,7 @@ type props = {
   oneEdge?: boolean;
   bgColor?: string;
   textColor?: string;
+  fontSize?: "h6" | "button" | "caption" | "h1" | "h2" | "h3" | "h4" | "h5" | "inherit" | "overline" | "subtitle1" | "subtitle2" | "body1" | "body2";
 };
 
 function SimpleValueCard(props: props) {
@@ -26,6 +27,7 @@ function SimpleValueCard(props: props) {
     oneEdge = false,
     bgColor = "white",
     textColor = "black",
+    fontSize ='h6'
   } = props;
 
   return (
@@ -36,7 +38,7 @@ function SimpleValueCard(props: props) {
         color: textColor,
       }}
     >
-      <CardHeader title={title} sx={{ textAlign: "center" }} />
+      <CardHeader titleTypographyProps={{variant:fontSize}} title={title} sx={{ textAlign: "center" }} s />
       <CardContent>
         {backendCall ? (
           <Stack alignItems={"center"} justifyContent={"center"}>
