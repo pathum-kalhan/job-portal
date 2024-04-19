@@ -181,14 +181,19 @@ export async function POST(request: Request) {
         $count: "count",
       },
     ]);
+
+    const overallSuccessRateCount = await ApplicationModel.countDocuments({
+      cvReviewStatus: "shortListed",
+    });
     
 
-    const activeCandidatesCount = await CandidateModel.countDocuments({
-      profileStatus: "active",
-    });
+    const totalApplications = await ApplicationModel.countDocuments();
 
-    const candidateSuccessRate =
-      (successRateCount[0].count / activeCandidatesCount) * 100;
+    const candidateSuccessRateOfRecommendedJob =
+      (successRateCount[0].count / totalApplications) * 100;
+    
+      const candidateOverallSuccessRateOfApplyingForJob =
+      (overallSuccessRateCount / totalApplications) * 100;
 
     const employerSuccessRates = await JobPostModel.aggregate([
       {
@@ -234,7 +239,8 @@ export async function POST(request: Request) {
       activeTotalEmployerCount: activeTotalEmployerCount ?? 0,
       activeJobs: activeJobs ?? 0,
       jobMatchedAndShortlisted: successRateCount[0]?.count ?? 0,
-      candidateSuccessRate: `${Math.ceil(candidateSuccessRate ?? 0)}%`,
+      candidateSuccessRateOfRecommendedJob:`${Math.ceil(candidateSuccessRateOfRecommendedJob ?? 0)}%`,
+      candidateOverallSuccessRateOfApplyingForJob:`${Math.ceil(candidateOverallSuccessRateOfApplyingForJob ?? 0)}%`,
       EmployerSuccessRate: `${Math.ceil(
         employerSuccessRates[0]?.overallSuccessRate ?? 0
       )}%`,

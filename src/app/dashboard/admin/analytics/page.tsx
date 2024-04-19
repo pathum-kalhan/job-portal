@@ -18,7 +18,8 @@ function Page() {
     candidatesRegistrationCount: 0,
     activeTotalEmployerCount: 0,
     activeJobs: 0,
-    candidateSuccessRate: 0,
+    candidateOverallSuccessRateOfApplyingForJob: 0,
+    candidateSuccessRateOfRecommendedJob: 0,
     EmployerSuccessRate: 0,
     candidateMonthlyAvgReg: 0,
     employerMonthlyAvgReg: 0,
@@ -131,13 +132,28 @@ function Page() {
           </Grid>
         </Tooltip>
         <Tooltip
-          title="The total percentage of Candidates who are applied for the matched job then get shortlisted by the employer"
+          title="The overall percentage of Candidates getting shortlisted by the employer if candidate applied for a job"
           placement="top"
         >
           <Grid item xs={"auto"}>
             <SimpleValueCard
               title={"Candidate Success Rate"}
-              count={analyticsData?.candidateSuccessRate}
+              count={analyticsData?.candidateOverallSuccessRateOfApplyingForJob}
+              backendCall={backendCall}
+              curveEdge
+              bgColor={"black"}
+              textColor={"white"}
+            />
+          </Grid>
+        </Tooltip>
+        <Tooltip
+          title="The percentage of Candidates getting shortlisted by the employer if candidate applied to a recommended job"
+          placement="top"
+        >
+          <Grid item xs={"auto"}>
+            <SimpleValueCard
+              title={"Recommended jobs Success Rate"}
+              count={analyticsData?.candidateSuccessRateOfRecommendedJob}
               backendCall={backendCall}
               curveEdge
               bgColor={"black"}
