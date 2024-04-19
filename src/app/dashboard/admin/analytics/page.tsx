@@ -1,5 +1,5 @@
 "use client";
-import { Grid } from "@mui/material";
+import { Grid, Tooltip } from "@mui/material";
 import { useSession } from "next-auth/react";
 import { useCallback, useEffect, useState } from "react";
 import FilterComponent from "../../../../components/analytics/FilterComponent";
@@ -18,6 +18,11 @@ function Page() {
     candidatesRegistrationCount: 0,
     activeTotalEmployerCount: 0,
     activeJobs: 0,
+    candidateSuccessRate: 0,
+    EmployerSuccessRate: 0,
+    candidateMonthlyAvgReg: 0,
+    employerMonthlyAvgReg: 0,
+    jobMatchedAndShortlisted: 0,
   });
 
   const loadData = useCallback(async () => {
@@ -110,10 +115,75 @@ function Page() {
             textColor={"white"}
           />
         </Grid>
+        <Tooltip
+          title="Total candidates who are applied for the matched job then get shortlisted by the employer"
+          placement="top"
+        >
+          <Grid item xs={"auto"}>
+            <SimpleValueCard
+              title={"Job Matched & Shortlisted"}
+              count={analyticsData?.jobMatchedAndShortlisted}
+              backendCall={backendCall}
+              curveEdge
+              bgColor={"black"}
+              textColor={"white"}
+            />
+          </Grid>
+        </Tooltip>
+        <Tooltip
+          title="The total percentage of Candidates who are applied for the matched job then get shortlisted by the employer"
+          placement="top"
+        >
+          <Grid item xs={"auto"}>
+            <SimpleValueCard
+              title={"Candidate Success Rate"}
+              count={analyticsData?.candidateSuccessRate}
+              backendCall={backendCall}
+              curveEdge
+              bgColor={"black"}
+              textColor={"white"}
+            />
+          </Grid>
+        </Tooltip>
+        <Tooltip
+          title="The total percentage of candidates who have been shortlisted by an employer in comparison to the total number of candidates who have applied for the job posts published by that employer."
+          placement="top"
+        >
+          <Grid item xs={"auto"}>
+            <SimpleValueCard
+              title={"Employer Success Rate"}
+              count={analyticsData?.EmployerSuccessRate}
+              backendCall={backendCall}
+              curveEdge
+              bgColor={"black"}
+              textColor={"white"}
+            />
+          </Grid>
+        </Tooltip>
         <Grid item xs={"auto"}>
           <SimpleValueCard
             title={"Actively Runing Jobs"}
             count={analyticsData?.activeJobs}
+            backendCall={backendCall}
+            curveEdge
+            bgColor={"black"}
+            textColor={"white"}
+          />
+        </Grid>
+        <Grid item xs={"auto"}>
+          <SimpleValueCard
+            title={"Avg. Candidates per/mo."}
+            count={analyticsData?.candidateMonthlyAvgReg}
+            backendCall={backendCall}
+            curveEdge
+            bgColor={"black"}
+            textColor={"white"}
+          />
+        </Grid>
+        <Grid item xs={"auto"}>
+          <SimpleValueCard
+            title={"Avg. Employers per/mo."}
+            count={analyticsData?.employerMonthlyAvgReg}
             backendCall={backendCall}
             curveEdge
             bgColor={"black"}
