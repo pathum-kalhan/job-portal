@@ -1,10 +1,10 @@
 "use client";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
-import { Avatar, Grid, Stack } from "@mui/material";
+import { Avatar, Badge, Grid, Stack, Tooltip } from "@mui/material";
 import Link from "next/link";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import { deepPurple } from "@mui/material/colors";
@@ -18,6 +18,10 @@ import { useDropzone } from "react-dropzone";
 import SnackBarComponent from "../../../../components/common/SnackBarComponent";
 import { AlertType, profileData } from "../../../../utils/types/general-types";
 import ManageSearchIcon from "@mui/icons-material/ManageSearch";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import CandidateInterviewCalender from "./CandidateInterviewCalender";
+import PriorityHighIcon from "@mui/icons-material/PriorityHigh";
+import moment from "moment";
 
 type props = {
   handleClickOpenUploadCv: () => void;
@@ -39,6 +43,13 @@ function CandidateProfileRightSideCard(props: props) {
     message: "",
     severity: "success",
   });
+
+  const [openDialogBox, setOpenDialogBox] = useState(false);
+  const [hasRecentMeetings, setHasRecentMeetings] = useState(0);
+
+  const handleCloseDialogBox = () => {
+    setOpenDialogBox(false);
+  };
 
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
@@ -173,9 +184,42 @@ function CandidateProfileRightSideCard(props: props) {
     setBackendCall(false);
   };
 
+  const getRecentMeetings = useCallback(async () => {
+    try {
+      setBackendCall(true);
+
+      const response = await fetch("/api/candidate/recentInterviewSchedules", {
+        method: "POST",
+        body: JSON.stringify({
+          email: session?.user?.email,
+          // @ts-ignore
+          userRole: session?.user?.role,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response?.status !== 200) {
+        setBackendCall(false);
+      } else {
+        const data = await response.json();
+        setHasRecentMeetings(data.data);
+        setBackendCall(false);
+      }
+    } catch (error) {
+      setBackendCall(false);
+    }
+    // @ts-ignore
+  }, [session?.user?.email, session?.user?.role]);
+
+  useEffect(() => {
+    getRecentMeetings();
+  }, [getRecentMeetings]);
+
   return (
     <>
-     <SnackBarComponent alert={alert} setAlert={setAlert} />
+      <SnackBarComponent alert={alert} setAlert={setAlert} />
       <Card
         sx={{
           width: {
@@ -279,6 +323,7 @@ function CandidateProfileRightSideCard(props: props) {
               }}
               alignItems="center"
               justifyContent="center"
+              gap={1}
             >
               <Grid item xs={"auto"}>
                 <Link href={"/dashboard/candidate/find-jobs"}>
@@ -293,6 +338,32 @@ function CandidateProfileRightSideCard(props: props) {
                     Search Jobs
                   </LoadingButton>
                 </Link>
+              </Grid>
+
+              <Grid item xs={"auto"}>
+                <Tooltip
+                  title={hasRecentMeetings>0 ? "You have upcoming meetings" : ""}
+                >
+                  <Badge
+                    color="error"
+                    badgeContent={
+                      hasRecentMeetings>0 ? "!" : null
+                    }
+                  >
+                    <Button
+                      color="primary"
+                      size="large"
+                      variant="contained"
+                      sx={{ textTransform: "capitalize", height: "2.5rem" }}
+                      endIcon={<CalendarMonthIcon />}
+                      onClick={() => {
+                        setOpenDialogBox(true);
+                      }}
+                    >
+                      Schedules
+                    </Button>
+                  </Badge>
+                </Tooltip>
               </Grid>
             </Grid>
 
@@ -375,6 +446,11 @@ function CandidateProfileRightSideCard(props: props) {
           </CardActions>
         </Stack>
       </Card>
+
+      <CandidateInterviewCalender
+        openDialogBox={openDialogBox}
+        handleCloseDialogBox={handleCloseDialogBox}
+      />
     </>
   );
 }
