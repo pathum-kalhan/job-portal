@@ -1,26 +1,34 @@
 "use client";
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
-import { Grid, Stack } from "@mui/material";
+import { Badge, Grid, Stack, Tooltip } from "@mui/material";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import { deepPurple } from "@mui/material/colors";
 import AddIcon from "@mui/icons-material/Add";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { LoadingButton } from "@mui/lab";
 import Link from "next/link";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import EmployerInterviewCalender from "./EmployerInterviewCalender";
 
-type props = {};
-
-function EmployerProfileRightSideCard(props: props) {
+function EmployerProfileRightSideCard() {
   const [backendCall, setBackendCall] = useState(false);
+  const [hasRecentMeetings, setHasRecentMeetings] = useState(0);
+  const { data: session } = useSession();
+
+  const [openDialogBox, setOpenDialogBox] = useState(false);
+
+  const handleCloseDialogBox = () => {
+    setOpenDialogBox(false);
+  };
+
 
   const router = useRouter();
-  const {} = props;
 
   const logOutFunc = async () => {
     setBackendCall(true);
@@ -29,6 +37,40 @@ function EmployerProfileRightSideCard(props: props) {
     router.replace("/");
     setBackendCall(false);
   };
+
+
+  const getRecentMeetings = useCallback(async () => {
+    try {
+      setBackendCall(true);
+
+      const response = await fetch("/api/employer/recentInterviewSchedules", {
+        method: "POST",
+        body: JSON.stringify({
+          email: session?.user?.email,
+          // @ts-ignore
+          userRole: session?.user?.role,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response?.status !== 200) {
+        setBackendCall(false);
+      } else {
+        const data = await response.json();
+        setHasRecentMeetings(data.data);
+        setBackendCall(false);
+      }
+    } catch (error) {
+      setBackendCall(false);
+    }
+    // @ts-ignore
+  }, [session?.user?.email, session?.user?.role]);
+
+  useEffect(() => {
+    getRecentMeetings();
+  }, [getRecentMeetings]);
 
   return (
     <Card
@@ -115,6 +157,48 @@ function EmployerProfileRightSideCard(props: props) {
             </Grid> 
 
           </Grid>
+
+          <Grid
+              container
+              item
+              lg={12}
+              md={12}
+              sm={12}
+              xs={12}
+              sx={{
+                backgroundColor: "#c9c9c9",
+                padding: "1rem",
+              }}
+              alignItems="center"
+              justifyContent="center"
+              gap={1}
+            >  
+            <Grid item xs={"auto"}>
+            <Tooltip
+                  title={hasRecentMeetings>0 ? "You have upcoming meetings" : ""}
+                >
+                  <Badge
+                    color="error"
+                    badgeContent={
+                      hasRecentMeetings>0 ? "!" : null
+                    }
+                  >
+                <Button
+                  color="primary"
+                  size="large"
+                  variant="contained"
+                  sx={{ textTransform: "capitalize", height: "2.5rem" }}
+                  endIcon={<CalendarMonthIcon />}
+                  onClick={() => {
+                    setOpenDialogBox(true);
+                  }}
+                >
+                  Schedules
+                  </Button>
+                  </Badge>
+                </Tooltip>
+              </Grid>
+            </Grid>
         </Grid>
       </CardContent>
 
@@ -145,6 +229,11 @@ function EmployerProfileRightSideCard(props: props) {
           </LoadingButton>
         </CardActions>
       </Stack>
+
+       <EmployerInterviewCalender
+        openDialogBox={openDialogBox}
+        handleCloseDialogBox={handleCloseDialogBox}
+      />
     </Card>
   );
 }
