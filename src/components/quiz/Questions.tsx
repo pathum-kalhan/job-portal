@@ -1,9 +1,8 @@
 "use client";
-import { Button, Grid } from "@mui/material";
+import { Grid } from "@mui/material";
 import React from "react";
 import { Formik, Form } from "formik";
 import { QuestionCard } from "./QuestionCard";
-import { useRouter } from "next/navigation";
 import { LoadingButton } from "@mui/lab";
 type CodeBlock = {
   code: string;
@@ -11,6 +10,7 @@ type CodeBlock = {
 };
 
 type Answer = {
+  _id: string;
   text: string;
   isCorrect: boolean;
   image?: string; // Optional Image type
@@ -35,7 +35,7 @@ type Props = {
 const Questions = ({ questions, handleSubmit, formikRef, getScoreBackendCall }: Props) => {
 
   return (
-    <Grid container>
+    <Grid container alignItems="center" justifyContent="center">
       <Formik
         innerRef={formikRef}
         initialValues={{}}

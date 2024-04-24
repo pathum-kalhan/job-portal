@@ -19,6 +19,7 @@ import {
 } from "@mui/material";
 import { Formik, Form, Field, FormikHelpers } from "formik";
 import { TextField } from "formik-mui";
+import mongoose from "mongoose";
 import { useSession } from "next-auth/react";
 import { useCallback, useEffect, useState } from "react";
 import * as yup from "yup";
@@ -30,6 +31,8 @@ const EmployerJobPostForm = () => {
   const { data: session, status } = useSession();
 
   const [backendCall, setBackendCall] = useState(false);
+  const [quizData, setQuizData] = useState([]);
+
   const [alert, setAlert] = useState<AlertType>({
     show: false,
     message: "",
@@ -67,6 +70,12 @@ const EmployerJobPostForm = () => {
         1,
         "Please select at least one qualification (Hit Enter key on the keyboard if you already typed)"
       ),
+    questions: yup
+      .array()
+      .min(
+        1,
+        "Please select at least one question (Hit Enter key on the keyboard if you already typed)"
+      ),
     workingHoursPerDay: yup
       .number()
       .required("Working Hours Per Day is required"),
@@ -84,6 +93,7 @@ const EmployerJobPostForm = () => {
     position: "",
     jobDescription: "",
     requiredQualifications: [],
+    questions: [],
     workingHoursPerDay: 8,
     acceptTerms: false,
     jobExpirationDate: "",
@@ -91,6 +101,7 @@ const EmployerJobPostForm = () => {
 
   const getAllSkillsAndIndustries = useCallback(async () => {
     try {
+      setBackendCall(true);
       const response = await fetch("/api/candidate/getAllSkillsAndIndustries", {
         method: "POST",
         body: JSON.stringify({
@@ -104,6 +115,7 @@ const EmployerJobPostForm = () => {
       const data = await response.json();
       setSkillsArray(data?.data?.skills);
       setIndustryArray(data?.data?.industries);
+      setBackendCall(false);
     } catch (error) {
       console.log("error", error);
     }
@@ -113,6 +125,11 @@ const EmployerJobPostForm = () => {
   const handleSubmit = useCallback(
     async (values: companyInfo, formikHelpers: FormikHelpers<companyInfo>) => {
       setBackendCall(true);
+
+      const getQuestionsIds = quizData
+        ?.filter((item) => values?.questions?.includes(item?.question))
+        .map((item) => ({ question: new mongoose.Types.ObjectId(item?.id) }));
+
       const payLoad = {
         companyDetails: values.companyDetails,
         websiteUrl: values.websiteUrl,
@@ -121,6 +138,7 @@ const EmployerJobPostForm = () => {
         position: values.position,
         jobDescription: values.jobDescription,
         requiredQualifications: values.requiredQualifications,
+        questionsSet: getQuestionsIds,
         workingHoursPerDay: values.workingHoursPerDay,
         jobExpirationDate: values.jobExpirationDate,
         jobType: values.jobType,
@@ -166,12 +184,40 @@ const EmployerJobPostForm = () => {
       }
     },
 
-    [getAllSkillsAndIndustries]
+    [getAllSkillsAndIndustries, quizData]
   );
+
+  const getAllQuestions = useCallback(async () => {
+    setBackendCall(true);
+    try {
+      const payload = {
+        email: session?.user?.email,
+      };
+
+      const response = await fetch("/api/employer/getAllQuestions", {
+        method: "POST",
+        body: JSON.stringify(payload),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response?.status !== 200) {
+        setBackendCall(false);
+      } else {
+        const data = await response.json();
+        setQuizData(data.data);
+        setBackendCall(false);
+      }
+    } catch (error) {
+      setBackendCall(false);
+    }
+  }, [session?.user?.email]);
 
   useEffect(() => {
     getAllSkillsAndIndustries();
-  }, [getAllSkillsAndIndustries]);
+    getAllQuestions();
+  }, [getAllQuestions, getAllSkillsAndIndustries]);
 
   return (
     <Card
@@ -407,6 +453,40 @@ const EmployerJobPostForm = () => {
                             name="requiredQualifications"
                             error={!!errors.requiredQualifications}
                             helperText={errors.requiredQualifications}
+                          />
+                        )}
+                      />
+                    </Grid>
+
+                    <Grid item lg={12} md={12} sm={12} xs={12}>
+                      <Autocomplete
+                        disabled={backendCall}
+                        multiple
+                        options={quizData.map((item) => item.question)}
+                        value={values.questions}
+                        onChange={(event, value) => {
+                          setFieldValue("questions", value);
+                        }}
+                        renderTags={(value, getTagProps) =>
+                          value.map((option, index) => (
+                            <Chip
+                              label={option}
+                              {...getTagProps({ index })}
+                              key={option}
+                            />
+                          ))
+                        }
+                        renderInput={(params) => (
+                          <Field
+                            {...params}
+                            variant="outlined"
+                            value={values.questions}
+                            label="Questions"
+                            placeholder="+ Add questions"
+                            component={MUITextField}
+                            name="questions"
+                            error={!!errors.questions}
+                            helperText={errors.questions}
                           />
                         )}
                       />

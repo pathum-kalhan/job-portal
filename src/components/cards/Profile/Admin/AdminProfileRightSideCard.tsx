@@ -4,14 +4,15 @@ import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
-import { Grid, Stack } from "@mui/material";
+import {Grid, Stack} from "@mui/material";
 import { deepPurple } from "@mui/material/colors";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { LoadingButton } from "@mui/lab";
 import Link from "next/link";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
-import InsertChartOutlinedOutlinedIcon from '@mui/icons-material/InsertChartOutlinedOutlined';
+import InsertChartOutlinedOutlinedIcon from "@mui/icons-material/InsertChartOutlinedOutlined";
+import PostAddIcon from "@mui/icons-material/PostAdd";
 
 type props = {};
 
@@ -66,7 +67,7 @@ function AdminProfileRightSideCard(props: props) {
             }}
             alignItems="center"
             justifyContent="space-between"
-          > 
+          >
             <Grid item lg="auto" md="auto" sm="auto" xs="auto">
               <Link href="/dashboard/admin/list-candidates">
                 <Button
@@ -76,7 +77,7 @@ function AdminProfileRightSideCard(props: props) {
                   sx={{ textTransform: "capitalize", height: "2.5rem" }}
                   endIcon={<FormatListBulletedIcon />}
                 >
-                CANDIDATES
+                  CANDIDATES
                 </Button>
               </Link>
             </Grid>
@@ -92,7 +93,7 @@ function AdminProfileRightSideCard(props: props) {
                   EMPLOYERS
                 </Button>
               </Link>
-            </Grid> 
+            </Grid>
 
             <Grid item lg="auto" md="auto" sm="auto" xs="auto">
               <Link href="/dashboard/admin/analytics">
@@ -101,13 +102,56 @@ function AdminProfileRightSideCard(props: props) {
                   size="small"
                   variant="contained"
                   endIcon={<InsertChartOutlinedOutlinedIcon />}
-                  sx={{  height: "2.5rem" }}
+                  sx={{ height: "2.5rem" }}
                 >
-                 Analytics
+                  Analytics
                 </Button>
               </Link>
-            </Grid> 
+            </Grid>
+          </Grid>
 
+          <Grid
+            container
+            item
+            lg={12}
+            md={12}
+            sm={12}
+            xs={12}
+            sx={{
+              backgroundColor: "#c9c9c9",
+              padding: "1rem",
+            }}
+            alignItems="center"
+            justifyContent="center"
+            gap={1}
+          >
+            <Grid item xs={"auto"}>
+              <Link href="/dashboard/admin/add-questions">
+                <Button
+                  color="secondary"
+                  size="large"
+                  variant="contained"
+                  sx={{ textTransform: "capitalize", height: "2.5rem" }}
+                  endIcon={<PostAddIcon />}
+                >
+                  Add Questions
+                </Button>
+              </Link>
+            </Grid>
+
+            <Grid item xs={"auto"}>
+              <Link href="/dashboard/admin/manage-questions">
+                <Button
+                  color="secondary"
+                  size="large"
+                  variant="contained"
+                  sx={{ textTransform: "capitalize", height: "2.5rem" }}
+                  endIcon={<FormatListBulletedIcon />}
+                >
+                  Manage Questions
+                </Button>
+              </Link>
+            </Grid>
           </Grid>
         </Grid>
       </CardContent>

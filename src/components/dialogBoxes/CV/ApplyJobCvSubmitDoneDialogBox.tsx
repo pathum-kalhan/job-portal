@@ -14,11 +14,12 @@ import CloseIcon from "@mui/icons-material/Close";
 
 type props = {
   openUploadCv: boolean;
-  setParticipateTheQuiz: (val:boolean) => void;
+  setParticipateTheQuiz: (val: boolean) => void;
+  jobId:string
 };
 
 function ApplyJobCvSubmitDoneDialogBox(props: props) {
-  const { openUploadCv, setParticipateTheQuiz } = props;
+  const { openUploadCv, setParticipateTheQuiz,jobId } = props;
 
   const handleClickCloseUploadCv = () => {
     setParticipateTheQuiz(false)
@@ -57,7 +58,7 @@ function ApplyJobCvSubmitDoneDialogBox(props: props) {
             <Grid container item alignItems="center" justifyContent="center">
               <Grid item>
                 <Button
-                  href="/dashboard/candidate/quizzes/start"
+                  href={`/dashboard/candidate/quizzes/start?jobId=${jobId}`}
                   variant="contained"
                   size="large"
                   color="success"

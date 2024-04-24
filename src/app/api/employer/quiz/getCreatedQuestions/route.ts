@@ -1,12 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import DbMongoose from "../../../../lib/db_mongoose";
-import CandidateModel from "../../models/Candidate";
+import DbMongoose from "../../../../../lib/db_mongoose";
 import { getServerSession } from "next-auth";
-import JobPostModel from "../../models/JobPost";
+import EmployerModel from "../../../models/Employer";
+import QuestionModel from "../../../models/Question";
 
 export async function POST(request: NextRequest, response: NextResponse) {
   try {
-  
     const sessionData = await getServerSession();
     if (!sessionData) {
       return NextResponse.json(
@@ -22,7 +21,8 @@ export async function POST(request: NextRequest, response: NextResponse) {
     if (!jobId) {
       return NextResponse.json(
         {
-          message: "Questions not found, please try again!, Redirecting to the applied jobs...",
+          message:
+            "Questions not found, please try again!, Redirecting to the applied jobs...",
         },
         {
           status: 404,
@@ -32,7 +32,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
 
     await DbMongoose();
 
-    const user = await CandidateModel.findOne({
+    const user = await EmployerModel.findOne({
       email: sessionData?.user?.email,
     });
 
@@ -47,19 +47,15 @@ export async function POST(request: NextRequest, response: NextResponse) {
       );
     }
 
-    const getQuestionsIdArray = await JobPostModel.findById(jobId)
-      .populate("questionsSet.question")
-      .lean()
-      .exec();
+    const questions = await QuestionModel.find({
+      createdUserId: user?._id,
+      createdUserRole:"employer"
+    }).sort({ createdAt: -1 });
 
-    // @ts-ignore
-    const remapQuestions = getQuestionsIdArray?.questionsSet?.map(
-      (item: { question: any }) => item?.question
-    ).filter((item: any)=> item)
     return NextResponse.json(
       {
         message: "Success",
-        data: remapQuestions,
+        data: questions,
       },
       {
         status: 200,

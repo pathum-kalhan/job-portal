@@ -198,6 +198,7 @@ function JobListCard(props: props) {
       <ApplyJobCvSubmitDoneDialogBox
         setParticipateTheQuiz={setParticipateTheQuiz}
         openUploadCv={participateTheQuiz}
+        jobId={jobPostInfo?._id}
       />
       <Grid
         container
@@ -407,19 +408,36 @@ function JobListCard(props: props) {
               </Link>
             </Grid>
 
-            <Grid item>
-              <LoadingButton
-                disabled={alreadyApplied || jobPostInfo?.alreadyApplied}
-                loading={backendCallJobApply}
-                onClick={applyTheJob}
-                size="large"
-                color="success"
-                variant="contained"
-                sx={{ borderRadius: 2 }}
-              >
-                APPLY
-              </LoadingButton>
-            </Grid>
+            {alreadyApplied || jobPostInfo?.alreadyApplied ? (
+              <Grid item>
+                <Link
+                  href={`/dashboard/candidate/quizzes/start?jobId=${jobPostInfo?._id}`}
+                >
+                  <LoadingButton
+                    size="large"
+                    color="success"
+                    variant="contained"
+                    sx={{ borderRadius: 2 }}
+                  >
+                    Take the Quiz
+                  </LoadingButton>
+                </Link>
+              </Grid>
+            ) : (
+              <Grid item>
+                <LoadingButton
+                  disabled={alreadyApplied || jobPostInfo?.alreadyApplied}
+                  loading={backendCallJobApply}
+                  onClick={applyTheJob}
+                  size="large"
+                  color="success"
+                  variant="contained"
+                  sx={{ borderRadius: 2 }}
+                >
+                  APPLY
+                </LoadingButton>
+              </Grid>
+            )}
           </Grid>
         </Grid>
       )}

@@ -19,6 +19,7 @@ const validationSchema = {
   jobExpirationDate: Yup.string().required(
     "Job Expiration Date is required"
   ),
+  questionsSet: Yup.array(),
   position: Yup.string().required("Position is required"),
   jobDescription: Yup.string().required("Job Description is required"),
   requiredQualifications: Yup.array().min(

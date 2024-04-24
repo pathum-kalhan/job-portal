@@ -1,4 +1,5 @@
 import { models, model, Schema } from "mongoose";
+import QuestionModel from "./Question";
 
 const JobPostSchema = new Schema(
   {
@@ -16,6 +17,11 @@ const JobPostSchema = new Schema(
     position: String,
     jobDescription: String,
     requiredQualifications: Array,
+    questionsSet: [
+      {
+        question: { type: Schema.Types.ObjectId, ref: QuestionModel },
+      },
+    ],
     workingHoursPerDay: {
       type: Number,
       default: 8,

@@ -15,6 +15,7 @@ import Link from "next/link";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import EmployerInterviewCalender from "./EmployerInterviewCalender";
+import PostAddIcon from "@mui/icons-material/PostAdd";
 
 function EmployerProfileRightSideCard() {
   const [backendCall, setBackendCall] = useState(false);
@@ -27,7 +28,6 @@ function EmployerProfileRightSideCard() {
     setOpenDialogBox(false);
   };
 
-
   const router = useRouter();
 
   const logOutFunc = async () => {
@@ -37,7 +37,6 @@ function EmployerProfileRightSideCard() {
     router.replace("/");
     setBackendCall(false);
   };
-
 
   const getRecentMeetings = useCallback(async () => {
     try {
@@ -112,7 +111,9 @@ function EmployerProfileRightSideCard() {
           >
             <Grid item lg="auto" md="auto" sm="auto" xs="auto">
               <Link href={"/dashboard/employer/interview-schedule"}>
-              <CalendarTodayIcon sx={{ fontSize: "4rem", cursor: "pointer" }} />
+                <CalendarTodayIcon
+                  sx={{ fontSize: "4rem", cursor: "pointer" }}
+                />
               </Link>
             </Grid>
             <Grid item lg="auto" md="auto" sm="auto" xs="auto">
@@ -140,7 +141,7 @@ function EmployerProfileRightSideCard() {
                   JOBS
                 </Button>
               </Link>
-            </Grid> 
+            </Grid>
 
             <Grid item lg="auto" md="auto" sm="auto" xs="auto">
               <Link href="/dashboard/employer/applicants-view">
@@ -149,56 +150,83 @@ function EmployerProfileRightSideCard() {
                   size="small"
                   variant="contained"
                   endIcon={<FormatListBulletedIcon />}
-                  sx={{  height: "2.5rem" }}
+                  sx={{ height: "2.5rem" }}
                 >
-                 Applications
+                  Applications
                 </Button>
               </Link>
-            </Grid> 
-
+            </Grid>
           </Grid>
 
           <Grid
-              container
-              item
-              lg={12}
-              md={12}
-              sm={12}
-              xs={12}
-              sx={{
-                backgroundColor: "#c9c9c9",
-                padding: "1rem",
-              }}
-              alignItems="center"
-              justifyContent="center"
-              gap={1}
-            >  
+            container
+            item
+            lg={12}
+            md={12}
+            sm={12}
+            xs={12}
+            sx={{
+              backgroundColor: "#c9c9c9",
+              padding: "1rem",
+            }}
+            alignItems="center"
+            justifyContent="center"
+            gap={1}
+          >
             <Grid item xs={"auto"}>
-            <Tooltip
-                  title={hasRecentMeetings>0 ? "You have upcoming meetings" : ""}
+              <Tooltip
+                title={
+                  hasRecentMeetings > 0 ? "You have upcoming meetings" : ""
+                }
+              >
+                <Badge
+                  color="error"
+                  badgeContent={hasRecentMeetings > 0 ? "!" : null}
                 >
-                  <Badge
-                    color="error"
-                    badgeContent={
-                      hasRecentMeetings>0 ? "!" : null
-                    }
+                  <Button
+                    color="primary"
+                    size="large"
+                    variant="contained"
+                    sx={{ textTransform: "capitalize", height: "2.5rem" }}
+                    endIcon={<CalendarMonthIcon />}
+                    onClick={() => {
+                      setOpenDialogBox(true);
+                    }}
                   >
+                    Schedules
+                  </Button>
+                </Badge>
+              </Tooltip>
+            </Grid>
+
+            <Grid item xs={"auto"}>
+              <Link href="/dashboard/employer/add-questions">
                 <Button
-                  color="primary"
+                  color="secondary"
                   size="large"
                   variant="contained"
                   sx={{ textTransform: "capitalize", height: "2.5rem" }}
-                  endIcon={<CalendarMonthIcon />}
-                  onClick={() => {
-                    setOpenDialogBox(true);
-                  }}
+                  endIcon={<PostAddIcon />}
                 >
-                  Schedules
-                  </Button>
-                  </Badge>
-                </Tooltip>
-              </Grid>
+                  Add Questions
+                </Button>
+              </Link>
             </Grid>
+
+            <Grid item xs={"auto"}>
+              <Link href="/dashboard/employer/manage-questions">
+                <Button
+                  color="secondary"
+                  size="large"
+                  variant="contained"
+                  sx={{ textTransform: "capitalize", height: "2.5rem" }}
+                  endIcon={<FormatListBulletedIcon />}
+                >
+                  Manage Questions
+                </Button>
+              </Link>
+            </Grid>
+          </Grid>
         </Grid>
       </CardContent>
 
@@ -230,7 +258,7 @@ function EmployerProfileRightSideCard() {
         </CardActions>
       </Stack>
 
-       <EmployerInterviewCalender
+      <EmployerInterviewCalender
         openDialogBox={openDialogBox}
         handleCloseDialogBox={handleCloseDialogBox}
       />

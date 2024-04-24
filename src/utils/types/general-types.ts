@@ -58,14 +58,15 @@ export type applicationType = {
   applicationStatus: string;
   industry: string;
   candidateCVUrl?: string;
-  isJobExpired?; boolean;
+  isJobExpired?;
+  boolean;
 
-  interview?:{
+  interview?: {
     jobApplicationId: string;
     jobId: string;
     candidateId: string;
     applicationStatus: string;
-  expiredDate: string;
+    expiredDate: string;
     status: string;
     scheduleDate: string;
     interviewType: string;
@@ -106,6 +107,7 @@ export type companyInfo = {
   position?: string;
   jobDescription?: string;
   requiredQualifications?: string[];
+  questions?: string[];
   workingHoursPerDay?: number;
   jobRole?: string;
   companyContactNo?: string;
@@ -114,7 +116,7 @@ export type companyInfo = {
   password?: string;
   reenterPassword?: string;
   jobType?: string;
-  jobExpirationDate?:string;
+  jobExpirationDate?: string;
 };
 
 export type adminInfo = {
@@ -137,8 +139,8 @@ export type profileData = {
   industry?: string[];
   skills: string[];
   quiz: {
-    latestScore:string
-  }
+    latestScore: string;
+  };
   profilePic: {
     image: string;
     status: {
@@ -157,7 +159,7 @@ export type profileData = {
 };
 
 export type Messages = {
-  type: {type:string, enum: ["left" | "right"]};
+  type: { type: string; enum: ["left" | "right"] };
   message: string;
   timestamp: string;
   displayName: string;
@@ -165,12 +167,17 @@ export type Messages = {
 }[];
 
 export type Question = {
-  _id:string,
-  question: string,
+  _id: string;
+  question: string;
+  codeBlock?: any;
+  image?: any;
   answers: [
     {
-      text: string,
-      isCorrect: boolean,
-    },
-  ],
-}
+      _id: string;
+      codeBlock?: any;
+      image?: any;
+      text: string;
+      isCorrect: boolean;
+    }
+  ];
+};

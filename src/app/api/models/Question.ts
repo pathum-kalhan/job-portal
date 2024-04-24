@@ -2,6 +2,8 @@ import { models, model, Schema } from "mongoose";
 
 const QuestionSchema = new Schema(
   {
+    createdUserRole: String,
+    createdUserId: String,
     question: String,
     answers: [
       {
@@ -21,6 +23,6 @@ const QuestionSchema = new Schema(
   }
 );
 
-const QuestionMModel = models.Question || model("Question", QuestionSchema);
+const QuestionModel = models.Question || model("Question", QuestionSchema);
 
-export default QuestionMModel;
+export default QuestionModel;

@@ -55,7 +55,8 @@ export async function POST(request: Request) {
       requiredQualifications,
       workingHoursPerDay,
       jobExpirationDate,
-      jobType
+      jobType,
+      questionsSet
     } = isValid;
 
     const today = new Date();
@@ -76,7 +77,8 @@ export async function POST(request: Request) {
       requiredQualifications,
       workingHoursPerDay,
       employer: user._id,
-      jobType
+      jobType,
+      questionsSet
     });
 
     return NextResponse.json(
