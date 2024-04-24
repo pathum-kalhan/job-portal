@@ -6,8 +6,10 @@ import { useRouter } from "next/navigation";
 function Page() {
   const router = useRouter();
 
-  const handleStatus = () => {
-      router.push("/dashboard/candidate/quizzes/quiz");
+  const handleStatus = (jobId: string) => {
+    if(jobId){
+      router.push(`/dashboard/candidate/quizzes/quiz?jobId=${jobId}`);
+    }
   };
 
   return (

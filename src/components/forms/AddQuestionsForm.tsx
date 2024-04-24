@@ -9,6 +9,7 @@ import { AlertType } from "../../utils/types/general-types";
 import SnackBarComponent from "../../components/common/SnackBarComponent";
 import { RadioGroup } from "formik-mui";
 import { stringToBoolean } from "../../utils/convert/stringToBoolean";
+import { useSession } from "next-auth/react";
 
 type initialValuesType = {
   title: string;
@@ -22,7 +23,15 @@ type initialValuesType = {
   ChoiceFourIsTrue: string;
 };
 
-function Page() {
+type props = {
+  role:string
+}
+
+function AddQuestionsForm(props: props) {
+  const { data: session } = useSession();
+  
+  const { role } = props
+
   const [backendCall, setBackendCall] = useState(false);
 
   const [alert, setAlert] = useState<AlertType>({
@@ -69,6 +78,9 @@ function Page() {
       formikHelpers: FormikHelpers<initialValuesType>
     ) => {
       const payLoad = {
+        createdUserRole: role,
+        // @ts-ignore
+        createdUserId:session?.user?.id,
         question: values?.title,
         answers: [
           {
@@ -130,8 +142,8 @@ function Page() {
         setBackendCall(false);
       }
     },
-
-    []
+        // @ts-ignore
+    [role, session?.user?.id]
   );
 
   return (
@@ -142,7 +154,7 @@ function Page() {
       enableReinitialize
     >
       {(formik) => {
-        const { isValid, dirty, errors, touched, values } = formik;
+        const { isValid, dirty, errors, touched } = formik;
         return (
           <Form>
             <SnackBarComponent alert={alert} setAlert={setAlert} />
@@ -163,7 +175,7 @@ function Page() {
             {/* Answer Fields Start */}
             <Stack
               direction="row"
-              gap={{lg:2, md:2, sm:1, xs:1}}
+              gap={{ lg: 2, md: 2, sm: 1, xs: 1 }}
               alignItems="center"
               justifyContent="center"
             >
@@ -176,12 +188,14 @@ function Page() {
                 margin="normal"
                 error={errors?.ChoiceOne && touched?.ChoiceOne}
                 helperText={
-                  errors?.ChoiceOne && touched?.ChoiceOne ? errors?.ChoiceOne : ""
+                  errors?.ChoiceOne && touched?.ChoiceOne
+                    ? errors?.ChoiceOne
+                    : ""
                 }
               />
 
               <Field component={RadioGroup} name={"ChoiceOneIsTrue"}>
-                <Stack direction="row" gap={{lg:2, md:2, sm:1, xs:1}}>
+                <Stack direction="row" gap={{ lg: 2, md: 2, sm: 1, xs: 1 }}>
                   <FormControlLabel
                     value={true}
                     control={<Radio />}
@@ -198,7 +212,7 @@ function Page() {
 
             <Stack
               direction="row"
-              gap={{lg:2, md:2, sm:1, xs:1}}
+              gap={{ lg: 2, md: 2, sm: 1, xs: 1 }}
               alignItems="center"
               justifyContent="center"
             >
@@ -211,12 +225,14 @@ function Page() {
                 margin="normal"
                 error={errors?.ChoiceTwo && touched?.ChoiceTwo}
                 helperText={
-                  errors?.ChoiceTwo && touched?.ChoiceTwo ? errors?.ChoiceTwo : ""
+                  errors?.ChoiceTwo && touched?.ChoiceTwo
+                    ? errors?.ChoiceTwo
+                    : ""
                 }
               />
 
               <Field component={RadioGroup} name={"ChoiceTwoIsTrue"}>
-                <Stack direction="row" gap={{lg:2, md:2, sm:1, xs:1}}>
+                <Stack direction="row" gap={{ lg: 2, md: 2, sm: 1, xs: 1 }}>
                   <FormControlLabel
                     value={true}
                     control={<Radio />}
@@ -233,7 +249,7 @@ function Page() {
 
             <Stack
               direction="row"
-              gap={{lg:2, md:2, sm:1, xs:1}}
+              gap={{ lg: 2, md: 2, sm: 1, xs: 1 }}
               alignItems="center"
               justifyContent="center"
             >
@@ -253,7 +269,7 @@ function Page() {
               />
 
               <Field component={RadioGroup} name={"ChoiceThreeIsTrue"}>
-                <Stack direction="row" gap={{lg:2, md:2, sm:1, xs:1}}>
+                <Stack direction="row" gap={{ lg: 2, md: 2, sm: 1, xs: 1 }}>
                   <FormControlLabel
                     value={true}
                     control={<Radio />}
@@ -270,7 +286,7 @@ function Page() {
 
             <Stack
               direction="row"
-              gap={{lg:2, md:2, sm:1, xs:1}}
+              gap={{ lg: 2, md: 2, sm: 1, xs: 1 }}
               alignItems="center"
               justifyContent="center"
             >
@@ -290,7 +306,7 @@ function Page() {
               />
 
               <Field component={RadioGroup} name={"ChoiceFourIsTrue"}>
-                <Stack direction="row" gap={{lg:2, md:2, sm:1, xs:1}} >
+                <Stack direction="row" gap={{ lg: 2, md: 2, sm: 1, xs: 1 }}>
                   <FormControlLabel
                     value={true}
                     control={<Radio />}
@@ -323,4 +339,4 @@ function Page() {
   );
 }
 
-export default Page;
+export default AddQuestionsForm;

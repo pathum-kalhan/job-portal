@@ -11,6 +11,8 @@ import SnackBarComponent from "../../../../../components/common/SnackBarComponen
 import { Constant } from "../../../../../utils/Constents";
 
 function Page() {
+  const searchParams = new URLSearchParams(window?.location?.search);
+  const jobId = searchParams.get("jobId");
   const router = useRouter();
   const formikRef = useRef();
   const { data: session, status } = useSession();
@@ -72,7 +74,7 @@ function Page() {
           router.push(
             `/dashboard/candidate/quizzes/results?score=${
               results.length ? correctAnswers.length : 0
-            }/${questions.length}`
+            }/${questions.length}&jobId=${jobId}`
           );
         }
       } catch (error) {
@@ -86,7 +88,7 @@ function Page() {
       }
     },
     // @ts-ignore
-    [questions, router, session?.user?.email, session?.user?.role]
+    [jobId, questions, router, session?.user?.email, session?.user?.role]
   );
 
   const onTimeout = useCallback(async () => {
@@ -102,7 +104,8 @@ function Page() {
       setBackendCall(true);
 
       const response = await fetch("/api/common/getQuestions", {
-        method: "GET",
+        method: "POST",
+        body: JSON.stringify({ jobId }),
       });
 
       if (response.status !== 200) {
@@ -117,6 +120,11 @@ function Page() {
               : "Question loading failed due to server error, please try again!",
           severity: "error",
         });
+
+        setTimeout(() => {
+          router.push("/dashboard/candidate/applied-jobs");
+        }, 4000);
+        
       } else {
         const data = await response.json();
         setQuestions(data.data);
@@ -133,7 +141,7 @@ function Page() {
     }
 
     // @ts-ignore
-  }, []);
+  }, [jobId, router]);
 
   useEffect(() => {
     if (status === "authenticated") {

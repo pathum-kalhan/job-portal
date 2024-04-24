@@ -20,8 +20,7 @@ import { AlertType, profileData } from "../../../../utils/types/general-types";
 import ManageSearchIcon from "@mui/icons-material/ManageSearch";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import CandidateInterviewCalender from "./CandidateInterviewCalender";
-import PriorityHighIcon from "@mui/icons-material/PriorityHigh";
-import moment from "moment";
+import TipsAndUpdatesIcon from '@mui/icons-material/TipsAndUpdates';
 
 type props = {
   handleClickOpenUploadCv: () => void;
@@ -239,7 +238,7 @@ function CandidateProfileRightSideCard(props: props) {
         <input {...getInputProps()} />
         <CardContent
           sx={{
-            maxHeight: { lg: 400, xs: 300 },
+            maxHeight: { lg: 400, xs: 400 },
             minHeight: { lg: 400, xs: 300 },
           }}
         >
@@ -398,20 +397,21 @@ function CandidateProfileRightSideCard(props: props) {
 
               <Grid item>
                 <Button
-                  href="/dashboard/candidate/quizzes/start"
+                  href="/dashboard/candidate/applied-jobs"
                   size="medium"
                   variant="contained"
+                  endIcon={<TipsAndUpdatesIcon/>}
                   sx={{
                     height: "3rem",
                     borderRadius: 4,
-                    textTransform: "capitalize",
+                    textTransform: "initial",
                     backgroundColor: deepPurple[500],
                     "&:hover": {
                       backgroundColor: deepPurple[700],
                     },
                   }}
                 >
-                  QUIZZES
+                  Take applied job quiz
                 </Button>
               </Grid>
             </Grid>

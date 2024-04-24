@@ -4,8 +4,7 @@ import QuestionModel from "../../models/Question";
 import EmployerModel from "../../models/Employer";
 import { getServerSession } from "next-auth";
 import AdminModel from "../../models/Admin";
-
-const apiKey: string = `${process.env.SENDGRID_API_KEY}`;
+import mongoose from "mongoose";
 
 export async function POST(request: Request) {
   try {
@@ -23,6 +22,7 @@ export async function POST(request: Request) {
 
     const data = await request.json();
     await DbMongoose();
+
     const user =
       data.createdUserRole === "employer"
         ? await EmployerModel.findOne({
@@ -45,7 +45,18 @@ export async function POST(request: Request) {
       );
     }
 
-    await QuestionModel.create(data);
+    await QuestionModel.findOneAndUpdate(
+      { _id: new mongoose.Types.ObjectId(data.id) },
+      { createdUserRole: data?.createdUserRole,
+        createdUserId: data?.createdUserId,
+        question: data?.question,
+        answers: data?.answers,
+      },
+      {
+        upsert: true,
+        new: true,
+      }
+    );
 
     return NextResponse.json(
       {

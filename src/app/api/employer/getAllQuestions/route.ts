@@ -1,11 +1,8 @@
-import { NextResponse } from "next/server";
 import DbMongoose from "../../../../lib/db_mongoose";
-import QuestionModel from "../../models/Question";
-import EmployerModel from "../../models/Employer";
+import { NextResponse } from "next/server";
+import Employer from "../../models/Employer";
 import { getServerSession } from "next-auth";
-import AdminModel from "../../models/Admin";
-
-const apiKey: string = `${process.env.SENDGRID_API_KEY}`;
+import QuestionModel from "../../models/Question";
 
 export async function POST(request: Request) {
   try {
@@ -21,18 +18,12 @@ export async function POST(request: Request) {
       );
     }
 
-    const data = await request.json();
     await DbMongoose();
-    const user =
-      data.createdUserRole === "employer"
-        ? await EmployerModel.findOne({
-            email: sessionData?.user?.email,
-          })
-        : data.createdUserRole === "admin"
-        ? await AdminModel.findOne({
-            email: sessionData?.user?.email,
-          })
-        : null;
+    const data = await request.json();
+
+    const normalizedEmail = data?.email?.toLowerCase().trim();
+
+    const user = await Employer.findOne({ email: normalizedEmail });
 
     if (!user) {
       return NextResponse.json(
@@ -45,22 +36,21 @@ export async function POST(request: Request) {
       );
     }
 
-    await QuestionModel.create(data);
+    const questions = await QuestionModel.find({_id:{$ne:null}}).sort({ createdAt: -1 })
 
     return NextResponse.json(
       {
         message: "Success",
+        data: questions,
       },
       {
         status: 200,
       }
     );
   } catch (error: any) {
-    console.log("error", error);
     return NextResponse.json(
       {
-        message:
-          error.message === "string" ? error.message : "Please try again.",
+        message: error,
       },
       {
         status: 500,

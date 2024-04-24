@@ -1,3 +1,4 @@
+"use client";
 import React, { useEffect, useState } from "react";
 import {
   Dialog,
@@ -13,7 +14,7 @@ import {
 
 type props = {
   open: boolean;
-  handleClose: () => void;
+  handleClose: (val:string) => void;
 };
 
 function ScoreDialogBox(props: props) {
@@ -43,7 +44,13 @@ function ScoreDialogBox(props: props) {
         ></CardContent>
         <CardActions>
           <Grid container>
-            <Grid container item alignItems="center" justifyContent="center">
+            <Grid
+              container
+              item
+              alignItems="center"
+              justifyContent="center"
+              gap={1}
+            >
               <Grid item lg={12} md={12} sm={12} xs={12} mb={5}>
                 {score === "loading" ? (
                   <CircularProgress />
@@ -59,9 +66,20 @@ function ScoreDialogBox(props: props) {
                   disabled={score === "loading"}
                   color="success"
                   variant="contained"
-                  onClick={handleClose}
+                  onClick={() => handleClose("/dashboard/candidate/quizzes/start?jobId=")}
                 >
                   Take Quiz again
+                </Button>
+              </Grid>
+
+              <Grid item>
+                <Button
+                  disabled={score === "loading"}
+                  color="primary"
+                  variant="contained"
+                  onClick={() => handleClose("/dashboard/profile")}
+                >
+                  Go to dashboard
                 </Button>
               </Grid>
             </Grid>
