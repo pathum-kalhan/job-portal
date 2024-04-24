@@ -54,7 +54,8 @@ export async function POST(request: Request) {
       requiredQualifications,
       workingHoursPerDay,
       jobType,
-      jobExpirationDate
+      jobExpirationDate,
+      questionsSet
     } = isValid;
 
     await JobPosteModel.findOneAndUpdate(
@@ -70,7 +71,8 @@ export async function POST(request: Request) {
         workingHoursPerDay,
         employer: user._id,
         jobType,
-        jobExpirationDate
+        jobExpirationDate,
+        questionsSet
       }
     );
 

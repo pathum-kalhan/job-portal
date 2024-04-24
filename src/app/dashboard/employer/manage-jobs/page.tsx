@@ -16,16 +16,20 @@ type companyInfo = {
   position: string;
   jobDescription: string;
   requiredQualifications: string[];
+  questionsSet?: any;
   workingHoursPerDay: number;
   jobRole: string;
   jobType: string;
-  jobExpirationDate:string;
+  jobExpirationDate: string;
 };
 
 function Page() {
   const router = useRouter();
   const [backendCall, setBackendCall] = useState(true);
   const { data: session, status } = useSession();
+  const [industryArray, setIndustryArray] = useState([]);
+  const [skillsArray, setSkillsArray] = useState([]);
+  const [quizData, setQuizData] = useState([]);
 
   const [companyInfo, setCompanyInfo] = React.useState([]);
 
@@ -55,9 +59,64 @@ function Page() {
     }
   }, [session?.user?.email]);
 
+  const getAllSkillsAndIndustries = useCallback(async () => {
+    try {
+      setBackendCall(true);
+      const response = await fetch("/api/candidate/getAllSkillsAndIndustries", {
+        method: "POST",
+        body: JSON.stringify({
+          // @ts-ignore
+          userRole: session?.user?.role,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+      setSkillsArray(data?.data?.skills);
+      setIndustryArray(data?.data?.industries);
+      setBackendCall(false);
+    } catch (error) {
+      console.log("error", error);
+    }
+    // @ts-ignore
+  }, [session?.user?.role]);
+
+  const getAllQuestions = useCallback(async () => {
+    setBackendCall(true);
+    try {
+      const payload = {
+        email: session?.user?.email,
+      };
+
+      const response = await fetch("/api/employer/getAllQuestions", {
+        method: "POST",
+        body: JSON.stringify(payload),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response?.status !== 200) {
+        setBackendCall(false);
+      } else {
+        const data = await response.json();
+        setQuizData(data.data);
+        setBackendCall(false);
+      }
+    } catch (error) {
+      setBackendCall(false);
+    }
+  }, [session?.user?.email]);
+
   useEffect(() => {
-    if (status === "authenticated" && !companyInfo.length) {
-      loadCreatedJobs();
+    if (status === "authenticated") {
+      if (!companyInfo.length) {
+        loadCreatedJobs();
+      }
+
+      getAllSkillsAndIndustries();
+      getAllQuestions();
     }
 
     if (status !== "loading" && !session) {
@@ -90,6 +149,9 @@ function Page() {
                   <EmployerJobListCard
                     companyInfo={item}
                     loadCreatedJobs={loadCreatedJobs}
+                    quizData={quizData}
+                    industryArray={industryArray}
+                    skillsArray={skillsArray}
                   />
                 </Grid>
               );

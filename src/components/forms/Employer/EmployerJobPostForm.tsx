@@ -128,7 +128,7 @@ const EmployerJobPostForm = () => {
 
       const getQuestionsIds = quizData
         ?.filter((item) => values?.questions?.includes(item?.question))
-        .map((item) => ({ question: new mongoose.Types.ObjectId(item?.id) }));
+        .map((item) => ({ question: item?.id }));
 
       const payLoad = {
         companyDetails: values.companyDetails,
