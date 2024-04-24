@@ -19,7 +19,6 @@ import { Formik, Form, Field } from "formik";
 import { TextField } from "formik-mui";
 import { useCallback, useEffect, useState } from "react";
 import * as yup from "yup";
-
 import React from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import { useSession } from "next-auth/react";
@@ -34,6 +33,7 @@ type initialValues = {
   position: string;
   jobDescription: string;
   requiredQualifications: string[];
+  questionsSet?: any;
   workingHoursPerDay: number;
   jobRole: string;
   jobType?: string;
@@ -45,6 +45,9 @@ type props = {
   handleCloseEditProfile: () => void;
   initialValues: initialValues;
   loadCreatedJobs: () => void;
+  quizData: any;
+  industryArray: string[];
+  skillsArray: string[];
 };
 
 type AlertType = {
@@ -54,23 +57,25 @@ type AlertType = {
 };
 
 function EditJobDialogBox(props: props) {
-  const { data: session } = useSession();
-
   const {
     openEditProfile,
     handleCloseEditProfile,
     initialValues,
     loadCreatedJobs,
+    quizData,
+    industryArray,
+    skillsArray,
   } = props;
 
   const remapInitialValues = {
     ...initialValues,
     jobExpirationDate: initialValues?.jobExpirationDate?.split("T")[0] ?? "",
+    questionsSet: initialValues?.questionsSet
+      .map((item) => (item?.question?.question ? item.question.question : null))
+      .filter((filterItem) => filterItem),
   };
 
   const jobTypeArray = ["hybrid", "remote", "dynamic", "flexible"];
-  const [industryArray, setIndustryArray] = useState([]);
-  const [skillsArray, setSkillsArray] = useState([]);
 
   const [backendCall, setBackendCall] = useState(false);
   const [alert, setAlert] = useState<AlertType>({
@@ -100,6 +105,12 @@ function EditJobDialogBox(props: props) {
       .required(
         "Industry is required (Hit Enter key on the keyboard if you already typed)"
       ),
+    questionsSet: yup
+      .array()
+      .min(
+        1,
+        "Please select at least one question (Hit Enter key on the keyboard if you already typed)"
+      ),
     jobExpirationDate: yup.string().required("Job expiration date is required"),
     jobType: yup.string().required("Job type is required"),
     position: yup.string().required("Position is required"),
@@ -118,6 +129,10 @@ function EditJobDialogBox(props: props) {
   const handleSubmit = useCallback(
     async (values: initialValues) => {
       setBackendCall(true);
+      const getQuestionsIds = quizData
+        ?.filter((item) => values?.questionsSet?.includes(item?.question))
+        .map((item) => ({ question: item?.id }));
+
       const payLoad = {
         companyDetails: values?.companyDetails,
         websiteUrl: values?.websiteUrl,
@@ -126,6 +141,7 @@ function EditJobDialogBox(props: props) {
         position: values?.position,
         jobDescription: values?.jobDescription,
         requiredQualifications: values?.requiredQualifications,
+        questionsSet: getQuestionsIds,
         workingHoursPerDay: values?.workingHoursPerDay,
         jobId: initialValues?._id,
         jobType: values.jobType,
@@ -175,33 +191,8 @@ function EditJobDialogBox(props: props) {
       }
     },
 
-    [handleCloseEditProfile, initialValues?._id, loadCreatedJobs]
+    [handleCloseEditProfile, initialValues?._id, loadCreatedJobs, quizData]
   );
-
-  const getAllSkillsAndIndustries = useCallback(async () => {
-    try {
-      const response = await fetch("/api/candidate/getAllSkillsAndIndustries", {
-        method: "POST",
-        body: JSON.stringify({
-          // @ts-ignore
-          userRole: session?.user?.role,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      const data = await response.json();
-      setSkillsArray(data?.data?.skills);
-      setIndustryArray(data?.data?.industries);
-    } catch (error) {
-      console.log("error", error);
-    }
-    // @ts-ignore
-  }, [session?.user?.role]);
-
-  useEffect(() => {
-    getAllSkillsAndIndustries();
-  }, [getAllSkillsAndIndustries]);
 
   return (
     <Dialog
@@ -457,7 +448,39 @@ function EditJobDialogBox(props: props) {
                           )}
                         />
                       </Grid>
-
+                      <Grid item lg={12} md={12} sm={12} xs={12}>
+                        <Autocomplete
+                          disabled={backendCall}
+                          multiple
+                          options={quizData.map((item) => item.question)}
+                          value={values.questionsSet}
+                          onChange={(event, value) => {
+                            setFieldValue("questionsSet", value);
+                          }}
+                          renderTags={(value, getTagProps) =>
+                            value.map((option, index) => (
+                              <Chip
+                                label={option}
+                                {...getTagProps({ index })}
+                                key={option}
+                              />
+                            ))
+                          }
+                          renderInput={(params) => (
+                            <Field
+                              {...params}
+                              variant="outlined"
+                              value={values.questionsSet}
+                              label="Questions"
+                              placeholder="+ Add questions"
+                              component={MUITextField}
+                              name="questionsSet"
+                              error={!!errors.questionsSet}
+                              helperText={errors.questionsSet}
+                            />
+                          )}
+                        />
+                      </Grid>
                       <Grid item lg={12} md={12} sm={12} xs={12}>
                         <Field
                           disabled={backendCall}

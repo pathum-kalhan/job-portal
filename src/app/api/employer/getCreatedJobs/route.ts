@@ -39,8 +39,8 @@ export async function POST(request: Request) {
     const createdJobs = await JobPosteModel.find({
       employer: user._id,
     }).select(
-      "jobType jobExpirationDate companyName companyDetails companyWebsite location industry position jobDescription requiredQualifications workingHoursPerDay jobRole websiteUrl"
-    ).sort({ createdAt: -1 })
+      "jobType jobExpirationDate companyName companyDetails companyWebsite location industry position jobDescription requiredQualifications workingHoursPerDay jobRole websiteUrl questionsSet"
+    ).populate("questionsSet.question").sort({ createdAt: -1 })
 
     return NextResponse.json(
       {

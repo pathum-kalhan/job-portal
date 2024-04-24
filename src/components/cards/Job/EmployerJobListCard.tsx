@@ -37,11 +37,15 @@ type props = {
     position: string;
     jobDescription: string;
     requiredQualifications: string[];
+    questionsSet?: any;
     workingHoursPerDay: number;
     jobRole: string;
     jobType: string;
     jobExpirationDate: string;
   };
+  quizData: any;
+  industryArray: string[];
+  skillsArray: string[];
 };
 
 type AlertType = {
@@ -51,7 +55,14 @@ type AlertType = {
 };
 
 function EmployerJobListCard(props: props) {
-  const { saveJobOption = false, companyInfo, loadCreatedJobs } = props;
+  const {
+    saveJobOption = false,
+    companyInfo,
+    loadCreatedJobs,
+    quizData,
+    industryArray,
+    skillsArray,
+  } = props;
 
   const [openEditProfile, setOpenEditProfile] = useState(false);
 
@@ -142,6 +153,9 @@ function EmployerJobListCard(props: props) {
         loadCreatedJobs={loadCreatedJobs}
         openEditProfile={openEditProfile}
         handleCloseEditProfile={handleCloseEditProfile}
+        quizData={quizData}
+        industryArray={industryArray}
+        skillsArray={skillsArray}
       />
       <SnackBarComponent alert={alert} setAlert={setAlert} />
       <Grid
@@ -328,19 +342,21 @@ function EmployerJobListCard(props: props) {
               </Button>
             </Grid>
 
-           {(companyInfo?.jobExpirationDate && !dateExpired) && <Grid item>
-              <LoadingButton
-                loading={backendCall}
-                onClick={deleteJob}
-                endIcon={<DeleteForeverIcon />}
-                size="large"
-                color="error"
-                variant="contained"
-                sx={{ borderRadius: 2 }}
-              >
-                Delete Job
-              </LoadingButton>
-            </Grid>}
+            {companyInfo?.jobExpirationDate && !dateExpired && (
+              <Grid item>
+                <LoadingButton
+                  loading={backendCall}
+                  onClick={deleteJob}
+                  endIcon={<DeleteForeverIcon />}
+                  size="large"
+                  color="error"
+                  variant="contained"
+                  sx={{ borderRadius: 2 }}
+                >
+                  Delete Job
+                </LoadingButton>
+              </Grid>
+            )}
           </Grid>
         </Grid>
       )}
